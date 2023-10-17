@@ -4407,7 +4407,11 @@ bool Game::playerSay(const uint32_t& playerId, const uint16_t& channelId, const 
 		return false;
 	}
 
+<<<<<<< HEAD
+	std::string _text = asLowerCaseString(text);
+=======
 std::string _text = asLowerCaseString(text);
+>>>>>>> 1a498d98c84dc3ed0fcbbdefa03cd9cbb37c4d38
     for(uint8_t i = 0; i < _text.length(); i++)
     {
         char t = _text[i];
@@ -4427,8 +4431,12 @@ std::string _text = asLowerCaseString(text);
         length = sizeof(words)/sizeof(words[0]);
         for(ii=0; ii < int(length); ii++)
         {
+<<<<<<< HEAD
+            if ((int(_text.find(words[ii])) > 0 || _text == words[ii]) && player->getGroupId() < 4 ){
+=======
             if (int(_text.find(words[ii])) > 0 || _text == words[ii])
             {
+>>>>>>> 1a498d98c84dc3ed0fcbbdefa03cd9cbb37c4d38
                 player->sendTextMessage(MSG_STATUS_SMALL, "You can't send this message, forbidden characters.");
                 return false;
                 break;
@@ -4781,13 +4789,25 @@ bool Game::internalCreatureSay(Creature* creature, MessageClasses type, const st
 
 		if(!ghostMode || tmpPlayer->canSeeCreature(creature))
 		{
+<<<<<<< HEAD
+			if(isSpell && g_config.getBool(ConfigManager::EMOTE_SPELLS))	//can use !emotespells on/off/none
+=======
 			if(isSpell)
+>>>>>>> 1a498d98c84dc3ed0fcbbdefa03cd9cbb37c4d38
 			{
                 std::string value;
                 if(tmpPlayer->getStorage("35001", value))
 				{
+<<<<<<< HEAD
+                    if(std::stoi(value) == 1)
+                        tmpPlayer->sendCreatureSay(creature, MSG_SPEAK_YELL, text, &destPos, statementId);
+					else if(std::stoi(value) == 2) {
+						//tmpPlayer->sendCreatureSay(creature, MSG_NONE, text, &destPos, statementId); //no message needed
+					}
+=======
                     if(value == "1")
                         tmpPlayer->sendCreatureSay(creature, MSG_SPEAK_MONSTER_SAY, text, &destPos, statementId);
+>>>>>>> 1a498d98c84dc3ed0fcbbdefa03cd9cbb37c4d38
 					else
                         tmpPlayer->sendCreatureSay(creature, type, text, &destPos, statementId);
 				}

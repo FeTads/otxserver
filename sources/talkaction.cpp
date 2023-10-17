@@ -338,6 +338,11 @@ bool TalkAction::loadFunction(const std::string& functionName)
 		m_function = diagnostics;
 	else if(m_functionName == "autoloot") //autoloot by naze
 		m_function = autoLoot;
+<<<<<<< HEAD
+	else if(m_functionName == "houseprotect") //house protect
+		m_function = houseProtect;
+=======
+>>>>>>> 1a498d98c84dc3ed0fcbbdefa03cd9cbb37c4d38
 	else if(m_functionName == "ghost")
 		m_function = ghost;
 	else if(m_functionName == "software")
@@ -1409,7 +1414,57 @@ bool TalkAction::autoLoot(Creature* creature, const std::string&, const std::str
 	}
 	
 	return true;
+<<<<<<< HEAD
+}		
+
+bool TalkAction::houseProtect(Creature* creature, const std::string&, const std::string& param)
+{
+	
+	Player* player = creature->getPlayer();
+	if(!player)
+		return false;
+	
+	if(!g_config.getBool(ConfigManager::HOUSE_PROTECTION)){
+		player->sendTextMessage(MSG_STATUS_CONSOLE_BLUE, "House protect are disabled by Admin!");
+		return false;
+	}
+	
+	Tile* tile = g_game.getMap()->getTile(player->getPosition());
+	if(!tile){
+		return false;
+	}
+	
+	HouseTile* houseTile = tile->getHouseTile();
+	if(!houseTile){
+		player->sendTextMessage(MSG_STATUS_CONSOLE_RED, "[House Protect]: Error! you are not inside a house!");
+		return false;
+	}
+	
+	House* house = houseTile->getHouse();
+	if(!house){
+		return false;
+	}
+	
+	uint32_t owner = house->getOwner();
+	if(owner && player->getGUID() != owner){
+		player->sendTextMessage(MSG_STATUS_CONSOLE_RED, "[House Protect]: Error! you are not owner this house!");
+		return false;
+	}
+	
+	std::string msg = asLowerCaseString(param);
+	if(msg == "on" && !house->isProtected()){
+		house->setProtected(true);
+		return true;
+	}else if (msg == "off" && house->isProtected()){
+		house->setProtected(false);
+		return true;
+	}
+	return false;	
+}
+
+=======
 }																						   
+>>>>>>> 1a498d98c84dc3ed0fcbbdefa03cd9cbb37c4d38
 bool TalkAction::ghost(Creature* creature, const std::string&, const std::string&)
 {
 	Player* player = creature->getPlayer();

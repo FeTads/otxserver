@@ -1,3 +1,17 @@
+[ OTX SERVER 2X - FEETADS EDITS]
+	//17/10
+	-- fixed house protect and enable by talkaction
+	-- fixed login delay in combat.cpp
+
+	// 15/10
+	- Added Reduce Skill Loss
+	- Global Libs
+	- Protect Login Delay in source (protect fast login and can't hit in delay)
+	- Exp in cast, can be enable in config.lua
+	- Autoloot system, can be enable in config.lua
+	- Clean datapack with custom scripts and libs
+
+
 [ OTX Server 2 - CHANGE LOG
 	Project Name
 		OTX Server

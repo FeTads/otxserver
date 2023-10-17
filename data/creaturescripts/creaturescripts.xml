@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <creaturescripts>
+
+	<!-- custom protect house -->
+	<event type="moveitem" name="houseProtectTrash" event="script" value="houseProtectTrash.lua"/>
+	
 	<!-- Player Login -->
 	<event type="login" name="PlayerLogin" event="script" value="login.lua"/>
 

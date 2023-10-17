@@ -28,6 +28,9 @@
 	
 	-- use life and mana in percentual 100/100
 	lifeAndManaInPercentual = false
+	
+	--use !emotespells on/off/none
+	emoteSpells = true				
 
 	-- MySql
 	sqlType = "mysql"
@@ -38,8 +41,8 @@
 	sqlDatabase = ""
 	sqlFile = "schemas/otxserver.s3db"
 	sqlKeepAlive = 0
-	mysqlReadTimeout = 10
-	mysqlWriteTimeout = 10
+	mysqlReadTimeout = 10000
+	mysqlWriteTimeout = 10000
 	mysqlReconnectionAttempts = 5
 	encryptionType = "sha1" --// encryptionType can be (plain, sha1).
 
@@ -121,10 +124,11 @@
 	showManaChangeForMonsters = true
 	fieldOwnershipDuration = 5 * 1000
 	stopAttackingAtExit = true
-	loginProtectionPeriod = 10 * 1000
+	loginProtectionPeriod = 5 * 1000	--//login delay
 	deathLostPercent = 10
-	stairhopDelay = 2 * 1000
-	pushCreatureDelay = 2 * 1000
+	stairhopDelay = 0.3 * 1000
+	pushCreatureDelay = 1 * 280
+	diagonalPush = true 		--// use diagonal push, push cruzado
 	deathContainerId = 1987
 	gainExperienceColor = 215
 	addManaSpentInPvPZone = true
@@ -170,7 +174,7 @@
 		paralyzeDelay = 1500
 
 		-- GUI
-		premiumDaysToAddByGui = 10
+		premiumDaysToAddByGui = 0
 
 		-- Depot and Miscellaneous
 		-- set playerFollowExhaust to 2000 if someone causes lags and kicks by following unreachable creatures too often
@@ -215,7 +219,7 @@
 	loginTries = 20
 	retryTimeout = 5 * 1000
 	loginTimeout = 60 * 1000
-	maxPlayers = 200
+	maxPlayers = 1000
 	displayOnOrOffAtCharlist = false
 	onePlayerOnlinePerAccount = true
 	allowClones = 0
@@ -224,7 +228,7 @@
 	forceSlowConnectionsToDisconnect = false
 	premiumPlayerSkipWaitList = true
 	packetsPerSecond = 50
-	loginProtectionTime = 10
+	loginProtectionTime = 5
 
 	-- Death List and Blessings
 	-- Function retroPVP true change it:
@@ -270,7 +274,7 @@
 	houseCleanOld = 8 * 24 * 60 * 60
 	guildHalls = true
 	houseSkipInitialRent = true
-	houseProtection = true
+	houseProtection = false			--//use house protection?
 
 	-- Item usage
 	timeBetweenActions = 200
@@ -326,7 +330,6 @@
 	disableOutfitsForPrivilegedPlayers = false
 	bankSystem = true
 	spellNameInsteadOfWords = false
-	emoteSpells = true
 	unifiedSpells = true
 	promptExceptionTracerErrorBox = true
 	storePlayerDirection = false
