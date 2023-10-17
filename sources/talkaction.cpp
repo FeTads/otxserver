@@ -338,11 +338,8 @@ bool TalkAction::loadFunction(const std::string& functionName)
 		m_function = diagnostics;
 	else if(m_functionName == "autoloot") //autoloot by naze
 		m_function = autoLoot;
-<<<<<<< HEAD
 	else if(m_functionName == "houseprotect") //house protect
 		m_function = houseProtect;
-=======
->>>>>>> 1a498d98c84dc3ed0fcbbdefa03cd9cbb37c4d38
 	else if(m_functionName == "ghost")
 		m_function = ghost;
 	else if(m_functionName == "software")
@@ -1414,7 +1411,6 @@ bool TalkAction::autoLoot(Creature* creature, const std::string&, const std::str
 	}
 	
 	return true;
-<<<<<<< HEAD
 }		
 
 bool TalkAction::houseProtect(Creature* creature, const std::string&, const std::string& param)
@@ -1462,9 +1458,6 @@ bool TalkAction::houseProtect(Creature* creature, const std::string&, const std:
 	return false;	
 }
 
-=======
-}																						   
->>>>>>> 1a498d98c84dc3ed0fcbbdefa03cd9cbb37c4d38
 bool TalkAction::ghost(Creature* creature, const std::string&, const std::string&)
 {
 	Player* player = creature->getPlayer();

@@ -112,10 +112,7 @@ class TalkAction : public Event
 		static TalkFunction banishmentInfo;
 		static TalkFunction diagnostics;
 		static TalkFunction autoLoot; //autoloot by naze
-<<<<<<< HEAD
 		static TalkFunction houseProtect; //house protecte
-=======
->>>>>>> 1a498d98c84dc3ed0fcbbdefa03cd9cbb37c4d38
 		static TalkFunction ghost;
 		static TalkFunction software;
 
