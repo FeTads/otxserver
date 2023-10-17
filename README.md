@@ -8,5 +8,4 @@ Mattyx tutorial - [Windows Tutorial](https://github.com/mattyx14/otxserver/wiki/
 - <b>FeeTads(Portuguese):</b><br>
 E-mail: felps18.082@gmail.com<br>
 Whatsapp: +55 41 9 84036942<br><br>
-Discord: FeeTads
-FeeTads#0246
+Discord: FeeTads / FeeTads#0246
