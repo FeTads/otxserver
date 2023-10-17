@@ -9,3 +9,9 @@ Mattyx tutorial - [Windows Tutorial](https://github.com/mattyx14/otxserver/wiki/
 E-mail: felps18.082@gmail.com<br>
 Whatsapp: +55 41 9 84036942<br><br>
 Discord: FeeTads / FeeTads#0246
+
+added systems:
+Autoloot system (enable in config.lua)
+Exp cast (cast navigation + exp enable in config.lua)
+Fixed bugs get in otx2
+Added new features
