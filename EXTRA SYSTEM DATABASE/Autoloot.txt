@@ -1,0 +1,8 @@
+Execute a seguinte query em seu banco de dados:
+
+CREATE TABLE player_autoloot (
+    id int NOT NULL AUTO_INCREMENT,
+    player_id int NOT NULL,
+    autoloot_list blob,
+    PRIMARY KEY (id)
+);
