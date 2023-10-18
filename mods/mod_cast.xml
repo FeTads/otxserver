@@ -15,7 +15,6 @@
 			data.broadcast = false
 			data.password = ""
 			doPlayerSetSpectators(cid, data)
-			setPlayerCastOn(cid, false)
 			return true
 		end
 	]]></event>
@@ -41,7 +40,6 @@
 					data.mutes = {}
 					data.broadcast = false
 					doPlayerSetSpectators(cid, data)
-					setPlayerCastOn(cid, false)
 					db.executeQuery("UPDATE `players` SET `broadcasting` = 0, `viewers` = 0 WHERE `id` = " .. getPlayerGUID(cid))
 					doPlayerSendTextMessage(cid, MESSAGE_STATUS_CONSOLE_BLUE, "You have disabled your cast stream.")
 					setPlayerStorageValue(cid, 45510, os.time()+5)		-- storage de exhaust
@@ -54,7 +52,6 @@
 				if not data.broadcast then
 					data.broadcast = true
 					doPlayerSetSpectators(cid, data)
-					setPlayerCastOn(cid, true)
 					doPlayerOpenPrivateChannel(cid)
 					db.executeQuery("UPDATE `players` SET `broadcasting` = 1 WHERE `id` = " .. getPlayerGUID(cid))
 					if data.password == "" then -- Check cast Password

@@ -1,7 +1,7 @@
 local config = {
-	healPlayerOnLevel = true
-	saveOnAdvance = true
-	fastSave = true
+	healPlayerOnLevel = true,
+	saveOnAdvance = true,
+	fastSave = true,
 }
 
 function onAdvance(cid, skill, oldLevel, newLevel)

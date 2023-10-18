@@ -429,7 +429,7 @@ bool IOLoginData::loadPlayer(Player* player, const std::string& name, bool preLo
 	<< "`save`";
 	if(g_config.getBool(ConfigManager::RESET_SYSTEM_ENABLE))
 		query <<  ", `reset`";
-	query << ", FROM `players` WHERE "
+	query << " FROM `players` WHERE "
 		<< "`name` " << db->getStringComparer() << db->escapeString(name) << " AND `deleted` = 0 LIMIT 1";
 
 	DBResult* result;

@@ -98,7 +98,6 @@
 	<action itemid="6576" event="script" value="other/fireworksrocket.lua"/>
 	<action itemid="6578" event="script" value="other/partyhat.lua"/>
 	<action itemid="8110" event="script" value="other/present.lua"/>
-	<action itemid="7735" event="script" value="other/spellwand.lua"/>
 	<action itemid="7537;7585" event="script" value="other/spideregg.lua" />
 	<action itemid="6561;12424" event="script" value="other/blessings.lua"/>
 
