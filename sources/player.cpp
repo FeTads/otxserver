@@ -4371,6 +4371,10 @@ bool Player::gainExperience(double& gainExp, Creature* target)
 			gainExp *= 1 + ((extraExpCast && extraExpCast > 0) ? (extraExpCast/100.0) : 0);	
 		}
 	}
+	if(g_config.getBool(ConfigManager::RESET_SYSTEM_ENABLE) && getResets() > 0){
+		gainExp *= 1 + ((getResets()/100) * 2);	//extra 2% exp each reset
+	}
+	
 	//soul regeneration
 	if(gainExp >= level)
 	{
