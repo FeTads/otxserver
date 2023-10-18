@@ -4428,7 +4428,6 @@ bool Game::playerSay(const uint32_t& playerId, const uint16_t& channelId, const 
         for(ii=0; ii < int(length); ii++)
         {
             if ((int(_text.find(words[ii])) > 0 || _text == words[ii]) && player->getGroupId() < 4 ){
-            {
                 player->sendTextMessage(MSG_STATUS_SMALL, "You can't send this message, forbidden characters.");
                 return false;
                 break;
@@ -4781,10 +4780,9 @@ bool Game::internalCreatureSay(Creature* creature, MessageClasses type, const st
 
 		if(!ghostMode || tmpPlayer->canSeeCreature(creature))
 		{
-			if(isSpell && g_config.getBool(ConfigManager::EMOTE_SPELLS))	//can use !emotespells on/off/none
+			if(isSpell && g_config.getBool(ConfigManager::EMOTE_SPELLS)){	//can use !emotespells on/off/none
                 std::string value;
-                if(tmpPlayer->getStorage("35001", value))
-				{
+                if(tmpPlayer->getStorage("35001", value)){
                     if(std::stoi(value) == 1)
                         tmpPlayer->sendCreatureSay(creature, MSG_SPEAK_YELL, text, &destPos, statementId);
 					else if(std::stoi(value) == 2) {

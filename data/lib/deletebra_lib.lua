@@ -571,3 +571,58 @@ end
 function removeExclusivePoints(cid, count)
 	return db.query("UPDATE `accounts` SET `exclusive_coin` = '".. getExclusiveCoins(cid) - count .."' WHERE `name` ='"..getPlayerAccount(cid).."'")
 end
+
+function giveRewardTable(cid, tableReward, parcelitem)
+	if type(tableReward) ~= "table" then
+		doPlayerSendTextMessage(cid, MESSAGE_FIRST, "Please contact administrador with message '/check giveRewardTable(cid, tableReward) reward not is a table/' ")
+		return "notTable"
+	end
+	if #tableReward < 1 then
+		return true
+	end
+	if not parcelitem then parcelitem = ITEM_PARCEL end
+	local parcel = doCreateItemEx(parcelitem)
+	for i=1, #tableReward do
+		if not isItemStackable(tableReward[i][1]) then	-- CASO //NÃO// SEJA STACKAVEL
+			if tableReward[i][2] > 1 then		-- não stackavel mas é pra add mais que 1
+				for j=1, tableReward[i][2] do		-- For só pra add varios items não stackaveis
+					local itemCreated = doCreateItemEx(tableReward[i][1], 1)
+					doAddContainerItemEx(parcel, itemCreated)
+				end
+			else
+				local itemCreated = doCreateItemEx(tableReward[i][1], 1)
+					doAddContainerItemEx(parcel, itemCreated)
+			end
+		else			-- CASO O ITEM SEJA STACKAVEL
+			local itemCreated = 0
+			if tableReward[i][2] > 100 then
+				local flagCem = tableReward[i][2]
+				while flagCem > 0 do
+					itemCreated = doCreateItemEx(tableReward[i][1], flagCem >= 100 and 100 or flagCem)
+					doAddContainerItemEx(parcel, itemCreated)
+					flagCem = flagCem - 100
+				end
+			else
+				itemCreated = doCreateItemEx(tableReward[i][1], tableReward[i][2])
+				doAddContainerItemEx(parcel, itemCreated)
+			end
+		end
+	end
+
+	return doPlayerAddItemEx(cid, parcel, true) == RETURNVALUE_NOERROR
+end
+
+function getPlayerWeaponHand(cid)
+	if isCreature(cid) and isPlayer(cid) then
+		local esquerda = getPlayerSlotItem(cid, CONST_SLOT_LEFT)
+		if isWeapon(esquerda.uid) and not isShield(esquerda.uid) then
+			return esquerda
+		else
+			local direita = getPlayerSlotItem(cid, CONST_SLOT_RIGHT)
+			if isWeapon(direita.uid) and not isShield(direita.uid) then
+				return direita
+			end
+		end
+	end
+	return 0
+end

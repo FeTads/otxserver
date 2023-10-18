@@ -343,6 +343,7 @@ void Party::updateSharedExperience()
 	if (g_config.getBool(ConfigManager::PARTY_VOCATION_MULT))
 		updateExperienceMult();
 
+	updateExperienceMult();
 	sharedExpEnabled = result;
 	updateAllIcons();
 }
@@ -360,7 +361,7 @@ bool Party::setSharedExperience(Player* player, bool _sharedExpActive)
 	{
 		sharedExpEnabled = canEnableSharedExperience();
 		if(sharedExpEnabled)
-			leader->sendTextMessage(MSG_PARTY_MANAGEMENT, "Shared Experience is now active.\n(!party)");
+			leader->sendTextMessage(MSG_PARTY_MANAGEMENT, "Shared Experience is now active.");
 		else
 			leader->sendTextMessage(MSG_PARTY_MANAGEMENT, "Shared Experience has been activated.\n*Bonus Party*: Actived!");
 	}
@@ -374,19 +375,25 @@ bool Party::setSharedExperience(Player* player, bool _sharedExpActive)
 void Party::shareExperience(double experience, Creature* target, bool multiplied)
 {
 	double shareExperience = experience;
-	if(experience >= (double)g_config.getNumber(ConfigManager::EXTRA_PARTY_LIMIT))
-		shareExperience += (experience * ((double)g_config.getNumber(ConfigManager::EXTRA_PARTY_PERCENT) / 100));
-
-	shareExperience /= memberList.size() + 1;
+	if(memberList.size() + 1 < 4 ){
+		shareExperience /= memberList.size() + 1;
+	}else if(memberList.size() + 1 >= 4 ){
+		shareExperience = (shareExperience / ((memberList.size() + 1) * 0.5));		//fix downgrade with 5+ players in party shared
+	}
+	
 	double tmpExperience = shareExperience * currentExpMultiplier; //we need this, as onGainSharedExperience increases the value
 
 	leader->onGainSharedExperience(tmpExperience, target, multiplied);
 	for(PlayerVector::iterator it = memberList.begin(); it != memberList.end(); ++it)
 	{
-		tmpExperience = shareExperience * currentExpMultiplier;
-		(*it)->onGainSharedExperience(tmpExperience, target, multiplied);
+		if((*it)->getZone() != ZONE_PROTECTION){
+			tmpExperience = shareExperience * currentExpMultiplier;
+			(*it)->onGainSharedExperience(tmpExperience, target, multiplied);
+		}
 	}
+	
 }
+
 
 bool Party::canUseSharedExperience(const Player* player, uint32_t highestLevel/* = 0*/) const
 {
@@ -401,6 +408,10 @@ bool Party::canUseSharedExperience(const Player* player, uint32_t highestLevel/*
 			if((*it)->getLevel() > highestLevel)
 				highestLevel = (*it)->getLevel();
 		}
+	}
+	
+	if(player->getZone() == ZONE_PROTECTION){		//fix pz zone don't use shared
+		return false;
 	}
 
 	if(player->getLevel() < (uint32_t)std::ceil((double)highestLevel * g_config.getDouble(

@@ -2,6 +2,8 @@
 	//17/10
 	-- fixed house protect and enable by talkaction
 	-- fixed login delay in combat.cpp
+	
+	-- added quest all in one action .lua
 
 	// 15/10
 	- Added Reduce Skill Loss

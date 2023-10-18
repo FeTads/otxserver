@@ -344,7 +344,7 @@
 	allowChangeOutfit = true
 	allowChangeColors = true
 	allowChangeAddons = true
-	addonsOnlyPremium = true
+	addonsOnlyPremium = false
 
 	-- Ghost mode
 	ghostModeInvisibleEffect = false
@@ -416,7 +416,7 @@
 	experienceShareLevelDifference = 2 / 3
 	extraPartyExperienceLimit = 20
 	extraPartyExperiencePercent = 5
-	experienceShareActivity = 30 * 1000
+	experienceShareActivity = 30 * 1000		--//time exp shared be actived without fighting
 
 	-- Global save
 	globalSaveEnabled = false

@@ -1624,7 +1624,7 @@ void Player::onChangeZone(ZoneType_t zone)
 	}
 	else
 	{
-		//fix party system not used in PZ
+		//Fix party system, reactivates out the PZ
 		if(isPartner(this)){
 			party->updateExperienceMult();
 			party->canUseSharedExperience(this);

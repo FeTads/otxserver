@@ -15,6 +15,9 @@
 
 # Build results
 
+sources/objects/
+**/theotxserver/
+
 [Dd]ebug/
 [Rr]elease/
 x64/

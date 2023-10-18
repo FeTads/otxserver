@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <actions>
 
+
+	<!-- quest all in one by feetads -->
+	<action actionid="55555" event="script" value="questAllInOne.lua"/>
+
 	<action itemid="7735" script="spellwand.lua"/>
 
 	<!-- Default script, responsible for destroyItem -->
