@@ -426,8 +426,11 @@ bool IOLoginData::loadPlayer(Player* player, const std::string& name, bool preLo
 	<< "`posz`, `cap`, `lastlogin`, `lastlogout`, `lastip`, `conditions`, `skull`, `skulltime`, `guildnick`, "
 	<< "`rank_id`, `town_id`, `balance`, `stamina`, `direction`, `loss_experience`, `loss_mana`, `loss_skills`, "
 	<< "`loss_containers`, `loss_items`, `marriage`, `promotion`, `description`, `offlinetraining_time`, `offlinetraining_skill`, "
-	<< "`save` FROM `players` WHERE "
-	<< "`name` " << db->getStringComparer() << db->escapeString(name) << " AND `deleted` = 0 LIMIT 1";
+	<< "`save`";
+	if(g_config.getBool(ConfigManager::RESET_SYSTEM_ENABLE))
+		query <<  ", `reset`";
+	query << ", FROM `players` WHERE "
+		<< "`name` " << db->getStringComparer() << db->escapeString(name) << " AND `deleted` = 0 LIMIT 1";
 
 	DBResult* result;
 	if(!(result = db->storeQuery(query.str())))
@@ -471,6 +474,9 @@ bool IOLoginData::loadPlayer(Player* player, const std::string& name, bool preLo
 		player->setDirection((Direction)result->getDataInt("direction"));
 
 	player->level = std::max((uint32_t)1, (uint32_t)result->getDataInt("level"));
+	if(g_config.getBool(ConfigManager::RESET_SYSTEM_ENABLE))
+		player->reset = std::max((uint32_t)0, (uint32_t)result->getDataInt("reset"));	//reset system
+	
 	uint64_t currExpCount = Player::getExpForLevel(player->level), nextExpCount = Player::getExpForLevel(
 		player->level + 1), experience = (uint64_t)result->getDataLong("experience");
 	if(experience < currExpCount || experience > nextExpCount)
@@ -942,6 +948,8 @@ bool IOLoginData::savePlayer(Player* player, bool preSave/* = true*/, bool shall
 	query << "`sex` = " << player->sex << ", ";
 	query << "`balance` = " << player->balance << ", ";
 	query << "`stamina` = " << player->getStamina() << ", ";
+	if(g_config.getBool(ConfigManager::RESET_SYSTEM_ENABLE))
+		query << "`reset` = " << player->reset << ", "; // reset system
 
 	Skulls_t skull = SKULL_RED;
 	if(g_config.getBool(ConfigManager::USE_BLACK_SKULL))

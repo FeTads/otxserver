@@ -41,11 +41,10 @@
 
 	<!-- Players -->
 		<talkaction words="/autoloot;!autoloot" event="function" value="autoloot"/>	<!-- system by naze and edited by feetads -->
-<<<<<<< HEAD
 		<talkaction words="!emotespells;!emotespell;/emotespells;/emotespell" event="script" value="emotespells/emotespells.lua"/>	<!-- use emote spells -->
 		<talkaction words="/houseprotect;!houseprotect" event="function" value="houseprotect"/> <!-- house protect system -->
-=======
->>>>>>> 1a498d98c84dc3ed0fcbbdefa03cd9cbb37c4d38
+		<talkaction words="!reset;!resetar;/reset;/resetar" script="resetsystem/reset_system.lua"/>	<!-- reset system edited by feetads -->
+		<talkaction words="/resetcheck;!resetcheck;/resetinfo;!resetinfo"  event="script" value="resetsystem/resetcheck.lua"/> <!-- reset system edited by feetads -->
 	
 	<talkaction access="0-4" words="!frags;/frags" event="script" value="frags.lua"/>
 	<talkaction access="0-4" words="!online;/online" event="script" value="online.lua"/>

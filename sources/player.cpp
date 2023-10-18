@@ -60,6 +60,10 @@ Player::Player(const std::string& _name, ProtocolGame_ptr p):
 {
 	if(client->getOwner())
 		p->setPlayer(this);
+	
+	// reset system
+	damageMultiplier = 1.0f;
+	reset = 0;
 
 	pvpBlessing = pzLocked = isConnecting = addAttackSkillPoint = requestedOutfit = outfitAttributes = sentChat = showLoot = false;
 	saving = true;

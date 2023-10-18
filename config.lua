@@ -30,7 +30,10 @@
 	lifeAndManaInPercentual = false
 	
 	--use !emotespells on/off/none
-	emoteSpells = true				
+	emoteSpells = true		
+	
+	-- reset system
+	resetSystemEnable = true
 
 	-- MySql
 	sqlType = "mysql"

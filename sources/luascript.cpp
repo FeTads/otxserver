@@ -2312,6 +2312,12 @@ void LuaInterface::registerFunctions()
 
 	//getCreatureNoMove(cid)
 	lua_register(m_luaState, "getCreatureNoMove", LuaInterface::luaGetCreatureNoMove);
+	
+	// reset system
+	lua_register(m_luaState, "getPlayerResets", LuaInterface::luaGetPlayerResets);
+	lua_register(m_luaState, "setPlayerResets", LuaInterface::luaSetPlayerResets);
+	lua_register(m_luaState, "getPlayerDamageMultiplier", LuaInterface::luaGetPlayerDamageMultiplier);
+	lua_register(m_luaState, "setPlayerDamageMultiplier", LuaInterface::luaSetPlayerDamageMultiplier);
 
 	//doCreatureSetNoMove(cid, block)
 	lua_register(m_luaState, "doCreatureSetNoMove", LuaInterface::luaDoCreatureSetNoMove);
@@ -8904,6 +8910,70 @@ int32_t LuaInterface::luaGetCreatureName(lua_State* L)
 		lua_pushboolean(L, false);
 	}
 
+	return 1;
+}
+
+int32_t LuaInterface::luaGetPlayerResets(lua_State* L)
+{
+	//getPlayerResets(cid)
+	Player* player = getEnv()->getPlayerByUID(popNumber(L));
+	if(player)
+	{
+		lua_pushnumber(L, player->getReset());
+		return 1;
+	}
+
+	errorEx(getError(LUA_ERROR_PLAYER_NOT_FOUND));
+	lua_pushnil(L);
+	return 1;
+}
+
+int32_t LuaInterface::luaSetPlayerResets(lua_State* L)
+{
+	//setPlayerResets(cid, value)
+	uint32_t value = static_cast<uint32_t>(popNumber(L));
+	Player* player = getEnv()->getPlayerByUID(popNumber(L));
+	if(player)
+	{
+		player->setReset(value);
+		lua_pushboolean(L, true);
+		return 1;
+	}
+
+	errorEx(getError(LUA_ERROR_PLAYER_NOT_FOUND));
+	lua_pushnil(L);
+	return 1;
+}
+
+int32_t LuaInterface::luaGetPlayerDamageMultiplier(lua_State* L)
+{
+	//getPlayerDamageMultiplier(cid)
+	Player* player = getEnv()->getPlayerByUID(static_cast<uint32_t>(popNumber(L)));
+	if(player)
+	{
+		lua_pushnumber(L, player->getDamageMultiplier());
+		return 1;
+	}
+
+	errorEx(getError(LUA_ERROR_PLAYER_NOT_FOUND));
+	lua_pushnil(L);
+	return 1;
+}
+
+int32_t LuaInterface::luaSetPlayerDamageMultiplier(lua_State* L)
+{
+	//setPlayerDamageMultiplier(cid, multiplier)
+	float multiplier = popFloatNumber(L);
+	Player* player = getEnv()->getPlayerByUID(static_cast<uint32_t>(popNumber(L)));
+	if(player)
+	{
+		player->setDamageMultiplier(multiplier);
+		lua_pushboolean(L, true);
+		return 1;
+	}
+
+	errorEx(getError(LUA_ERROR_PLAYER_NOT_FOUND));
+	lua_pushnil(L);
 	return 1;
 }
 

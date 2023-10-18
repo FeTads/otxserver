@@ -129,7 +129,7 @@ struct DeathLessThan
 typedef std::vector<DeathEntry> DeathList;
 typedef std::list<CreatureEvent*> CreatureEventList;
 typedef std::list<Condition*> ConditionList;
-typedef std::map<std::string, std::string> StorageMap;
+typedef std::unordered_map<std::string, std::string> StorageMap;
 
 class Map;
 class Tile;
@@ -328,9 +328,9 @@ class Creature : public AutoId, virtual public Thing
 		virtual bool isAccountManager() const {return false;}
 
 		virtual void changeHealth(int32_t healthChange);
-		void changeMaxHealth(uint32_t healthChange) {healthMax = healthChange;}
+		void changeMaxHealth(int32_t healthChange);
 		virtual void changeMana(int32_t manaChange);
-		void changeMaxMana(uint32_t manaChange) {manaMax = manaChange;}
+		void changeMaxMana(int32_t manaChange);
 
 		virtual bool getStorage(const std::string& key, std::string& value) const;
 		virtual bool setStorage(const std::string& key, const std::string& value);

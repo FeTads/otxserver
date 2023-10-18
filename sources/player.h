@@ -299,6 +299,12 @@ class Player : public Creature, public Cylinder
 
 		uint32_t getExtraAttackSpeed() const {return extraAttackSpeed;}
 		void setPlayerExtraAttackSpeed(uint32_t speed);
+		
+		// reset system
+		uint32_t getReset() const {return reset;}
+		void setReset(uint32_t value) {reset = value;}
+		float getDamageMultiplier() const {return damageMultiplier;}
+		void setDamageMultiplier(float multiplier) {damageMultiplier = multiplier;}
 
 		bool isPremium() const;
 		int32_t getPremiumDays() const {return premiumDays;}
@@ -944,6 +950,7 @@ class Player : public Creature, public Cylinder
 		uint32_t accountId;
 		uint32_t lastIP;
 		uint32_t level;
+		uint32_t reset;
 		uint32_t levelPercent;
 		uint32_t magLevel;
 		uint32_t magLevelPercent;
@@ -981,6 +988,8 @@ class Player : public Creature, public Cylinder
 		double inventoryWeight;
 		double capacity;
 		char managerChar[100];
+		
+		float damageMultiplier;
 
 		std::string managerString, managerString2;
 		std::string account, password;

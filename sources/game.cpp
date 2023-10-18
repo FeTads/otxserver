@@ -5199,6 +5199,15 @@ bool Game::combatChangeHealth(const CombatParams& params, Creature* attacker, Cr
 		int32_t elementDamage = 0;
 		if(params.element.damage && params.element.type != COMBAT_NONE)
 			elementDamage = -params.element.damage;
+		
+		// Reset System
+		Player* attackerPlayer = attacker ? attacker->getPlayer() : NULL;
+		if(attackerPlayer && g_config.getBool(ConfigManager::RESET_SYSTEM_ENABLE))
+		{
+			float dmgMultiplier = attackerPlayer->getDamageMultiplier();
+			healthChange *= dmgMultiplier;
+			elementDamage *= dmgMultiplier;
+		}
 
 		int32_t damage = -healthChange;
 		if(damage > 0)

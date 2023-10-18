@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <creaturescripts>
-
+	
+	<!-- RESET SYSTEM -->
+	<event type="login" name="RSLogin" script="reset_system/reset_system.lua"/>
+	<event type="advance" name="RSAdvance" script="reset_system/reset_system.lua"/>
+	
 	<!-- custom protect house -->
 	<event type="moveitem" name="houseProtectTrash" event="script" value="houseProtectTrash.lua"/>
 	

@@ -16,7 +16,9 @@
 # Build results
 
 sources/objects/
-**/theotxserver/
+**/theotxserver
+theotxserver
+sources/theotxserver
 
 [Dd]ebug/
 [Rr]elease/

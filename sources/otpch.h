@@ -24,8 +24,9 @@
 #define __OTPCH__
 
 #ifdef _MSC_VER
-#define strncasecmp _strnicmp
-#define strcasecmp _stricmp
+	#define strncasecmp _strnicmp
+	#define strcasecmp _stricmp
+	#pragma warning(disable:26812) // prefer 'enum class' over 'enum'
 #endif
 
 

@@ -42,6 +42,7 @@ extern "C"
 #include "database.h"
 #include "position.h"
 
+#include <unordered_map>
 enum LuaVariantType_t
 {
 	VARIANT_NONE = 0,
@@ -73,7 +74,7 @@ struct LuaVariant
 	uint32_t number;
 };
 
-typedef std::map<std::string, std::string> StorageMap;
+typedef std::unordered_map<std::string, std::string> StorageMap;
 
 class Game;
 class Thing;
@@ -667,6 +668,13 @@ class LuaInterface
 		static int32_t luaGetPlayerPremiumDays(lua_State* L);
 		static int32_t luaDoPlayerAddPremiumDays(lua_State* L);
 		static int32_t luaGetCreatureNoMove(lua_State* L);
+		
+		// reset system
+		static int32_t luaGetPlayerResets(lua_State* L);
+		static int32_t luaSetPlayerResets(lua_State* L);
+		static int32_t luaGetPlayerDamageMultiplier(lua_State* L);
+		static int32_t luaSetPlayerDamageMultiplier(lua_State* L);
+		
 		static int32_t luaDoCreatureSetNoMove(lua_State* L);
 		static int32_t luaGetTownId(lua_State* L);
 		static int32_t luaGetTownName(lua_State* L);

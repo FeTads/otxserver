@@ -912,17 +912,33 @@ void Creature::changeMana(int32_t manaChange)
 		mana = std::max((int32_t)0, mana + manaChange);
 }
 
+// Reset System
+void Creature::changeMaxMana(int32_t manaChange)
+{
+	manaMax = manaChange;
+	if(mana > manaMax)
+		mana = manaMax;
+}
+
+void Creature::changeMaxHealth(int32_t healthChange)
+{
+	healthMax = healthChange;
+	if(health > healthMax)
+	{
+		health = healthMax;
+		g_game.addCreatureHealth(this);
+	}
+}
+
 bool Creature::getStorage(const std::string& key, std::string& value) const
 {
-	StorageMap::const_iterator it = storageMap.find(key);
-	if(it != storageMap.end())
-	{
-		value = it->second;
-		return true;
+	auto it = storageMap.find(key);
+	if(it == storageMap.end()) {
+		value = "-1";
+		return false;
 	}
-
-	value = "-1";
-	return false;
+	value = it->second;
+	return true;
 }
 
 bool Creature::setStorage(const std::string& key, const std::string& value)
