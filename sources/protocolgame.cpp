@@ -3016,8 +3016,10 @@ void ProtocolGame::AddPlayerStatsNew(OutputMessage_ptr msg)
 
 void ProtocolGame::AddPlayerStats(OutputMessage_ptr msg)
 {
-	if(g_config.getBool(ConfigManager::LIFE_IN_PERCENTUAL))
+	if(g_config.getBool(ConfigManager::LIFE_IN_PERCENTUAL)){
 		AddPlayerStatsNew(msg);
+		return;
+	}
 	
 	msg->addByte(0xA0);
 	msg->add<uint16_t>(player->getHealth());

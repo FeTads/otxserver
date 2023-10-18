@@ -121,9 +121,9 @@ bool ConfigManager::load()
 	m_confNumber[AUTOLOOT_MAXITEM] = getGlobalNumber("AutoLoot_MaxItem", 5); 					    //autoloot by naze#3578
 	m_confNumber[AUTOLOOT_MAXPREMIUM] = getGlobalNumber("AutoLoot_MaxItemPremium", 5); //this edit by feetads
 	m_confNumber[AUTOLOOT_MAXFREE] = getGlobalNumber("AutoLoot_MaxItemFree", 3);		//this edit by feetads	
-	m_confBool[AUTOLOOT_ENABLE_SYSTEM] = getGlobalBool("Autoloot_enabled", true);	//this edit by feetads
-	m_confBool[CAST_EXP_ENABLED] = getGlobalBool("expInCast", true);	//this edit by feetads	
-	m_confDouble[CAST_EXP_PERCENT] = getGlobalDouble("expPercentIncast", 5.0);
+	m_confBool[AUTOLOOT_ENABLE_SYSTEM] = getGlobalBool("Autoloot_enabled", false);	//this edit by feetads
+	m_confBool[CAST_EXP_ENABLED] = getGlobalBool("expInCast", false);	//this edit by feetads	
+	m_confNumber[CAST_EXP_PERCENT] = getGlobalNumber("expPercentIncast", 5.0);
 	m_confBool[LIFE_IN_PERCENTUAL] = getGlobalBool("lifeAndManaInPercentual", false);	//this edit by feetads	
 	m_confBool[MAXIP_USECONECT] = getGlobalBool("UseMaxIpConnect", false);	//this edit by feetads
 	m_confBool[RESET_SYSTEM_ENABLE] = getGlobalBool("resetSystemEnable", false);	//this edit by feetads	

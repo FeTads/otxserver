@@ -179,6 +179,7 @@ class ConfigManager
 			NAME_REPORT_TYPE,
 			HOUSE_CLEAN_OLD,
 			MAX_IP_CONNECTIONS, // by Swatt'
+			CAST_EXP_PERCENT,
 			MANAGER_CONNECTIONS_LIMIT,
 			ADMIN_CONNECTIONS_LIMIT,
 			VIPLIST_DEFAULT_LIMIT,
@@ -208,7 +209,6 @@ class ConfigManager
 
 		enum double_config_t
 		{
-			CAST_EXP_PERCENT,
 			RATE_EXPERIENCE,
 			RATE_SKILL,
 			RATE_SKILL_OFFLINE,
@@ -238,11 +238,6 @@ class ConfigManager
 
 		enum bool_config_t
 		{
-			AUTOLOOT_ENABLE_SYSTEM, //use autoloot, edited by feetads
-			MAXIP_USECONECT, // make by feetads
-			LIFE_IN_PERCENTUAL,
-			CAST_EXP_ENABLED,
-			RESET_SYSTEM_ENABLE,
 			GLOBALSAVE_ENABLED = 0,
 			SCRIPT_SYSTEM,
 			MONSTER_ATTACK_MONSTER,
@@ -349,6 +344,11 @@ class ConfigManager
 			ALLOW_INDEPENDENT_PUSH,
 			DIAGONAL_PUSH,
 			PZLOCK_ON_ATTACK_SKULLED_PLAYERS,
+			AUTOLOOT_ENABLE_SYSTEM,
+			MAXIP_USECONECT,
+			LIFE_IN_PERCENTUAL,
+			CAST_EXP_ENABLED,
+			RESET_SYSTEM_ENABLE,
 			PUSH_IN_PZ,
 			LAST_BOOL_CONFIG /* this must be the last one */
 		};

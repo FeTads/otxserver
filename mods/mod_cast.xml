@@ -55,9 +55,9 @@
 					doPlayerOpenPrivateChannel(cid)
 					db.executeQuery("UPDATE `players` SET `broadcasting` = 1 WHERE `id` = " .. getPlayerGUID(cid))
 					if data.password == "" then -- Check cast Password
-						doPlayerSendTextMessage(cid, MESSAGE_STATUS_CONSOLE_BLUE, "You have enabled your cast stream and are getting +15% monsters experience.")
+						doPlayerSendTextMessage(cid, MESSAGE_STATUS_CONSOLE_BLUE, "You have enabled your cast stream and are getting +"..getConfigValue('expPercentIncast').."% monsters experience.")
 					else
-						doPlayerSendTextMessage(cid, MESSAGE_STATUS_CONSOLE_BLUE, "You have enabled your cast stream. Remove the password to gain +15% monsters experience.")
+						doPlayerSendTextMessage(cid, MESSAGE_STATUS_CONSOLE_BLUE, "You have enabled your cast stream. Remove the password to gain +"..getConfigValue('expPercentIncast').."% monsters experience.")
 					end
 					setPlayerStorageValue(cid, 45510, os.time()+5)
 				else
@@ -255,7 +255,7 @@
 						data.password = ""
 						doPlayerSetSpectators(cid, data)
 						if data.broadcast then -- Check Cast On and password
-							doPlayerSendTextMessage(cid, MESSAGE_STATUS_CONSOLE_BLUE, "You have removed password for your cast stream and getting +15% monsters experience.")
+							doPlayerSendTextMessage(cid, MESSAGE_STATUS_CONSOLE_BLUE, "You have removed password for your cast stream and getting +"..getConfigValue('expPercentIncast').."% monsters experience.")
 						else
 							doPlayerSendTextMessage(cid, MESSAGE_STATUS_CONSOLE_BLUE, "You have removed password for your cast stream.")
 						end
@@ -266,7 +266,7 @@
 						data.password = string.trim(t[2])
 						doPlayerSetSpectators(cid, data)
 						if data.broadcast then
-							doPlayerSendTextMessage(cid, MESSAGE_STATUS_CONSOLE_BLUE, "You have set new password for your stream. Remove the password to gain +15% monsters experience.")
+							doPlayerSendTextMessage(cid, MESSAGE_STATUS_CONSOLE_BLUE, "You have set new password for your stream. Remove the password to gain +"..getConfigValue('expPercentIncast').."% monsters experience.")
 						else
 							doPlayerSendTextMessage(cid, MESSAGE_STATUS_CONSOLE_BLUE, "You have set new password for your stream.")
 						end

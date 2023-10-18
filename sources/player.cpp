@@ -4366,9 +4366,9 @@ bool Player::gainExperience(double& gainExp, Creature* target)
 	
 	//use cast exp, make by feetads
 	if(g_config.getBool(ConfigManager::CAST_EXP_ENABLED)){
-		if((client->isBroadcasting() /*|| isCastOn()*/) && client->getPassword().empty()){
-			double extraExpCast = g_config.getBool(ConfigManager::CAST_EXP_PERCENT);
-			gainExp *= 1 + ((extraExpCast && extraExpCast > 0) ? (extraExpCast/100) : 0);	
+		if(client->isBroadcasting() && client->getPassword().empty()){
+			uint32_t extraExpCast = g_config.getNumber(ConfigManager::CAST_EXP_PERCENT);
+			gainExp *= 1 + ((extraExpCast && extraExpCast > 0) ? (extraExpCast/100.0) : 0);	
 		}
 	}
 	//soul regeneration

@@ -80,7 +80,7 @@ function onStartup()
 	db.executeQuery("DELETE FROM `guild_wars` WHERE `status` = 0 AND `begin` < " .. (time - 2 * 86400) .. ";")
 	db.executeQuery("UPDATE `players` SET `broadcasting` = 0")
 
-	--doSetGameState(GAMESTATE_NORMAL)
+	doSetGameState(GAMESTATE_NORMAL)
 
 	return true
 end

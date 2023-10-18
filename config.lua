@@ -11,9 +11,11 @@
 	loginMessage = "Bem vindo ao OTXSERVER!"
 	displayGamemastersWithOnlineCommand = false
 	
+	-- use max connection in same IP
 	UseMaxIpConnect = true
 	MaxIpConnections = 10
 	
+	-- use autoloot system
 	Autoloot_enabled = true
 	AutoLoot_BlockIDs = "" 
 	AutoLoot_MoneyIDs = "2148;2152;2160;9971" 
@@ -22,10 +24,12 @@
 	AutoLoot_MaxItemFree = 5
 	
 	expInCast = true
-	expPercentIncast = 5.0
+	expPercentIncast = 5
 	
-	lifeAndManaInPercentual = true
+	-- use life/mana in percentual 100/100
+	lifeAndManaInPercentual = false
 	
+	-- use reset system
 	resetSystemEnable = true
 
 	sqlType = "mysql"
@@ -33,7 +37,7 @@
 	sqlPort = 3306
 	sqlUser = "root"
 	sqlPass = ""
-	sqlDatabase = ""
+	sqlDatabase = "database"
 	sqlFile = "schemas/otxserver.s3db"
 	sqlKeepAlive = 0
 	mysqlReadTimeout = 15000
@@ -50,7 +54,7 @@
 	statusPort = 7171
 	loginOnlyWithLoginServer = false
 	
-	blockedVps = "google;amazon;amazon.com;oracle;azure;vultr;google.com"	--// blocked vps script
+	blockedVps = "google;amazon;amazon.com;oracle;azure;vultr;google.com"
 	permitedVps = 0
 	
 	accountManager = false
@@ -92,7 +96,6 @@
 	fragsToBanishment = 7
 	fragsSecondToBanishment = 21
 	fragsThirdToBanishment = 41
-    enableCast = "false"
 	
 	protectionLevel = 2000
 	pvpTileIgnoreLevelAndVocationProtection = true
