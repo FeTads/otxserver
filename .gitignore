@@ -20,6 +20,8 @@ sources/objects/
 theotxserver
 sources/theotxserver
 
+config-ot.lua
+
 [Dd]ebug/
 [Rr]elease/
 x64/

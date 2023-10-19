@@ -96,8 +96,8 @@ void NetworkMessage::addPosition(const Position& pos)
 void NetworkMessage::addItem(uint16_t id, uint8_t count)
 {
 	const ItemType& it = Item::items[id];
-
-	add<uint16_t>(it.clientId);
+	uint16_t spriteId = it.clientId;
+	add<uint16_t>(spriteId);
 	if (it.stackable) {
 		addByte(count);
 	} else if (it.isSplash() || it.isFluidContainer()) {
@@ -108,8 +108,8 @@ void NetworkMessage::addItem(uint16_t id, uint8_t count)
 void NetworkMessage::addItem(const Item* item)
 {
 	const ItemType& it = Item::items[item->getID()];
-
-	add<uint16_t>(it.clientId);
+	uint16_t spriteId = it.clientId;
+	add<uint16_t>(spriteId);
 	if (it.stackable) {
 		addByte(std::min<uint16_t>(0xFF, item->getItemCount()));
 	} else if (it.isSplash() || it.isFluidContainer()) {
