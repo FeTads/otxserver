@@ -13,5 +13,8 @@ Discord: FeeTads / FeeTads#0246
 added systems:<br>
 Autoloot system (enable in config.lua)<br>
 Exp cast (cast navigation + exp enable in config.lua)<br>
+reset system (enable in config.lua +2%exp each reset)<br>
+life and mana in percent 100/100 can be change normal in config.lua<br>
+max connections in same IP (send only 4 for otservlist)<br>
 Fixed bugs get in otx2<br>
 Added new features<br>
