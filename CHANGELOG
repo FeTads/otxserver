@@ -2,8 +2,12 @@
 	//17/10
 	-- fixed house protect and enable by talkaction
 	-- fixed login delay in combat.cpp
-	
 	-- added quest all in one action .lua
+	
+	-- life and mana in percentual by config.lua
+	-- fixed configManager issues
+	
+	-- added script elementalWand.lua on weapons
 
 	// 15/10
 	- Added Reduce Skill Loss
