@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <creaturescripts>
 	
+	<!-- monster boost login -->
+	<event type="login" name="MBlogin" script="monsterBoost.lua"/>
+	<event type="kill" name="MBKill" event="script" value="monsterBoost.lua"/>
+	
 	<!-- RESET SYSTEM -->
 	<event type="login" name="RSLogin" script="reset_system/reset_system.lua"/>
 	<event type="advance" name="RSAdvance" script="reset_system/reset_system.lua"/>

@@ -1,5 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <globalevents>
+
+	<!-- Boosted Monsters -->
+	<globalevent name="monsterBoostStart" type="startup" event="script" value="monsterBoost/monsterBoost.lua"/>
+	<globalevent name="monsterBoostThink" interval="3000" event="script" value="monsterBoost/monsterBoost.lua" />
+
 	<!-- Server Events -->
 	<globalevent name="save" interval="900000" event="script" value="save.lua"/>
 	<globalevent name="clean" interval="7200000" event="script" value="clean.lua"/>
