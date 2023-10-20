@@ -45,6 +45,8 @@
 		<talkaction words="/houseprotect;!houseprotect" event="function" value="houseprotect"/> <!-- house protect system -->
 		<talkaction words="!reset;!resetar;/reset;/resetar" script="resetsystem/reset_system.lua"/>	<!-- reset system edited by feetads -->
 		<talkaction words="/resetcheck;!resetcheck;/resetinfo;!resetinfo"  event="script" value="resetsystem/resetcheck.lua"/> <!-- reset system edited by feetads -->
+	<talkaction words="/mw;!mw"  event="script" value="mwchange.lua"/>
+	
 	
 	<talkaction access="0-4" words="!frags;/frags" event="script" value="frags.lua"/>
 	<talkaction access="0-4" words="!online;/online" event="script" value="online.lua"/>
