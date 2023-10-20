@@ -127,6 +127,11 @@ bool ConfigManager::load()
 	m_confBool[LIFE_IN_PERCENTUAL] = getGlobalBool("lifeAndManaInPercentual", false);	//this edit by feetads	
 	m_confBool[MAXIP_USECONECT] = getGlobalBool("UseMaxIpConnect", false);	//this edit by feetads
 	m_confBool[RESET_SYSTEM_ENABLE] = getGlobalBool("resetSystemEnable", false);	//this edit by feetads	
+	
+	m_confNumber[NEWSPRITE_TO_MW] = getGlobalNumber("newSpriteIdMW", 0);
+	m_confNumber[MWSPRITE_TO_REPLACE] = getGlobalNumber("mwSpriteId", 10180);
+	m_confBool[MW_REPLACE_ENABLE] = getGlobalBool("useMwReplaceSystem", false);
+	
 	m_confString[MAP_AUTHOR] = getGlobalString("mapAuthor", "Unknown");
 	m_confNumber[LOGIN_TRIES] = getGlobalNumber("loginTries", 3);
 	m_confNumber[RETRY_TIMEOUT] = getGlobalNumber("retryTimeout", 30000);

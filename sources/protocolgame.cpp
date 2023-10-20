@@ -913,7 +913,7 @@ void ProtocolGame::GetTileDescription(const Tile* tile, OutputMessage_ptr msg)
 	int32_t count = 0;
 	if(tile->ground)
 	{
-		msg->addItem(tile->ground);
+		msg->addItem(tile->ground, player);
 		++count;
 	}
 
@@ -924,7 +924,7 @@ void ProtocolGame::GetTileDescription(const Tile* tile, OutputMessage_ptr msg)
 	if(items)
 	{
 		for(it = items->getBeginTopItem(); (it != items->getEndTopItem() && count < 10); ++it, ++count)
-			msg->addItem(*it);
+			msg->addItem(*it, player);
 	}
 
 	if(creatures)
@@ -946,7 +946,7 @@ void ProtocolGame::GetTileDescription(const Tile* tile, OutputMessage_ptr msg)
 	if(items)
 	{
 		for(it = items->getBeginDownItem(); (it != items->getEndDownItem() && count < 10); ++it, ++count)
-			msg->addItem(*it);
+			msg->addItem(*it, player);
 	}
 }
 
@@ -1875,7 +1875,7 @@ void ProtocolGame::sendContainer(uint32_t cid, const Container* container, bool 
 	msg->addByte(0x6E);
 	msg->addByte(cid);
 
-	msg->addItem(container);
+	msg->addItem(container, player);
 	msg->addString(container->getName());
 	msg->addByte(container->capacity());
 
@@ -1884,7 +1884,7 @@ void ProtocolGame::sendContainer(uint32_t cid, const Container* container, bool 
 
 	ItemList::const_iterator cit = container->getItems();
 	for(uint32_t i = 0; cit != container->getEnd() && i < 255; ++cit, ++i)
-		msg->addItem(*cit);
+		msg->addItem(*cit, player);
 }
 
 void ProtocolGame::sendShop(Npc*, const ShopInfoList& shop)
@@ -1982,7 +1982,7 @@ void ProtocolGame::sendGoods(const ShopInfoList& shop)
 	std::map<uint32_t, uint32_t>::const_iterator it = goodsMap.begin();
 	for(uint32_t i = 0; it != goodsMap.end() && i < 255; ++it, ++i)
 	{
-		msg->addItemId(it->first);
+		msg->addItemId(it->first, player);
 		msg->addByte(std::min(it->second, (uint32_t)255));
 	}
 }
@@ -2052,16 +2052,16 @@ void ProtocolGame::sendTradeItemRequest(const Player* _player, const Item* item,
 	if (const Container* container = item->getContainer())
 	{
 		msg->addByte(std::min(255U, container->getItemHoldingCount() + 1));
-		msg->addItem(item);
+		msg->addItem(item, player);
 
 		uint16_t i = 0;
 		for (ContainerIterator it = container->begin(); i < 255 && it != container->end(); ++it, ++i)
-			msg->addItem(*it);
+			msg->addItem(*it, player);
 	}
 	else
 	{
 		msg->addByte(1);
-		msg->addItem(item);
+		msg->addItem(item, player);
 	}
 }
 
@@ -2664,7 +2664,7 @@ void ProtocolGame::sendTextWindow(uint32_t windowTextId, Item* item, uint16_t ma
 	TRACK_MESSAGE(msg);
 	msg->addByte(0x96);
 	msg->add<uint32_t>(windowTextId);
-	msg->addItem(item);
+	msg->addItem(item, player);
 	if(canWrite)
 	{
 		msg->add<uint16_t>(maxLen);
@@ -3161,7 +3161,7 @@ void ProtocolGame::AddCreatureOutfit(OutputMessage_ptr msg, const Creature* crea
 			msg->addByte(outfit.lookAddons);
 		}
 		else if(outfit.lookTypeEx)
-			msg->addItemId(outfit.lookTypeEx);
+			msg->addItemId(outfit.lookTypeEx, player);
 		else
 			msg->add<uint16_t>(outfit.lookTypeEx);
 	}
@@ -3196,7 +3196,7 @@ void ProtocolGame::AddTileItem(OutputMessage_ptr msg, const Position& pos, uint3
 	msg->addByte(0x6A);
 	msg->addPosition(pos);
 	msg->addByte(stackpos);
-	msg->addItem(item);
+	msg->addItem(item, player);
 }
 
 void ProtocolGame::AddTileCreature(OutputMessage_ptr msg, const Position& pos, uint32_t stackpos, const Creature* creature)
@@ -3220,7 +3220,7 @@ void ProtocolGame::UpdateTileItem(OutputMessage_ptr msg, const Position& pos, ui
 	msg->addByte(0x6B);
 	msg->addPosition(pos);
 	msg->addByte(stackpos);
-	msg->addItem(item);
+	msg->addItem(item, player);
 }
 
 void ProtocolGame::RemoveTileItem(OutputMessage_ptr msg, const Position& pos, uint32_t stackpos)
@@ -3332,7 +3332,7 @@ void ProtocolGame::AddInventoryItem(OutputMessage_ptr msg, slots_t slot, const I
 	{
 		msg->addByte(0x78);
 		msg->addByte(slot);
-		msg->addItem(item);
+		msg->addItem(item, player);
 	}
 	else
 		RemoveInventoryItem(msg, slot);
@@ -3354,7 +3354,7 @@ void ProtocolGame::AddContainerItem(OutputMessage_ptr msg, uint8_t cid, const It
 {
 	msg->addByte(0x70);
 	msg->addByte(cid);
-	msg->addItem(item);
+	msg->addItem(item, player);
 }
 
 void ProtocolGame::UpdateContainerItem(OutputMessage_ptr msg, uint8_t cid, uint8_t slot, const Item* item)
@@ -3362,7 +3362,7 @@ void ProtocolGame::UpdateContainerItem(OutputMessage_ptr msg, uint8_t cid, uint8
 	msg->addByte(0x71);
 	msg->addByte(cid);
 	msg->addByte(slot);
-	msg->addItem(item);
+	msg->addItem(item, player);
 }
 
 void ProtocolGame::RemoveContainerItem(OutputMessage_ptr msg, uint8_t cid, uint8_t slot)
