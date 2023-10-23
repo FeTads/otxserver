@@ -4346,6 +4346,15 @@ bool Player::onKilledCreature(Creature* target, DeathEntry& entry)
 
 		entry.setWar(enemy);
 	}
+	
+	if (targetPlayer){
+		CreatureEventList killEvents = getCreatureEvents(CREATURE_EVENT_NOCOUNTFRAG);
+		for (const auto &event : killEvents) {
+			if (!event->executeNoCountFragArea(this, target)) {
+				return true;
+			}
+		}
+	}
 
 	if(!entry.isJustify() || !hasCondition(CONDITION_INFIGHT))
 		return true;
