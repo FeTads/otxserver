@@ -11,10 +11,13 @@
 	loginMessage = "Bem vindo ao OTXSERVER!"
 	displayGamemastersWithOnlineCommand = false
 	
+	-- mw replace system !mw old/new
+	useMwReplaceSystem = true
+	mwSpriteId = 10181
+	newSpriteIdMW = 3642
 	-- use max connection in same IP
 	UseMaxIpConnect = true
 	MaxIpConnections = 10
-	
 	-- use autoloot system
 	Autoloot_enabled = true
 	AutoLoot_BlockIDs = "" 
@@ -22,13 +25,13 @@
 	AutoLoot_MaxItem = 5
 	AutoLoot_MaxItemPremium = 10
 	AutoLoot_MaxItemFree = 5
-	
+	-- add if enable cast without password 
 	expInCast = true
 	expPercentIncast = 5
-	
 	-- use life/mana in percentual 100/100
 	lifeAndManaInPercentual = false
-	
+	-- add frag if player kill mc / same ip
+	addFragToSameIp = false
 	-- use reset system
 	resetSystemEnable = true
 

@@ -4354,6 +4354,10 @@ bool Player::onKilledCreature(Creature* target, DeathEntry& entry)
 				return true;
 			}
 		}
+		if(!g_config.getBool(ConfigManager::ADD_FRAG_SAMEIP)){
+			if(this->getIP() == targetPlayer->getIP())
+				return true;
+		}
 	}
 
 	if(!entry.isJustify() || !hasCondition(CONDITION_INFIGHT))

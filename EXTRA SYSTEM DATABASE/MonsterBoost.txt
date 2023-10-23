@@ -1,0 +1,8 @@
+CREATE TABLE `monster_boost` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `monster` varchar(255) NOT NULL DEFAULT '0',
+  `loot` int(11) NOT NULL DEFAULT 0,
+  `exp` int(11) NOT NULL DEFAULT 0,
+  `date` timestamp NOT NULL DEFAULT current_timestamp(),
+   PRIMARY KEY (id)
+)
