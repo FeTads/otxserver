@@ -58,6 +58,7 @@ function onLogin(cid)
 		registerCreatureEvent(cid, "SkullCheck")
 	end
 
+	registerCreatureEvent(cid, "fragarea")
 	registerCreatureEvent(cid, "houseProtectTrash")
 	registerCreatureEvent(cid, "GuildEvents")
 	registerCreatureEvent(cid, "AdvanceSave")
