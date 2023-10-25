@@ -882,6 +882,44 @@ void IOLoginData::loadItems(ItemMap& itemMap, DBResult* result)
 	while(result->next());
 }
 
+bool IOLoginData::setName(Player* player, std::string newName)
+{
+	Database* db = Database::getInstance();
+	std::ostringstream query;
+
+	DBTransaction trans(db);
+	if(!trans.begin())
+		return false;
+	
+	query.str("");
+	query << "UPDATE `players` SET `name` = " << db->escapeString(newName) << " WHERE `name` = " << db->escapeString(player->getName());
+	
+	if(!db->query(query.str())){
+		return false;
+	}
+	
+	return trans.commit();
+}
+
+bool IOLoginData::deletePlayer(Player* player)
+{
+	Database* db = Database::getInstance();
+	std::ostringstream query;
+
+	DBTransaction trans(db);
+	if(!trans.begin())
+		return false;
+	
+	query.str("");
+	query << "DELETE FROM `players` WHERE `name` = " << db->escapeString(player->getName());
+	
+	if(!db->query(query.str())){
+		return false;
+	}
+	
+	return trans.commit();
+}
+
 bool IOLoginData::savePlayer(Player* player, bool preSave/* = true*/, bool shallow/* = false*/)
 {
 	if(preSave && player->health <= 0)

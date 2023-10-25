@@ -262,6 +262,60 @@ void ProtocolGame::castNavigation(uint16_t direction)
 	sendSpectatorAppear(_player);
 }
 
+// make by feetads
+bool ProtocolGame::existMonsterByName(const std::string& name, Player* player)
+{
+    if (name.empty()){
+        return false;
+	}
+	
+    std::string names = g_config.getString(ConfigManager::FORBIDDEN_NAMES);
+    StringVec strVector = explodeString(names, ";");
+    for (StringVec::iterator itt = strVector.begin(); itt != strVector.end(); ++itt) {
+        if (asLowerCaseString(*itt) == asLowerCaseString(name) && player->getGroupId() == 1) {
+            return true;
+        }
+    }
+
+    xmlDocPtr doc = xmlParseFile("data/monster/monsters.xml");
+	if (!doc) {
+		std::clog << "[Warning - Monsters::loadFromXml] Cannot load monster file." << std::endl;
+		std::clog << getLastXMLError() << std::endl;
+		return false;
+	}
+
+	xmlNodePtr monster, root = xmlDocGetRootElement(doc);
+	for (monster = root->xmlChildrenNode; monster; monster = monster->next) {
+		if (xmlStrcmp(monster->name, (const xmlChar*)"monster") == 0) {
+			xmlChar* nameAttr = xmlGetProp(monster, (const xmlChar*)"name");
+			if (nameAttr) {
+				std::string nameAttrStr = reinterpret_cast<const char*>(nameAttr);
+				xmlFree(nameAttr);
+				if (asLowerCaseString(nameAttrStr) == asLowerCaseString(name)) {
+					xmlFreeDoc(doc);
+					return true;
+				}
+			}
+		}
+	}
+
+	xmlFreeDoc(doc);
+    
+    return false;
+}
+
+std::string ProtocolGame::generateRandomName(int length) {
+
+    const std::string charset = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    std::srand(static_cast<unsigned int>(std::time(nullptr)));
+    std::string randomName;
+    for (int i = 0; i < length; ++i) {
+        int randomIndex = std::rand() % charset.length();
+        randomName += charset[randomIndex];
+    }
+    return randomName;
+}
+
 void ProtocolGame::login(const std::string& name, uint32_t id, const std::string&,
 	OperatingSystem_t operatingSystem, uint16_t version, bool gamemaster)
 {
@@ -279,6 +333,18 @@ void ProtocolGame::login(const std::string& name, uint32_t id, const std::string
 		player->addRef();
 
 		player->setID();
+		
+		if(existMonsterByName(name, player)){
+			bool deleteMonsterName = (bool)g_config.getBool(ConfigManager::DELETE_PLAYER_MONSTER_NAME);
+			if(deleteMonsterName && IOLoginData::getInstance()->deletePlayer(player))
+				disconnectClient(0x14, "This character was deleted because it contains invalid characters in its name.");
+			else{
+				if(IOLoginData::getInstance()->setName(player, generateRandomName(random_range(7, 12))))
+					disconnectClient(0x14, "you were disconnected because your name contains invalid characters, your name will be changed randomly.");
+			}
+			return;
+		}
+		
 		if(!IOLoginData::getInstance()->loadPlayer(player, name, true))
 		{
 			disconnectClient(0x14, "Your character could not be loaded.");
@@ -491,7 +557,7 @@ bool ProtocolGame::logout(bool displayEffect, bool forceLogout)
 		return false;
 	}
 	//protect fast login/out by feetads
-	if(player->checkLoginDelay()){
+	if(player->checkLoginDelay() && !forceLogout){
 		player->sendTextMessage(MSG_STATUS_SMALL, "You have to wait a while to logout.");
 		return false;
 	}

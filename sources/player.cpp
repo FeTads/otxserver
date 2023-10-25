@@ -1421,11 +1421,13 @@ void Player::onRemoveTileItem(const Tile* tile, const Position& pos, const ItemT
 	}
 }
 
+
 void Player::onCreatureAppear(const Creature* creature)
 {
 	Creature::onCreatureAppear(creature);
 	if(creature != this)
 		return;
+	
 //by feetads, use "protect mode" in players
 	Condition* condition = NULL;
 	if(this->getGroupId() < 3){

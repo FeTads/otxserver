@@ -42,6 +42,7 @@ function onLogin(cid)
 	else
 		addEvent(valid(doCreatureSay), 500, cid, "Hello, type {account} to create an account or {recover} to recover an account.", TALKTYPE_PRIVATE_NP, true, cid)
 	end
+	
 
 	if(not isPlayerGhost(cid)) then
 		doSendMagicEffect(getCreaturePosition(cid), CONST_ME_TELEPORT)

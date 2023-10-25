@@ -37,6 +37,8 @@
 	-- use max absorbAll (prevents absorb +100% / SSA + might ring)
 	useMaxAbsorbAll = true
 	maxAbsorbPercent = 80.0
+	-- delete player with monster name?
+	deletePlayersWithMonsterName = true
 
 	sqlType = "mysql"
 	sqlHost = "localhost"

@@ -137,6 +137,10 @@ bool ConfigManager::load()
 	m_confBool[USE_MAX_ABSORBALL] = getGlobalBool("useMaxAbsorbAll", false);
 	m_confDouble[MAX_ABSORB_PERCENT] = getGlobalDouble("maxAbsorbPercent", 80.0);
 	
+	m_confString[FORBIDDEN_NAMES] = getGlobalString("forbiddenNames", "gm;adm;cm;support;god;tutor");
+	
+	m_confBool[DELETE_PLAYER_MONSTER_NAME] = getGlobalBool("deletePlayersWithMonsterName", false);
+	
 	m_confString[MAP_AUTHOR] = getGlobalString("mapAuthor", "Unknown");
 	m_confNumber[LOGIN_TRIES] = getGlobalNumber("loginTries", 3);
 	m_confNumber[RETRY_TIMEOUT] = getGlobalNumber("retryTimeout", 30000);
