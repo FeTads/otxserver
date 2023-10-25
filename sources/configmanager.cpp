@@ -134,6 +134,9 @@ bool ConfigManager::load()
 	
 	m_confBool[ADD_FRAG_SAMEIP] = getGlobalBool("addFragToSameIp", false);
 	
+	m_confBool[USE_MAX_ABSORBALL] = getGlobalBool("useMaxAbsorbAll", false);
+	m_confDouble[MAX_ABSORB_PERCENT] = getGlobalDouble("maxAbsorbPercent", 80.0);
+	
 	m_confString[MAP_AUTHOR] = getGlobalString("mapAuthor", "Unknown");
 	m_confNumber[LOGIN_TRIES] = getGlobalNumber("loginTries", 3);
 	m_confNumber[RETRY_TIMEOUT] = getGlobalNumber("retryTimeout", 30000);

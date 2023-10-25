@@ -34,6 +34,9 @@
 	addFragToSameIp = false
 	-- use reset system
 	resetSystemEnable = true
+	-- use max absorbAll (prevents absorb +100% / SSA + might ring)
+	useMaxAbsorbAll = true
+	maxAbsorbPercent = 80.0
 
 	sqlType = "mysql"
 	sqlHost = "localhost"

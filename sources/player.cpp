@@ -2433,8 +2433,13 @@ BlockType_t Player::blockHit(Creature* attacker, CombatType_t combatType, int32_
 
 	if(reflect && vocation->getReflect(combatType))
 		reflected += (int32_t)std::ceil((double)(damage * vocation->getReflect(combatType)) / 100.);
-
-	damage -= blocked;
+	
+	if(g_config.getDouble(ConfigManager::USE_MAX_ABSORBALL)){
+		double maxAbsorb = (g_config.getDouble(ConfigManager::MAX_ABSORB_PERCENT) / 100.0);
+		damage -= (blocked > (damage*maxAbsorb) ? (damage*maxAbsorb) : blocked); 	//set max absorb = 80%
+	}else{
+		damage -= blocked;
+	}
 	if(damage <= 0)
 	{
 		damage = 0;

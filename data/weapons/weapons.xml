@@ -12,7 +12,7 @@
 			<vocation id="6" showInDescription="0"/>
 		</wand>
 		<!-- Hailstorm Rod -->
-		<wand id="2183" level="33" mana="13" min="55000" max="55000" type="ice" event="function" value="default">
+		<wand id="2183" level="33" mana="13" min="55" max="75" type="ice" event="function" value="default">
 			<vocation name="Druid"/>
 			<vocation id="6" showInDescription="0"/>
 		</wand>
