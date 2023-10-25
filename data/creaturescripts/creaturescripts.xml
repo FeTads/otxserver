@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <creaturescripts>
 	
+	<!-- death channel -->
+	<event type="death" name="deathchannel" event="script" value="deathChannel.lua"/>
+	
 	<!-- no count frag in area -->
 	<event type="nocountfrag" name="fragarea" event="script" value="noCountFragInArea.lua"/>
 	

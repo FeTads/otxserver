@@ -1,4 +1,8 @@
 [ OTX SERVER 2X - FEETADS EDITS]
+	//25/10
+	-- added system to fix max absorb percent all, prevent +100% damage absorb
+	-- added system to replace names ou delete players with forbidden/monster name
+	
 	//22/10
 	-- added a system for not counting frags in specific areas, creaturescripts/noCountFragInArea.
 	-- added not counting frags in case of killing someone from the same IP (enabled from config.lua).

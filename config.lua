@@ -40,6 +40,8 @@
 	-- delete player with monster/forbidden name?
 	deletePlayersWithMonsterName = true
 	forbiddenNames = "gm;adm;cm;support;god;tutor;god ; god; adm;adm ; gm;gm ; cm;cm ;"
+	-- display messages death channel on death
+	displayDeathChannelMessages = true
 
 	sqlType = "mysql"
 	sqlHost = "localhost"

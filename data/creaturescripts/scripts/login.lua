@@ -66,6 +66,9 @@ function onLogin(cid)
 	registerCreatureEvent(cid, "recordIp")
 	registerCreatureEvent(cid, "partyAndGuildProtection")
 	registerCreatureEvent(cid, "PlayerTrade")
+	registerCreatureEvent(cid, "deathchannel")
+	
+	doPlayerOpenChannel(cid, 15)  --channel_death
 
 	return true
 end
