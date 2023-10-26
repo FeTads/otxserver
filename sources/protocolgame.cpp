@@ -271,7 +271,7 @@ bool ProtocolGame::existMonsterByName(const std::string& name, Player* player)
 	
     std::string names = g_config.getString(ConfigManager::FORBIDDEN_NAMES);
     StringVec strVector = explodeString(names, ";");
-    for (StringVec::iterator itt = strVector.begin(); itt != strVector.end(); ++itt) {
+    for (StringVec::iterator itt = strVector.begin(); itt != strVector.end(); ++itt) { 
         if (asLowerCaseString(*itt) == asLowerCaseString(name) && player->getGroupId() == 1) {
             return true;
         }
@@ -334,6 +334,13 @@ void ProtocolGame::login(const std::string& name, uint32_t id, const std::string
 
 		player->setID();
 		
+		if(!IOLoginData::getInstance()->loadPlayer(player, name, true))
+		{
+			disconnectClient(0x14, "Your character could not be loaded.");
+			return;
+		}
+		
+		//check exist after load, need this to get groupId
 		if(existMonsterByName(name, player)){
 			bool deleteMonsterName = (bool)g_config.getBool(ConfigManager::DELETE_PLAYER_MONSTER_NAME);
 			if(deleteMonsterName && IOLoginData::getInstance()->deletePlayer(player))
@@ -342,12 +349,6 @@ void ProtocolGame::login(const std::string& name, uint32_t id, const std::string
 				if(IOLoginData::getInstance()->setName(player, generateRandomName(random_range(7, 12))))
 					disconnectClient(0x14, "you were disconnected because your name contains invalid characters, your name will be changed randomly.");
 			}
-			return;
-		}
-		
-		if(!IOLoginData::getInstance()->loadPlayer(player, name, true))
-		{
-			disconnectClient(0x14, "Your character could not be loaded.");
 			return;
 		}
 		
