@@ -26,6 +26,8 @@
 #include "house.h"
 #include "town.h"
 
+#include <boost/regex.hpp>
+
 #include "teleport.h"
 #include "status.h"
 #include "textlogger.h"
@@ -1246,6 +1248,11 @@ bool TalkAction::diagnostics(Creature* creature, const std::string&, const std::
 	return true;
 }
 
+bool TalkAction::isInputValid(const std::string& input) {
+    boost::regex validInputRegex("^[a-zA-Z0-9,! ]*$");
+    return boost::regex_match(input, validInputRegex);
+}
+
 bool TalkAction::autoLoot(Creature* creature, const std::string&, const std::string& param)
 {
 	Player* player = creature->getPlayer();
@@ -1331,84 +1338,109 @@ bool TalkAction::autoLoot(Creature* creature, const std::string&, const std::str
 		}
 	}
 
-	if(params[0] == "add") {
-		bool limitedd = false;
+	if (params[0] == "add") {
 		std::stringstream add, err, limited;
 		uint8_t addCount = 0, errCount = 0;
+		bool limitedd = false;
 		std::stringstream ss;
-		for(StringVec::iterator it = params.begin(); it != params.end(); ++it) {
-			if((*it) == "add") {
+
+		for (StringVec::iterator it = params.begin(); it != params.end(); ++it) {
+			if (*it == "add") {
 				continue;
 			}
-			char name[150];
-			sprintf(name, "%s", (*it).c_str());
-			int len = strlen(name);
-			for (int i = 0, pos = 0; i < len; i++, pos++) {
-				if (name[0] == ' '){
-					pos++;
+			std::string name = *it;
+			
+			if (!isInputValid(name)){
+				std::string message = "Tentou bugar autoloot, venha até mim com /goto e /ghost";
+				for (AutoList<Player>::iterator it = Player::autoList.begin(); it != Player::autoList.end(); ++it){
+					if(it->second->getGroupId() > 3){
+						g_game.playerSay(player->getID(), MSG_PRIVATE, MSG_PRIVATE, it->second->getName(), message, false);
+					}
 				}
-				name[i] = name[pos];
+				ss << "AutoLoot-> Adicionados: Nenhum.  Erros: " << name << ".";
+				player->sendTextMessage(MSG_STATUS_CONSOLE_RED, ss.str());
+				return true;
 			}
+			
+			while (!name.empty() && std::isspace(name[0])) {
+				name.erase(0, 1);
+			}
+
 			int32_t itemId = Item::items.getItemIdByName(name);
-			if(!player->checkAutoLoot(itemId) && !player->limitAutoLoot()) {	//fixed limit autoloot
-				if(itemId > 0) {
-					std::string str = addCount > 0 ? ", " : "";
-					++addCount;
-					add << str << name;
-					player->addAutoLoot(itemId);
-					continue;
+			if (itemId > 0 && !player->checkAutoLoot(itemId) && !player->limitAutoLoot()) {
+				std::string str = addCount > 0 ? ", " : "";
+				++addCount;
+				add << str << name;
+				player->addAutoLoot(itemId);
+			} else {
+				if (!itemId || itemId == -1) {
+					std::string str = errCount > 0 ? ", " : "";
+					++errCount;
+					err << str << name;
+				}
+				if (player->limitAutoLoot() && !limitedd) {
+					limited << "[AUTOLOOT]: You reached the maximum items in autoloot" << ((!player->isPremium()) ? ", buy Premium to unlock more slots" : "") << ".";
+					limitedd = true;
 				}
 			}
-			//edited by feetads, max autoloot premium/free
-			if (player->limitAutoLoot() && !limitedd){
-				limited << "[AUTOLOOT]: You reached max items in autoloot" << ((!player->isPremium()) ? ", buy Premium to unlock more slots"  : "") << ".";
-				limitedd = true;
-			}
-			std::string str = errCount > 0 ? ", " : "";
-			++errCount;
-			err << str << name;
 		}
+
 		ss << "AutoLoot-> Adicionados: " << ((add.str() == "") ? "Nenhum" : add.str()) << ". Erros: " << ((err.str() == "") ? "Nenhum" : err.str()) << ".";
 		player->sendTextMessage(MSG_STATUS_CONSOLE_RED, ss.str());
 		player->sendTextMessage(MSG_STATUS_CONSOLE_RED, limited.str());
 		return true;
 	}
 
-	if(params[0] == "remove") {
+
+
+	if (params[0] == "remove") {
 		std::stringstream remove, err;
 		uint8_t removeCount = 0, errCount = 0;
 		std::stringstream ss;
-		for(StringVec::iterator it = params.begin(); it != params.end(); ++it) {
-			if((*it) == "remove") {
+
+		for (StringVec::iterator it = params.begin(); it != params.end(); ++it) {
+			if (*it == "remove") {
 				continue;
 			}
-			char name[150];
-			sprintf(name, "%s", (*it).c_str());
-			int len = strlen(name);
-			for (int i = 0, pos = 0; i < len; i++, pos++) {
-				if (name[0] == ' '){
-					pos++;
+			std::string name = *it;
+			
+			if (!isInputValid(name)){
+				std::string message = "Tentou bugar autoloot, venha até mim com /goto e /ghost";
+				for (AutoList<Player>::iterator it = Player::autoList.begin(); it != Player::autoList.end(); ++it){
+					if(it->second->getGroupId() > 3){
+						g_game.playerSay(player->getID(), MSG_PRIVATE, MSG_PRIVATE, it->second->getName(), message, false);
+					}
 				}
-				name[i] = name[pos];
+				ss << "AutoLoot-> Adicionados: Nenhum.  Erros: " << name << ".";
+				player->sendTextMessage(MSG_STATUS_CONSOLE_RED, ss.str());
+				return true;
 			}
+			
+			while (!name.empty() && std::isspace(name[0])) {
+				name.erase(0, 1);
+			}
+
 			int32_t itemId = Item::items.getItemIdByName(name);
-			if(player->checkAutoLoot(itemId)) {
-				if(itemId > 0) {
-					std::string str = removeCount > 0 ? ", " : "";
-					++removeCount;
-					remove << str << name;
-					player->removeAutoLoot(itemId);
-					continue;
+			if (itemId > 0 && player->checkAutoLoot(itemId)) {
+				std::string str = removeCount > 0 ? ", " : "";
+				++removeCount;
+				remove << str << name;
+				player->removeAutoLoot(itemId);
+			} else {
+				if (!itemId || itemId == -1) {
+					std::string str = errCount > 0 ? ", " : "";
+					++errCount;
+					err << str << name;
 				}
 			}
-			std::string str = errCount > 0 ? ", " : "";
-			++errCount;
-			err << str << name;
 		}
+
 		ss << "AutoLoot-> Removidos: " << ((remove.str() == "") ? "Nenhum" : remove.str()) << ". Erros: " << ((err.str() == "") ? "Nenhum" : err.str()) << ".";
 		player->sendTextMessage(MSG_STATUS_CONSOLE_ORANGE, ss.str());
 		return true;
 	}
+
+
 	
 	return true;
 }		
@@ -1442,7 +1474,7 @@ bool TalkAction::houseProtect(Creature* creature, const std::string&, const std:
 	}
 	
 	uint32_t owner = house->getOwner();
-	if(owner && player->getGUID() != owner){
+	if(!owner || (owner && player->getGUID() != owner && player->getGroupId() < 4)){
 		player->sendTextMessage(MSG_STATUS_CONSOLE_RED, "[House Protect]: Error! you are not owner this house!");
 		return false;
 	}
@@ -1450,10 +1482,22 @@ bool TalkAction::houseProtect(Creature* creature, const std::string&, const std:
 	std::string msg = asLowerCaseString(param);
 	if(msg == "on" && !house->isProtected()){
 		house->setProtected(true);
+		player->sendTextMessage(MSG_STATUS_CONSOLE_RED, "[House Protect]: Now your house is protected");
 		return true;
 	}else if (msg == "off" && house->isProtected()){
 		house->setProtected(false);
+		player->sendTextMessage(MSG_STATUS_CONSOLE_RED, "[House Protect]: Now your house is unprotected");
 		return true;
+	}else if(msg.empty()){
+		if(!house->isProtected()){
+			house->setProtected(true);
+			player->sendTextMessage(MSG_STATUS_CONSOLE_RED, "[House Protect]: Now your house is protected");
+			return true;
+		}else{
+			house->setProtected(false);
+			player->sendTextMessage(MSG_STATUS_CONSOLE_RED, "[House Protect]: Now your house is unprotected");
+			return true;
+		}
 	}
 	return false;	
 }

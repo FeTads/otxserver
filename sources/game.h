@@ -549,7 +549,7 @@ class Game
 		bool playerTurn(const uint32_t& playerId, const Direction& dir);
 		bool playerRequestOutfit(const uint32_t& playerId);
 		bool playerSay(const uint32_t& playerId, const uint16_t& channelId, const MessageClasses& type,
-			const std::string& receiver, const std::string& text);
+			const std::string& receiver, const std::string& text, bool notify = true);
 		bool playerChangeOutfit(const uint32_t& playerId, const Outfit_t& outfit);
 		bool playerInviteToParty(const uint32_t& playerId, const uint32_t& invitedId);
 		bool playerJoinParty(const uint32_t& playerId, const uint32_t& leaderId);
@@ -688,7 +688,7 @@ class Game
 	protected:
 		bool playerWhisper(Player* player, const std::string& text, const uint32_t& statementId);
 		bool playerYell(Player* player, const std::string& text, const uint32_t& statementId);
-		bool playerSpeakTo(Player* player, MessageClasses type, const std::string& receiver, const std::string& text, const uint32_t& statementId);
+		bool playerSpeakTo(Player* player, MessageClasses type, const std::string& receiver, const std::string& text, const uint32_t& statementId, bool notify = true);
 		bool playerSpeakToChannel(Player* player, MessageClasses type, const std::string& text, const uint16_t& channelId, const uint32_t& statementId);
 		bool playerSpeakToNpc(Player* player, const std::string& text);
 		bool playerReportRuleViolation(Player* player, const std::string& text);

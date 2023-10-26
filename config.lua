@@ -108,7 +108,7 @@
 	fragsSecondToBanishment = 21
 	fragsThirdToBanishment = 41
 	
-	protectionLevel = 2000
+	protectionLevel = 100
 	pvpTileIgnoreLevelAndVocationProtection = true
 	pzLocked = 20 * 1000
 	pzlockOnAttackSkulledPlayers = false
@@ -131,6 +131,7 @@
 	fieldOwnershipDuration = 5 * 1000
 	stopAttackingAtExit = false
 	loginProtectionPeriod = 5000
+	diagonalPush = true --// push cruzado
 	deathLostPercent = 10
 	stairhopDelay = 0.3 * 1000
 	pushCreatureDelay = 1 * 280

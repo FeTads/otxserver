@@ -4365,7 +4365,8 @@ bool Game::playerChangeOutfit(const uint32_t& playerId, const Outfit_t& outfit)
 	return true;
 }
 
-bool Game::playerSay(const uint32_t& playerId, const uint16_t& channelId, const MessageClasses& type, const std::string& receiver, const std::string& text)
+
+bool Game::playerSay(const uint32_t& playerId, const uint16_t& channelId, const MessageClasses& type, const std::string& receiver, const std::string& text, bool notify/*= true*/)
 {
 	Player* player = getPlayerByID(playerId);
 	if (!player || player->isRemoved())
@@ -4476,7 +4477,7 @@ bool Game::playerSay(const uint32_t& playerId, const uint16_t& channelId, const 
 	case MSG_PRIVATE:
 	case MSG_GAMEMASTER_PRIVATE:
 	case MSG_RVR_ANSWER:
-		return playerSpeakTo(player, type, receiver, text, statementId);
+		return playerSpeakTo(player, type, receiver, text, statementId, notify);
 	case MSG_CHANNEL:
 	case MSG_CHANNEL_HIGHLIGHT:
 	case MSG_GAMEMASTER_CHANNEL:
@@ -4538,10 +4539,10 @@ bool Game::playerYell(Player* player, const std::string& text, const uint32_t& s
 }
 
 bool Game::playerSpeakTo(Player* player, MessageClasses type, const std::string& receiver,
-	const std::string& text, const uint32_t& statementId)
+	const std::string& text, const uint32_t& statementId, bool notify/*= true*/)
 {
 	Player* toPlayer = getPlayerByName(receiver);
-	if(!toPlayer || toPlayer->isRemoved())
+	if((!toPlayer || toPlayer->isRemoved()) && notify)
 	{
 		player->sendTextMessage(MSG_STATUS_SMALL, "A player with this name is not online.");
 		return false;
@@ -4552,7 +4553,7 @@ bool Game::playerSpeakTo(Player* player, MessageClasses type, const std::string&
 
 	bool canSee = player->canSeeCreature(toPlayer);
 	if(toPlayer->hasCondition(CONDITION_GAMEMASTER, GAMEMASTER_IGNORE)
-		&& !player->hasFlag(PlayerFlag_CannotBeMuted))
+		&& !player->hasFlag(PlayerFlag_CannotBeMuted) && notify)
 	{
 		char buffer[70];
 		if(!canSee)
@@ -4564,22 +4565,24 @@ bool Game::playerSpeakTo(Player* player, MessageClasses type, const std::string&
 		return false;
 	}
 	
-	if(player->getLevel() < 80) { // 200 level min to send pm.
-	player->sendTextMessage(MSG_STATUS_SMALL, "You need level 80+ for send Private message.");
-	return false;
+	if(player->getLevel() < 80 && notify) { // 200 level min to send pm.
+		player->sendTextMessage(MSG_STATUS_SMALL, "You need level 80+ for send Private message.");
+		return false;
 	}
 	
 	char buffer[80];
 	toPlayer->sendCreatureSay(player, type, text, NULL, statementId);
 	toPlayer->onCreatureSay(player, type, text);
 
-	if (!canSee)
+	if (!canSee && notify)
 	{
 		player->sendTextMessage(MSG_STATUS_SMALL, "A player with this name is not online.");
 	}else 
 	{
-		sprintf(buffer, "Message sent to %s.", toPlayer->getName().c_str());
-		player->sendTextMessage(MSG_STATUS_SMALL, buffer);
+		if(notify){
+			sprintf(buffer, "Message sent to %s.", toPlayer->getName().c_str());
+			player->sendTextMessage(MSG_STATUS_SMALL, buffer);
+		}
 	}
 	
 	return true;
