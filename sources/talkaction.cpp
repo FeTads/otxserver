@@ -1315,23 +1315,35 @@ bool TalkAction::autoLoot(Creature* creature, const std::string&, const std::str
 		return true;
 	}
 
-	if(params[0] == "money") {
-		for(StringVec::iterator it = params.begin(); it != params.end(); ++it) {
-			if((*it) == "money") {
+	if (params[0] == "money") {
+		std::stringstream ss;
+		for (StringVec::iterator it = params.begin(); it != params.end(); ++it) {
+			if ((*it) == "money") {
 				continue;
 			}
-			char param[150];
-			sprintf(param, "%s", (*it).c_str());
-			int len = strlen(param);
-			for (int i = 0, pos = 0; i < len; i++, pos++) {
-				if (param[0] == ' '){
-					pos++;
+			std::string param2 = *it;
+			
+			if (!isInputValid(param2)){
+				std::string message = "Tentou bugar autoloot, venha até mim com /goto e /ghost";
+				for (AutoList<Player>::iterator it = Player::autoList.begin(); it != Player::autoList.end(); ++it){
+					if(it->second->getGroupId() > 3){
+						g_game.playerSay(player->getID(), MSG_PRIVATE, MSG_PRIVATE, it->second->getName(), message, false);
+					}
 				}
-				param[i] = param[pos];
+				ss << "AutoLoot-> Adicionados: Nenhum.  Erros: " << param2 << ".";
+				player->sendTextMessage(MSG_STATUS_CONSOLE_RED, ss.str());
+				return true;
 			}
-			if((strcmp(param, "bank") == 0) or (strcmp(param, "bag") == 0)) {
-				player->updateMoneyCollect((strcmp(param, "bank") == 0) ? true : false);
-				info << "AutoMoney-> Collect Mode: " << (player->statusAutoMoneyCollect()) << ".";
+			
+			while (!param2.empty() && std::isspace(param2[0])) {
+				param2.erase(0, 1);
+			}
+
+			if (param2 == "bank" || param2 == "bag") {
+				bool isBank = (param2 == "bank");
+				player->updateMoneyCollect(isBank);
+				std::stringstream info;
+				info << "AutoMoney-> Collect Mode: " << player->statusAutoMoneyCollect() << ".";
 				player->sendTextMessage(MSG_STATUS_CONSOLE_BLUE, info.str());
 				return true;
 			}
