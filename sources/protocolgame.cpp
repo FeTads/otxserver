@@ -2951,8 +2951,16 @@ void ProtocolGame::AddTextMessage(MessageClasses mClass, const std::string& mess
 			OutputMessage_ptr msg = getOutputBuffer();
 			if(!msg)
 				return;
-
-			AddAnimatedText(msg, *pos, details->color, asString(details->value));
+			
+			std::stringstream sss;
+			if(g_config.getBool(ConfigManager::USEDAMAGE_IN_K)){
+				if (details->value > 1000000)
+					sss << std::fixed << std::setprecision(2) << (details->value / 1000000.0) << "Mi";
+				else if(details->value > 1000)
+					sss << std::fixed << std::setprecision(1) << (details->value / 1000.0) << "K";
+			}else
+				sss << asString(details->value);
+			AddAnimatedText(msg, *pos, details->color, sss.str());
 			if(details->sub)
 				AddAnimatedText(msg, *pos, details->sub->color, asString(details->sub->value));
 		}

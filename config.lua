@@ -42,6 +42,8 @@
 	forbiddenNames = "gm;adm;cm;support;god;tutor;god ; god; adm;adm ; gm;gm ; cm;cm ;"
 	-- display messages death channel on death
 	displayDeathChannelMessages = true
+	-- modify damage to K 219000 -> 219.0K
+	modifyDamageInK = true
 
 	sqlType = "mysql"
 	sqlHost = "localhost"
