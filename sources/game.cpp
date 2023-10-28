@@ -4791,10 +4791,6 @@ bool Game::internalCreatureSay(Creature* creature, MessageClasses type, const st
 					else if(std::stoi(value) == 2) {
 						//tmpPlayer->sendCreatureSay(creature, MSG_NONE, text, &destPos, statementId); //no message needed
 					}
-                    if(value == "1")
-                        tmpPlayer->sendCreatureSay(creature, MSG_SPEAK_MONSTER_SAY, text, &destPos, statementId);
-					else
-                        tmpPlayer->sendCreatureSay(creature, type, text, &destPos, statementId);
 				}
 				else
                     tmpPlayer->sendCreatureSay(creature, type, text, &destPos, statementId);
