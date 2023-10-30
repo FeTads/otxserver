@@ -142,6 +142,7 @@ bool ConfigManager::load()
 	m_confBool[DELETE_PLAYER_MONSTER_NAME] = getGlobalBool("deletePlayersWithMonsterName", false);
 	
 	m_confBool[USEDAMAGE_IN_K] = getGlobalBool("modifyDamageInK", false);
+	m_confBool[USEEXP_IN_K] = getGlobalBool("modifyExperienceInK", false);
 	
 	m_confString[MAP_AUTHOR] = getGlobalString("mapAuthor", "Unknown");
 	m_confNumber[LOGIN_TRIES] = getGlobalNumber("loginTries", 3);

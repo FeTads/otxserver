@@ -43,7 +43,9 @@
 	-- display messages death channel on death
 	displayDeathChannelMessages = true
 	-- modify damage to K 219000 -> 219.0K
-	modifyDamageInK = true
+	modifyDamageInK = false
+	-- modify exp to K/mi 2.000.000 exp -> 2.0 mi
+	modifyExperienceInK= false
 
 	sqlType = "mysql"
 	sqlHost = "localhost"
