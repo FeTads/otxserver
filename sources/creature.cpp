@@ -1360,6 +1360,28 @@ bool Creature::onKilledCreature(Creature* target, DeathEntry& entry)
 	return ret;
 }
 
+std::string Creature::TransformExpToString(double& gainExp)
+{
+	std::stringstream sss;
+	const long long TRILHAO = 1000000000000LL;
+	const long long BILHAO = 1000000000LL;
+	const long long MILHAO = 1000000LL;
+	const long long MIL = 1000LL;
+
+	sss << "+" << std::fixed << std::setprecision(2); // Defina a precisão de todos os casos
+
+	if ((uint64_t)gainExp >= TRILHAO)
+		sss << (double)(gainExp / TRILHAO) << " Tri Exp";
+	else if ((uint64_t)gainExp >= BILHAO)
+		sss << (double)(gainExp / BILHAO) << " Bi Exp";
+	else if ((uint64_t)gainExp >= MILHAO)
+		sss << (double)(gainExp / MILHAO) << " Mi Exp";
+	else if ((uint64_t)gainExp >= MIL)
+		sss << (double)(gainExp / MIL) << "K Exp";
+	
+	return sss.str();
+}
+
 void Creature::onGainExperience(double& gainExp, Creature* target, bool multiplied)
 {
 	if(gainExp <= 0)
@@ -1392,24 +1414,9 @@ void Creature::onGainExperience(double& gainExp, Creature* target, bool multipli
 			textList.insert(spectator);
 	}
 
-	std::stringstream sss;
-	if (g_config.getBool(ConfigManager::USEEXP_IN_K)) {
-		const long long TRILHAO = 1000000000000LL;
-		const long long BILHAO = 1000000000LL;
-		const long long MILHAO = 1000000LL;
-		const long long MIL = 1000LL;
-
-		sss << "+" << std::fixed << std::setprecision(2); // Defina a precisão de todos os casos
-
-		if ((uint64_t)gainExp >= TRILHAO)
-			sss << (double)(gainExp / TRILHAO) << " Tri Exp";
-		else if ((uint64_t)gainExp >= BILHAO)
-			sss << (double)(gainExp / BILHAO) << " Bi Exp";
-		else if ((uint64_t)gainExp >= MILHAO)
-			sss << (double)(gainExp / MILHAO) << " Mi Exp";
-		else if ((uint64_t)gainExp >= MIL)
-			sss << (double)(gainExp / MIL) << "K Exp";
-	}
+	std::string sss;
+	if (g_config.getBool(ConfigManager::USEEXP_IN_K))
+		sss = TransformExpToString((double&)gainExp);
 	
 	MessageDetails* details = NULL;
 	if(!g_config.getBool(ConfigManager::USEEXP_IN_K)){
@@ -1418,7 +1425,7 @@ void Creature::onGainExperience(double& gainExp, Creature* target, bool multipli
 	}
 	else{
 		uint16_t colorExp = g_config.getNumber(ConfigManager::EXPERIENCE_COLOR);
-		g_game.addAnimatedText(targetPos, (Color_t)colorExp, sss.str());
+		g_game.addAnimatedText(targetPos, (Color_t)colorExp, sss);
 	}
 	
 	if(Player* player = getPlayer())
@@ -1428,7 +1435,7 @@ void Creature::onGainExperience(double& gainExp, Creature* target, bool multipli
 		player->sendStatsMessage(MSG_EXPERIENCE, ss.str(), targetPos, details);
 	}
 	
-	if(!g_config.getBool(ConfigManager::USEEXP_IN_K))
+	if(details)
 		delete details;
 }
 
@@ -1463,17 +1470,30 @@ void Creature::onGainSharedExperience(double& gainExp, Creature* target, bool mu
 		if (spectator != this)
 			textList.insert(spectator);
 	}
-
-	MessageDetails* details = new MessageDetails((int32_t)gainExp, (Color_t)color);
-	g_game.addStatsMessage(textList, MSG_EXPERIENCE_OTHERS, ss.str(), targetPos, details);
+	
+	std::string sss;
+	if (g_config.getBool(ConfigManager::USEEXP_IN_K))
+		sss = TransformExpToString((double&)gainExp);
+	
+	MessageDetails* details = NULL;
+	if(!g_config.getBool(ConfigManager::USEEXP_IN_K)){
+		details = new MessageDetails((uint32_t)gainExp, (Color_t)color);
+		g_game.addStatsMessage(textList, MSG_EXPERIENCE_OTHERS, ss.str(), targetPos, details);
+	}
+	else{
+		uint16_t colorExp = g_config.getNumber(ConfigManager::EXPERIENCE_COLOR);
+		g_game.addAnimatedText(targetPos, (Color_t)colorExp, sss);
+	}
+	
 	if(Player* player = getPlayer())
 	{
 		ss.str("");
 		ss << "You gained " << (uint64_t)gainExp << " experience points.";
 		player->sendStatsMessage(MSG_EXPERIENCE, ss.str(), targetPos, details);
 	}
-
-	delete details;
+	
+	if(details)
+		delete details;
 }
 
 void Creature::addSummon(Creature* creature)

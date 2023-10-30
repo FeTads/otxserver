@@ -372,6 +372,7 @@ class Creature : public AutoId, virtual public Thing
 		virtual void onTargetGain(Creature* target, int32_t points);
 		virtual void onTargetKilled(Creature* target);
 		virtual bool onKilledCreature(Creature* target, DeathEntry& entry);
+		std::string TransformExpToString(double& gainExp);	//make by feetads
 		virtual void onGainExperience(double& gainExp, Creature* target, bool multiplied);
 		virtual void onGainSharedExperience(double& gainExp, Creature* target, bool multiplied);
 		virtual void onTargetBlockHit(Creature*, BlockType_t) {}
