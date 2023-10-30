@@ -33,6 +33,13 @@
 #include "configmanager.h"
 #include "game.h"
 
+#ifdef _WIN32
+#include <stdint.h>
+#define LOOTLIST_TYPE uint64_t
+#else
+#define LOOTLIST_TYPE unsigned long
+#endif
+
 extern ConfigManager g_config;
 extern Game g_game;
 
@@ -779,7 +786,7 @@ bool IOLoginData::loadPlayer(Player* player, const std::string& name, bool preLo
 		query.str("");
 		query << "SELECT `autoloot_list` FROM `player_autoloot` WHERE `player_id` = " << player->getGUID();
 		if ((result = db->storeQuery(query.str()))) {
-			unsigned long lootListSize;
+			LOOTLIST_TYPE lootListSize;
 			const char* autoLootList = result->getDataStream("autoloot_list", lootListSize);
 			PropStream propStream;
 			propStream.init(autoLootList, lootListSize);

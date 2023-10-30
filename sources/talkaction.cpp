@@ -1266,19 +1266,19 @@ bool TalkAction::autoLoot(Creature* creature, const std::string&, const std::str
 	}
 
 	StringVec params = explodeString(param, ",");
-	if(params[0] == "on" or params[0] == "off") {
+	if(params[0] == "on" || params[0] == "off") {
 		player->updateStatusAutoLoot((params[0] == "on" ? true : false));
 		info << "Autoloot-> Status: " << (player->statusAutoLoot()) << ".";
 		player->sendTextMessage(MSG_STATUS_CONSOLE_BLUE, info.str());
 		return true;
 	}
-	if(params[0] == "clear" or params[0] == "clean") {
+	if(params[0] == "clear" || params[0] == "clean") {
 		player->clearAutoLoot();
 		info << "Autoloot-> Todos itens removidos.";
 		player->sendTextMessage(MSG_STATUS_CONSOLE_BLUE, info.str());
 		return true;
 	}
-	if(params[0] == "list" or params[0] == "lista") {
+	if(params[0] == "list" || params[0] == "lista") {
 		std::list<uint16_t> list = player->getAutoLoot();
 		std::list<uint16_t>::iterator it = list.begin();
 		std::string msg = g_config.getString(ConfigManager::AUTOLOOT_MONEYIDS);
