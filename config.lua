@@ -385,6 +385,7 @@
 	disableLuaErrors = false
 	adminLogs = true
 	displayPlayersLogging = true
+	displayPlayersLogging = true
 	prefixChannelLogs = ""
 	runFile = "server/run.log"
 	outputLog = "server/out.log"
