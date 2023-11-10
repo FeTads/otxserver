@@ -2429,6 +2429,9 @@ void LuaInterface::registerFunctions()
 
 	//getItemInfo(itemid)
 	lua_register(m_luaState, "getItemInfo", LuaInterface::luaGetItemInfo);
+	
+	//isItemDoor(itemid) //make by feetads
+	lua_register(m_luaState, "isItemDoor", LuaInterface::luaisItemDoor);
 
 	//getItemAttribute(uid, key)
 	lua_register(m_luaState, "getItemAttribute", LuaInterface::luaGetItemAttribute);
@@ -4289,7 +4292,7 @@ int32_t LuaInterface::luaDoRelocate(lua_State* L)
 				break;
 
 			const ItemType& iType = Item::items[(*it)->getID()];
-			if(!iType.isGroundTile() && !iType.alwaysOnTop && !iType.isMagicField() && (unmovable || iType.movable))
+			if(!iType.isGroundTile() && !iType.alwaysOnTop && !iType.isMagicField() && (unmovable || iType.movable) && !iType.isDoor())
 			{
 				if(Item* item = (*it))
 				{
@@ -10627,6 +10630,20 @@ int32_t LuaInterface::luaGetItemIdByName(lua_State* L)
 	return 1;
 }
 
+//make by feetads
+int32_t LuaInterface::luaisItemDoor(lua_State* L)
+{
+	//isItemDoor(itemId)
+	int32_t itemId = (popNumber(L));
+	if(itemId <= 0 || itemId >= static_cast<int32_t>(Item::items.size())){
+		lua_pushboolean(L, false);
+		return 1;
+	}	
+	const ItemType& iType = Item::items[itemId];
+	lua_pushboolean(L, iType.isDoor());
+	return 1;
+}
+
 int32_t LuaInterface::luaGetItemInfo(lua_State* L)
 {
 	//getItemInfo(itemid)
@@ -10638,6 +10655,7 @@ int32_t LuaInterface::luaGetItemInfo(lua_State* L)
 	}
 
 	lua_newtable(L);
+	setFieldBool(L, "isDoor", item->isDoor());
 	setFieldBool(L, "stopTime", item->stopTime);
 	setFieldBool(L, "showCount", item->showCount);
 	setFieldBool(L, "stackable", item->stackable);
