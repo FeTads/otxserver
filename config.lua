@@ -46,6 +46,8 @@
 	modifyDamageInK = false
 	-- modify exp to K/mi 2.000.000 exp -> 2.0 mi
 	modifyExperienceInK= false
+	-- display broadcast in distro
+	displayBroadcastLog = true
 
 	sqlType = "mysql"
 	sqlHost = "localhost"
@@ -135,7 +137,7 @@
 	fieldOwnershipDuration = 5 * 1000
 	stopAttackingAtExit = false
 	loginProtectionPeriod = 5000
-	diagonalPush = true --// push cruzado
+	diagonalPush = true
 	deathLostPercent = 10
 	stairhopDelay = 0.3 * 1000
 	pushCreatureDelay = 1 * 280

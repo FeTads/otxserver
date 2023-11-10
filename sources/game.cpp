@@ -6462,7 +6462,8 @@ void Game::kickPlayer(const uint32_t& playerId, const bool& displayEffect)
 
 bool Game::broadcastMessage(const std::string& text, MessageClasses type)
 {
-	std::clog << "> Broadcasted message: \"" << text << "\"." << std::endl;
+	if(g_config.getBool(ConfigManager::DISPLAY_BROADCAST))		//by kizuno18
+		std::clog << "> Broadcasted message: \"" << text << "\"." << std::endl;
 	for(AutoList<Player>::iterator it = Player::autoList.begin(); it != Player::autoList.end(); ++it)
 		it->second->sendTextMessage(type, text);
 

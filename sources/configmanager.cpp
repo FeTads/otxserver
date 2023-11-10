@@ -144,6 +144,8 @@ bool ConfigManager::load()
 	m_confBool[USEDAMAGE_IN_K] = getGlobalBool("modifyDamageInK", false);
 	m_confBool[USEEXP_IN_K] = getGlobalBool("modifyExperienceInK", false);
 	
+	m_confBool[DISPLAY_BROADCAST] = getGlobalBool("displayBroadcastLog", true);  //by kizuno18
+	
 	m_confString[MAP_AUTHOR] = getGlobalString("mapAuthor", "Unknown");
 	m_confNumber[LOGIN_TRIES] = getGlobalNumber("loginTries", 3);
 	m_confNumber[RETRY_TIMEOUT] = getGlobalNumber("retryTimeout", 30000);
