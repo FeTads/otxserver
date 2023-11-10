@@ -90,6 +90,8 @@ class Outfits
 		bool removeAttributes(uint32_t playerId, uint32_t outfitId, uint16_t sex);
 
 		uint32_t getOutfitId(uint32_t lookType);
+		
+		const Outfit* getOutfitByLookType(uint16_t sex, uint16_t lookType);
 
 		int16_t getOutfitAbsorb(uint32_t lookType, uint16_t sex, CombatType_t combat);
 		int16_t getOutfitReflect(uint32_t lookType, uint16_t sex, CombatType_t combat);
