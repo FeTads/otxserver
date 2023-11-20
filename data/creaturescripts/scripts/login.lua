@@ -59,6 +59,8 @@ function onLogin(cid)
 		registerCreatureEvent(cid, "SkullCheck")
 	end
 
+	registerCreatureEvent(cid, "decayOnDepotThrow")
+	registerCreatureEvent(cid, "decayOnDepotTrade")
 	registerCreatureEvent(cid, "fragarea")
 	registerCreatureEvent(cid, "houseProtectTrash")
 	registerCreatureEvent(cid, "GuildEvents")

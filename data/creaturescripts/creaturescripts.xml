@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <creaturescripts>
 	
+	<event type="throw" name="decayOnDepotThrow" event="script" value="decayOnDepotItem.lua"/>
+	<event type="tradeaccept" name="decayOnDepotTrade" event="script" value="decayOnDepotItem.lua"/>
+	
 	<!-- death channel -->
 	<event type="death" name="deathchannel" event="script" value="deathChannel.lua"/>
 	
