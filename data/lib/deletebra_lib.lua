@@ -615,14 +615,14 @@ end
 function getPlayerWeaponHand(cid)
 	if isCreature(cid) and isPlayer(cid) then
 		local esquerda = getPlayerSlotItem(cid, CONST_SLOT_LEFT)
-		if isWeapon(esquerda.uid) and not isShield(esquerda.uid) then
+		if esquerda and esquerda.uid ~= 0 and isWeapon(esquerda.uid) and not isShield(esquerda.uid) then
 			return esquerda
 		else
 			local direita = getPlayerSlotItem(cid, CONST_SLOT_RIGHT)
-			if isWeapon(direita.uid) and not isShield(direita.uid) then
+			if direita and direita.uid ~=0 and isWeapon(direita.uid) and not isShield(direita.uid) then
 				return direita
 			end
 		end
 	end
-	return 0
+	return nil
 end
