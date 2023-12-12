@@ -514,6 +514,7 @@ class LuaInterface
 		static int32_t luaGetCreatureBaseSpeed(lua_State* L);
 		static int32_t luaGetCreatureTarget(lua_State* L);
 		static int32_t luaGetCreatureLookDirection(lua_State* L);
+		static int32_t luaExistMonsterByName(lua_State* L);	
 		static int32_t luaGetPlayerSkillLevel(lua_State* L);
 		static int32_t luaGetPlayerSkillTries(lua_State* L);
 		static int32_t luaDoPlayerSetOfflineTrainingSkill(lua_State* L);

@@ -353,6 +353,8 @@ class Game
 		uint32_t getPlayersWithMcLimit();
 
 		uint32_t getUniquePlayersOnline();
+		
+		bool existMonsterByName(const std::string& name);
 
 		uint32_t getPlayersRecord() const {return playersRecord;}
 		void getWorldLightInfo(LightInfo& lightInfo);

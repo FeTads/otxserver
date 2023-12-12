@@ -262,48 +262,6 @@ void ProtocolGame::castNavigation(uint16_t direction)
 	sendSpectatorAppear(_player);
 }
 
-// make by feetads
-bool ProtocolGame::existMonsterByName(const std::string& name, Player* player)
-{
-    if (name.empty()){
-        return false;
-	}
-	
-    std::string names = g_config.getString(ConfigManager::FORBIDDEN_NAMES);
-    StringVec strVector = explodeString(names, ";");
-    for (StringVec::iterator itt = strVector.begin(); itt != strVector.end(); ++itt) { 
-        if (asLowerCaseString(*itt) == asLowerCaseString(name) && player->getGroupId() == 1) {
-            return true;
-        }
-    }
-
-    xmlDocPtr doc = xmlParseFile("data/monster/monsters.xml");
-	if (!doc) {
-		std::clog << "[Warning - Monsters::loadFromXml] Cannot load monster file." << std::endl;
-		std::clog << getLastXMLError() << std::endl;
-		return false;
-	}
-
-	xmlNodePtr monster, root = xmlDocGetRootElement(doc);
-	for (monster = root->xmlChildrenNode; monster; monster = monster->next) {
-		if (xmlStrcmp(monster->name, (const xmlChar*)"monster") == 0) {
-			xmlChar* nameAttr = xmlGetProp(monster, (const xmlChar*)"name");
-			if (nameAttr) {
-				std::string nameAttrStr = reinterpret_cast<const char*>(nameAttr);
-				xmlFree(nameAttr);
-				if (asLowerCaseString(nameAttrStr) == asLowerCaseString(name)) {
-					xmlFreeDoc(doc);
-					return true;
-				}
-			}
-		}
-	}
-
-	xmlFreeDoc(doc);
-    
-    return false;
-}
-
 std::string ProtocolGame::generateRandomName(int length) {
 
     const std::string charset = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
@@ -341,7 +299,7 @@ void ProtocolGame::login(const std::string& name, uint32_t id, const std::string
 		}
 		
 		//check exist after load, need this to get groupId
-		if(existMonsterByName(name, player)){
+		if(g_game.existMonsterByName(name) && player->getGroupId() == 1){
 			bool deleteMonsterName = (bool)g_config.getBool(ConfigManager::DELETE_PLAYER_MONSTER_NAME);
 			if(deleteMonsterName && IOLoginData::getInstance()->deletePlayer(player))
 				disconnectClient(0x14, "This character was deleted because it contains invalid characters in its name.");

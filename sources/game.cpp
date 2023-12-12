@@ -713,6 +713,46 @@ void Game::internalGetPosition(Item* item, Position& pos, int16_t& stackpos)
 	}
 }
 
+// make by feetads
+bool Game::existMonsterByName(const std::string& name)
+{
+    if (name.empty()){
+        return false;
+	}
+	
+    std::string names = g_config.getString(ConfigManager::FORBIDDEN_NAMES);
+    StringVec strVector = explodeString(names, ";");
+    for (StringVec::iterator itt = strVector.begin(); itt != strVector.end(); ++itt) { 
+        if (asLowerCaseString(*itt) == asLowerCaseString(name)) {
+			return true;
+        }
+    }
+
+    xmlDocPtr doc = xmlParseFile("data/monster/monsters.xml");
+	if (!doc) {
+		std::clog << "[Warning - Monsters::loadFromXml] Cannot load monster file." << std::endl;
+		std::clog << getLastXMLError() << std::endl;
+		return false;
+	}
+
+	xmlNodePtr monster, root = xmlDocGetRootElement(doc);
+	for (monster = root->xmlChildrenNode; monster; monster = monster->next) {
+		if (xmlStrcmp(monster->name, (const xmlChar*)"monster") == 0) {
+			xmlChar* nameAttr = xmlGetProp(monster, (const xmlChar*)"name");
+			if (nameAttr) {
+				std::string nameAttrStr = reinterpret_cast<const char*>(nameAttr);
+				xmlFree(nameAttr);
+				if (asLowerCaseString(nameAttrStr) == asLowerCaseString(name)) {
+					xmlFreeDoc(doc);
+					return true;
+				}
+			}
+		}
+	}
+	xmlFreeDoc(doc);
+    return false;
+}
+
 Creature* Game::getCreatureByID(const uint32_t& id)
 {
 	if(!id)

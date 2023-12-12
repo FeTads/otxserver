@@ -1491,6 +1491,9 @@ void LuaInterface::registerFunctions()
 
 	//getCreatureMaxHealth(cid[, ignoreModifiers = false])
 	lua_register(m_luaState, "getCreatureMaxHealth", LuaInterface::luaGetCreatureMaxHealth);
+	
+	//existMonsterByName(name)
+	lua_register(m_luaState, "existMonsterByName", LuaInterface::luaExistMonsterByName);
 
 	//getCreatureMana(cid)
 	lua_register(m_luaState, "getCreatureMana", LuaInterface::luaGetCreatureMana);
@@ -9578,6 +9581,18 @@ int32_t LuaInterface::luaGetCreatureLookDirection(lua_State* L)
 		lua_pushboolean(L, false);
 	}
 
+	return 1;
+}
+
+int32_t LuaInterface::luaExistMonsterByName(lua_State* L)
+{
+	//existMonsterByName(name)
+	if(g_game.existMonsterByName(popString(L))){
+		lua_pushboolean(L, true);
+		return 1;
+	}
+	
+	lua_pushboolean(L, false);
 	return 1;
 }
 

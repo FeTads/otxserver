@@ -77,7 +77,6 @@ class ProtocolGame : public Protocol
 		}
 		
 		std::string generateRandomName(int length);
-		bool existMonsterByName(const std::string& name, Player* player);
 		
 		void spectate(const std::string& name, const std::string& password);
 		void login(const std::string& name, uint32_t id, const std::string& password,
