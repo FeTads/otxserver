@@ -275,6 +275,10 @@ void Game::setGameState(GameState_t newState)
 			case GAMESTATE_NORMAL:
 			case GAMESTATE_MAINTAIN:
 			case GAMESTATE_STARTUP:
+			{
+				loadNamesFromXml();		//save cache to monster names
+				break;
+			}
 			case GAMESTATE_CLOSING:
 			default:
 				break;
@@ -714,25 +718,13 @@ void Game::internalGetPosition(Item* item, Position& pos, int16_t& stackpos)
 }
 
 // make by feetads
-bool Game::existMonsterByName(const std::string& name)
-{
-    if (name.empty()){
-        return false;
-	}
-	
-    std::string names = g_config.getString(ConfigManager::FORBIDDEN_NAMES);
-    StringVec strVector = explodeString(names, ";");
-    for (StringVec::iterator itt = strVector.begin(); itt != strVector.end(); ++itt) { 
-        if (asLowerCaseString(*itt) == asLowerCaseString(name)) {
-			return true;
-        }
-    }
-
-    xmlDocPtr doc = xmlParseFile("data/monster/monsters.xml");
+void Game::loadNamesFromXml() {
+	std::map<std::string, bool> monsterNames;
+	xmlDocPtr doc = xmlParseFile("data/monster/monsters.xml");
 	if (!doc) {
 		std::clog << "[Warning - Monsters::loadFromXml] Cannot load monster file." << std::endl;
 		std::clog << getLastXMLError() << std::endl;
-		return false;
+		return;
 	}
 
 	xmlNodePtr monster, root = xmlDocGetRootElement(doc);
@@ -742,15 +734,32 @@ bool Game::existMonsterByName(const std::string& name)
 			if (nameAttr) {
 				std::string nameAttrStr = reinterpret_cast<const char*>(nameAttr);
 				xmlFree(nameAttr);
-				if (asLowerCaseString(nameAttrStr) == asLowerCaseString(name)) {
-					xmlFreeDoc(doc);
-					return true;
-				}
+				std::string nameLow = asLowerCaseString(nameAttrStr);
+				monsterNames[nameLow] = true;
 			}
 		}
 	}
+
 	xmlFreeDoc(doc);
-    return false;
+	monsterNamesMap_ = std::move(monsterNames);
+	
+	std::clog << "\033[32m>>>> [Loaded monster names into cache].\033[0m" << std::endl;
+}
+	
+bool Game::existMonsterByName(const std::string& name)
+{
+    if (name.empty()){
+        return false;
+	}
+	
+    std::string forbiddenNames = g_config.getString(ConfigManager::FORBIDDEN_NAMES);
+    StringVec forbiddenNamesVec = explodeString(forbiddenNames, ";");
+    if (std::find(forbiddenNamesVec.begin(), forbiddenNamesVec.end(), asLowerCaseString(name)) != forbiddenNamesVec.end()) {
+        return true;
+    }
+
+    auto it = monsterNamesMap_.find(asLowerCaseString(name));
+    return it != monsterNamesMap_.end();
 }
 
 Creature* Game::getCreatureByID(const uint32_t& id)

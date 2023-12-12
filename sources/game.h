@@ -682,6 +682,8 @@ class Game
 		bool isRunning() const {return services && services->is_running();}
 		int32_t getLightHour() const {return lightHour;}
 		void startDecay(Item* item);
+		
+		void loadNamesFromXml();
 
 #ifdef __GROUND_CACHE__
 		std::map<Item*, int32_t> grounds;
@@ -707,6 +709,8 @@ class Game
 		std::map<Item*, uint32_t> tradeItems;
 		AutoList<Creature> autoList;
 		RuleViolationsMap ruleViolations;
+		
+		std::map<std::string, bool> monsterNamesMap_;
 
 		size_t checkCreatureLastIndex;
 		std::vector<Creature*> checkCreatureVectors[EVENT_CREATURECOUNT];
