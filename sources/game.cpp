@@ -271,14 +271,13 @@ void Game::setGameState(GameState_t newState)
 				saveGameState((uint8_t)SAVE_PLAYERS | (uint8_t)SAVE_MAP | (uint8_t)SAVE_STATE);
 				break;
 			}
-
-			case GAMESTATE_NORMAL:
-			case GAMESTATE_MAINTAIN:
 			case GAMESTATE_STARTUP:
 			{
 				loadNamesFromXml();		//save cache to monster names
 				break;
 			}
+			case GAMESTATE_NORMAL:
+			case GAMESTATE_MAINTAIN:
 			case GAMESTATE_CLOSING:
 			default:
 				break;
@@ -7213,8 +7212,10 @@ bool Game::reloadInfo(ReloadInfo_t reload, uint32_t playerId/* = 0*/, bool compl
 
 		case RELOAD_MONSTERS:
 		{
-			if(g_monsters.reload())
+			if(g_monsters.reload()){
+				loadNamesFromXml();		//reload monster and reload names from XML
 				done = true;
+			}
 			else
 				std::clog << "[Error - Game::reloadInfo] Failed to reload monsters." << std::endl;
 
