@@ -1,0 +1,45 @@
+#!/bin/bash
+
+# Config
+servername="OTXSERVER"
+##sqlpassword=""
+
+# Allow core dumps
+ulimit -c unlimited
+
+# Set working directory
+#cd ~/server/
+
+# Main loop
+while true;
+do
+    date=$(date "+%d-%m-%y-%H-%M-%S")
+    filename="${servername}-${date}"
+    logfile="/home/togitcerto/serverlog/${filename}.log"
+
+    expect -c "
+        spawn gdb -ex \"set disable-randomization off\" -ex \"set detach-on-fork off\" --args ./theotxserver
+        set timeout -1
+        expect -re \".*gdb\"
+        send \"run\r\"
+        expect -re \".*gdb\"
+        send \"call g_game.saveGameState(13)\r\"
+        send \"bt full\r\"
+        send \"quit\r\"
+        expect -re \"Quit anyway? (y or n)\"
+        send \"y\r\"
+        sleep 1
+        interact
+    " |& tee "$logfile"
+	
+    sleep 1
+done;
+
+
+
+
+
+
+
+
+

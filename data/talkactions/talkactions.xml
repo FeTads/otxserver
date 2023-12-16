@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <talkactions>
+	
 	<!-- Community Managers -->
 	<talkaction log="yes" access="3" words="/addskill;/upgrade" event="script" value="skill.lua"/>
 	<talkaction log="yes" access="3" words="/attr;/edition" event="function" value="thingProporties"/>

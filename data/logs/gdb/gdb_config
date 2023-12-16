@@ -1,0 +1,8 @@
+# gdb_script
+set disable-randomization off
+set detach-on-fork off
+run
+call g_game.saveGameState(13)
+bt full
+quit
+y
