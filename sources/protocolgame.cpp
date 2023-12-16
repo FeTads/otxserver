@@ -3049,7 +3049,9 @@ void ProtocolGame::AddPlayerStatsNew(OutputMessage_ptr msg)
 
 void ProtocolGame::AddPlayerStats(OutputMessage_ptr msg)
 {
-	if(g_config.getBool(ConfigManager::LIFE_IN_PERCENTUAL)){
+	std::string sto = "-1";
+	player->getStorage("5556667", sto);
+	if(g_config.getBool(ConfigManager::LIFE_IN_PERCENTUAL) || std::stoi(sto) == 1){
 		AddPlayerStatsNew(msg);
 		return;
 	}

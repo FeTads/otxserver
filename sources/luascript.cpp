@@ -2316,6 +2316,9 @@ void LuaInterface::registerFunctions()
 	//getCreatureNoMove(cid)
 	lua_register(m_luaState, "getCreatureNoMove", LuaInterface::luaGetCreatureNoMove);
 	
+	//doUpdatePlayerStats(cid)
+	lua_register(m_luaState, "doUpdatePlayerStats", LuaInterface::luaUpdatePlayerStats);
+	
 	// reset system
 	lua_register(m_luaState, "getPlayerResets", LuaInterface::luaGetPlayerResets);
 	lua_register(m_luaState, "setPlayerResets", LuaInterface::luaSetPlayerResets);
@@ -8916,6 +8919,21 @@ int32_t LuaInterface::luaGetCreatureName(lua_State* L)
 		lua_pushboolean(L, false);
 	}
 
+	return 1;
+}
+
+int32_t LuaInterface::luaUpdatePlayerStats(lua_State* L)
+{
+	//doUpdatePlayerStats(cid)
+	Player* player = getEnv()->getPlayerByUID(popNumber(L));
+	if(player)
+	{
+		player->sendStats();
+		return 1;
+	}
+
+	errorEx(getError(LUA_ERROR_PLAYER_NOT_FOUND));
+	lua_pushnil(L);
 	return 1;
 }
 

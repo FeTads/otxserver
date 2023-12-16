@@ -669,6 +669,8 @@ class LuaInterface
 		static int32_t luaGetPlayerPremiumDays(lua_State* L);
 		static int32_t luaDoPlayerAddPremiumDays(lua_State* L);
 		static int32_t luaGetCreatureNoMove(lua_State* L);
+		//update stats to client, by feetads
+		static int32_t luaUpdatePlayerStats(lua_State* L);
 		
 		// reset system
 		static int32_t luaGetPlayerResets(lua_State* L);
