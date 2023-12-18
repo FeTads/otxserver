@@ -25,6 +25,7 @@ do
         expect -re \".*gdb\"
         send \"call g_game.saveGameState(13)\r\"
         send \"bt full\r\"
+		send \"detach\r\"
         send \"quit\r\"
         expect -re \"Quit anyway? (y or n)\"
         send \"y\r\"

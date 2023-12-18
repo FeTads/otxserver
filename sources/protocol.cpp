@@ -83,9 +83,9 @@ void Protocol::XTEA_encrypt(OutputMessage& msg) const
 
         uint32_t sum = 0;
         for(int32_t i = 0; i < 32; ++i) {
-            *v0 += ((*v1 << 4 ^ *v1 >> 5) + *v1) ^ sum + k[sum & 3];
+            *v0 += (((*v1 << 4) ^ (*v1 >> 5)) + *v1) ^ (sum + k[sum & 3]);
             sum -= delta;
-            *v1 += ((*v0 << 4 ^ *v0 >> 5) + *v0) ^ sum + k[(sum >> 11) & 3];
+            *v1 += (((*v0 << 4) ^ (*v0 >> 5)) + *v0) ^ (sum + k[(sum >> 11) & 3]);
         }
 
         buffer += 8;
