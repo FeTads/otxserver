@@ -231,6 +231,9 @@ void Game::setGameState(GameState_t newState)
 
 				IOGuild::getInstance()->checkWars();
 				IOGuild::getInstance()->checkEndingWars();
+				
+				loadNamesFromXml();		//save cache to monster names
+				
 				break;
 			}
 
@@ -272,10 +275,6 @@ void Game::setGameState(GameState_t newState)
 				break;
 			}
 			case GAMESTATE_STARTUP:
-			{
-				loadNamesFromXml();		//save cache to monster names
-				break;
-			}
 			case GAMESTATE_NORMAL:
 			case GAMESTATE_MAINTAIN:
 			case GAMESTATE_CLOSING:
