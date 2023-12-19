@@ -256,9 +256,7 @@ void MonsterType::dropLootOld(Container* corpse)
 		owner->getParty()->broadcastMessage((MessageClasses)g_config.getNumber(ConfigManager::LOOT_MESSAGE_TYPE), ss.str());
 	else if(message == LOOTMSG_PLAYER || message == LOOTMSG_BOTH)
 	{
-		std::string value = "-1";
-		owner->getStorage("lootch", value);
-		if (std::stoi(value) == -1)
+		if (!owner->getLoot())
 			owner->sendTextMessage((MessageClasses)g_config.getNumber(ConfigManager::LOOT_MESSAGE_TYPE), ss.str());
 		else
 			owner->sendChannelMessage("", ss.str(), MSG_CHANNEL_MANAGEMENT, CHANNEL_LOOT);
@@ -351,9 +349,7 @@ void MonsterType::dropLoot(Container* corpse)
 		owner->getParty()->broadcastMessage((MessageClasses)g_config.getNumber(ConfigManager::LOOT_MESSAGE_TYPE), ss.str());
 	else if(message == LOOTMSG_PLAYER || message == LOOTMSG_BOTH)
 	{
-		std::string value = "-1";
-		owner->getStorage("lootch", value);
-		if (std::stoi(value) == -1)
+		if (!owner->getLoot())
 			owner->sendTextMessage((MessageClasses)g_config.getNumber(ConfigManager::LOOT_MESSAGE_TYPE), ss.str());
 		else
 			owner->sendChannelMessage("", ss.str(), MSG_CHANNEL_MANAGEMENT, CHANNEL_LOOT);

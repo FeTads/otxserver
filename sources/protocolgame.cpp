@@ -1149,8 +1149,7 @@ void ProtocolGame::parseOpenChannel(NetworkMessage& msg)
 
 	if(channelId == CHANNEL_LOOT){
 		player->setGetLoot(true);
-		std::string value = "1";
-		player->setStorage("lootch", value);
+		player->sendTextMessage(MSG_INFO_DESCR, "You open Loot Channel.\nThe Loot Drop messages appear this channel.");
 	}
 }
 
@@ -1160,8 +1159,6 @@ void ProtocolGame::parseCloseChannel(NetworkMessage& msg)
 	addGameTask(&Game::playerCloseChannel, player->getID(), channelId);
 	if(channelId == CHANNEL_LOOT)
 	{
-		std::string value = "-1";
-		player->setStorage("lootch", value);
 		player->setGetLoot(false);
 		player->sendTextMessage(MSG_INFO_DESCR, "You closed the Loot Channel.\nThe Loot Drop messages appear in Server Log.");
 	}

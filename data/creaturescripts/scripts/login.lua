@@ -71,6 +71,7 @@ function onLogin(cid)
 	registerCreatureEvent(cid, "deathchannel")
 	
 	doPlayerOpenChannel(cid, 15)  --channel_death
+	doPlayerOpenChannel(cid, 0x10)  --loot channel
 
 	return true
 end
