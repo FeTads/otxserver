@@ -1378,6 +1378,8 @@ std::string Creature::TransformExpToString(double& gainExp)
 		sss << (double)(gainExp / MILHAO) << " Mi Exp";
 	else if ((uint64_t)gainExp >= MIL)
 		sss << (double)(gainExp / MIL) << "K Exp";
+	else
+		sss << (double)(gainExp) << " Exp";
 	
 	return sss.str();
 }

@@ -2913,6 +2913,8 @@ void ProtocolGame::AddTextMessage(MessageClasses mClass, const std::string& mess
 					sss << std::fixed << std::setprecision(2) << (details->value / 1000000.0) << "Mi";
 				else if(details->value > 1000)
 					sss << std::fixed << std::setprecision(1) << (details->value / 1000.0) << "K";
+				else
+					sss << asString(details->value);
 			}else
 				sss << asString(details->value);
 			AddAnimatedText(msg, *pos, details->color, sss.str());
