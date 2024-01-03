@@ -4422,18 +4422,6 @@ std::string Game::removeNonAlphabetic(const std::string& s) {
     return result;
 }
 
-bool Game::isProhibitedWords(const std::string& word, const std::vector<std::string>& prohibitedWords) {
-    std::string cleanedWord = removeNonAlphabetic(word);
-    for (const auto& prohibitedWord : prohibitedWords) {
-        std::string cleanedProhibitedWord = removeNonAlphabetic(prohibitedWord);
-        if (cleanedWord == cleanedProhibitedWord) {
-            return true;
-        }
-    }
-    return false;
-}
-
-
 bool Game::playerSay(const uint32_t& playerId, const uint16_t& channelId, const MessageClasses& type, const std::string& receiver, const std::string& text, bool notify/*= true*/)
 {
 	Player* player = getPlayerByID(playerId);
@@ -4480,11 +4468,10 @@ bool Game::playerSay(const uint32_t& playerId, const uint16_t& channelId, const 
 	StringVec prohibitedWords;
     prohibitedWords = explodeString(g_config.getString(ConfigManager::ADVERTISING_BLOCK), ";");
 	
+	std::string concatenatedText = removeNonAlphabetic(_text);
 	for (const auto& prohibitedWord : prohibitedWords) {
 		std::string cleanedProhibitedWord = removeNonAlphabetic(prohibitedWord);
-		std::string cleanedText = removeNonAlphabetic(_text);
-
-		if (isProhibitedWords(cleanedText, prohibitedWords) && player->getGroupId() < 4) {
+		if (concatenatedText.find(cleanedProhibitedWord) != std::string::npos && player->getGroupId() < 4) {
 			player->sendTextMessage(MSG_STATUS_SMALL, "You can't send this message, forbidden characters.");
 			return false;
 		}
