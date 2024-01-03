@@ -4,7 +4,7 @@
 	site = ""
 	host = ""
 	location = "Brasil"
-	advertisingBlock = "ba1ak;íp;ìp;142.;ip:;b4iak;b4i4k;abertura;142.;h0st;crle;c0nta;br;BR;ot.com;,com;20.;21.;SV;.DDNS;IP;INAUGUR;.COM;.ONLINE;-ONLINE;-WAR;BAIAK;192.;191.;sv;balan;sv-;sv.;.ga;macaco;preto;inaugur;b@i@k;.net;servegame;no-ip,.net;-war;,online;-net;.com.br;.ddns;.org;.pl;.online;.biz;.info;baiak;.tk;mapa;iiak;web;www;ip;35.;34."
+	advertisingBlock = "ba1ak;ip;b4iak;b4i4k;abertura;h0st;crle;c0nta;br;otserv;20.;21.;sv;ddns;inaugur;.com;online;war;baiak;192;m4caco;m4c4co;m4c4c0;pr3to;pr3t0;191;sv;balan;macaco;preto;b@i@k;net;servegame;org;pl;biz;tk;mapa;iiak;web;www;35;34;21"
 
 	motd = "Bem vindo ao OTXSERVER!"
 	serverName = "OTXSERVER"
