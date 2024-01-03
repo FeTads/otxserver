@@ -34,7 +34,7 @@
 	<talkaction log="yes" access="3" words="/info" event="script" value="playerinfo.lua"/>
 	<talkaction log="yes" access="3" words="/cliport;/squelch" event="script" value="gamemaster.lua"/>
 	<talkaction log="yes" access="3" words="/ghost;/invisible" event="function" value="ghost"/>
-	<talkaction log="yes" access="3" words="/mute;/unmute" event="script" value="mute.lua"/>
+	<talkaction log="yes" access="2" words="!helpmute;/helpmute;!mute;/mute;/desmute;!unmute;/unmute;!desmute" event="script" value="mute.lua"/>
 	<talkaction log="yes" access="3" words="/light" event="script" value="gamemaster.lua"/>
 	<talkaction log="yes" access="3" words="/notations" event="script" value="notations.lua"/>
 	<talkaction log="yes" access="3" words="/goto;!goto" event="script" value="teleportto.lua"/>

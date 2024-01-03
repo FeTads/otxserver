@@ -25,13 +25,13 @@ function onStartup()
 	if not monster then
 		return true 
 	end
-	monster = monster[math.random(1, #monster)]
+	local monsterToday = monster[math.random(1, #monster)]
 	local func = db.query or db.executeQuery
-	doSetStorage(BOOST_SYSTEM_MONSTER_NAME_STORAGE, monster:lower())
+	doSetStorage(BOOST_SYSTEM_MONSTER_NAME_STORAGE, monsterToday:lower())
 	doSetStorage(BOOST_SYSTEM_LOOT_BONUS_STORAGE, math.random(10, 50))
 	doSetStorage(BOOST_SYSTEM_EXP_BONUS_STORAGE, math.random(20, 48))
-	doCreateMonster(monster, monsterPosition, false, true)
-	func("INSERT INTO monster_boost (monster, loot, exp) VALUES ('"..monster.."', '"..getStorage(BOOST_SYSTEM_LOOT_BONUS_STORAGE).."', '"..getStorage(BOOST_SYSTEM_EXP_BONUS_STORAGE).."')")
+	doCreateMonster(monsterToday, monsterPosition, false, true)
+	func("INSERT INTO monster_boost (monster, loot, exp) VALUES ('"..monsterToday.."', '"..getStorage(BOOST_SYSTEM_LOOT_BONUS_STORAGE).."', '"..getStorage(BOOST_SYSTEM_EXP_BONUS_STORAGE).."')")
 	return true
 end
 
