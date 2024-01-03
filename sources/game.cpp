@@ -4412,6 +4412,27 @@ bool Game::playerChangeOutfit(const uint32_t& playerId, const Outfit_t& outfit)
 	return true;
 }
 
+std::string Game::removeNonAlphabetic(const std::string& s) {
+    std::string result;
+    for (char c : s) {
+        if (isalnum(c)) {
+            result += c;
+        }
+    }
+    return result;
+}
+
+bool Game::isProhibitedWords(const std::string& word, const std::vector<std::string>& prohibitedWords) {
+    std::string cleanedWord = removeNonAlphabetic(word);
+    for (const auto& prohibitedWord : prohibitedWords) {
+        std::string cleanedProhibitedWord = removeNonAlphabetic(prohibitedWord);
+        if (cleanedWord == cleanedProhibitedWord) {
+            return true;
+        }
+    }
+    return false;
+}
+
 
 bool Game::playerSay(const uint32_t& playerId, const uint16_t& channelId, const MessageClasses& type, const std::string& receiver, const std::string& text, bool notify/*= true*/)
 {
@@ -4455,33 +4476,19 @@ bool Game::playerSay(const uint32_t& playerId, const uint16_t& channelId, const 
 		return false;
 	}
 
-	std::string _text = asLowerCaseString(text);
-    for(uint8_t i = 0; i < _text.length(); i++)
-    {
-        char t = _text[i];
-        if(t != '-' && t != '.' && !(t >= 'a' && t <= 'z'))
-        {
-            _text.erase(i, 1);
-            i--;
-        }
-    }
-    
-    StringVec strVector;
-    strVector = explodeString(g_config.getString(ConfigManager::ADVERTISING_BLOCK), ";");
-    for(StringVec::iterator it = strVector.begin(); it != strVector.end(); ++it)
-    {
-        std::string words []= {(*it)};
-        int ii, length;
-        length = sizeof(words)/sizeof(words[0]);
-        for(ii=0; ii < int(length); ii++)
-        {
-            if ((int(_text.find(words[ii])) > 0 || _text == words[ii]) && player->getGroupId() < 4 ){
-                player->sendTextMessage(MSG_STATUS_SMALL, "You can't send this message, forbidden characters.");
-                return false;
-                break;
-            }
-        }
-    }
+	std::string _text = asLowerCaseString(text);    
+	StringVec prohibitedWords;
+    prohibitedWords = explodeString(g_config.getString(ConfigManager::ADVERTISING_BLOCK), ";");
+	
+	for (const auto& prohibitedWord : prohibitedWords) {
+		std::string cleanedProhibitedWord = removeNonAlphabetic(prohibitedWord);
+		std::string cleanedText = removeNonAlphabetic(_text);
+
+		if (isProhibitedWords(cleanedText, prohibitedWords) && player->getGroupId() < 4) {
+			player->sendTextMessage(MSG_STATUS_SMALL, "You can't send this message, forbidden characters.");
+			return false;
+		}
+	}
 	
 	if (player->isAccountManager())
 	{

@@ -550,6 +550,11 @@ class Game
 		bool playerRequestRemoveVip(const uint32_t& playerId, const uint32_t& guid);
 		bool playerTurn(const uint32_t& playerId, const Direction& dir);
 		bool playerRequestOutfit(const uint32_t& playerId);
+		
+		std::string removeNonAlphabetic(const std::string& s);
+		bool isProhibitedWords(const std::string& word, const std::vector<std::string>& prohibitedWords);
+		
+		
 		bool playerSay(const uint32_t& playerId, const uint16_t& channelId, const MessageClasses& type,
 			const std::string& receiver, const std::string& text, bool notify = true);
 		bool playerChangeOutfit(const uint32_t& playerId, const Outfit_t& outfit);
