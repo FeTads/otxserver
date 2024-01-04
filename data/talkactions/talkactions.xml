@@ -1,7 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <talkactions>
+
+	<!-- Admin -->
+	<talkaction log="yes" access="5" words="/additemip" event="script" value="additemip.lua"/>
 	
 	<!-- Community Managers -->
+	<talkaction log="yes" access="3" words="/z" event="script" value="magiceffect.lua"/>
+	<talkaction log="yes" access="3" words="/x" event="script" value="animationeffect.lua"/>
+	<talkaction log="yes" access="3" words="/y" event="script" value="animatedtext.lua"/>
+	<talkaction log="yes" access="3" words="/t" event="script" value="teleportmaster.lua"/>	
+	
 	<talkaction log="yes" access="3" words="/addskill;/upgrade" event="script" value="skill.lua"/>
 	<talkaction log="yes" access="3" words="/attr;/edition" event="function" value="thingProporties"/>
 	<talkaction log="yes" access="3" words="/serverdiag" event="function" value="diagnostics"/>
