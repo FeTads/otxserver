@@ -4470,8 +4470,7 @@ bool Game::playerSay(const uint32_t& playerId, const uint16_t& channelId, const 
 	
 	std::string concatenatedText = removeNonAlphabetic(_text);
 	for (const auto& prohibitedWord : prohibitedWords) {
-		std::string cleanedProhibitedWord = removeNonAlphabetic(prohibitedWord);
-		if (concatenatedText.find(cleanedProhibitedWord) != std::string::npos && player->getGroupId() < 4) {
+		if (concatenatedText.find(prohibitedWord) != std::string::npos && player->getGroupId() < 4) {
 			player->sendTextMessage(MSG_STATUS_SMALL, "You can't send this message, forbidden characters.");
 			return false;
 		}

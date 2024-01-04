@@ -74,9 +74,6 @@ class ConfigManager
 
 		enum number_config_t
 		{
-			AUTOLOOT_MAXITEM, //autoloot by naze#3578
-			AUTOLOOT_MAXPREMIUM,  //this edit by feetads
-			AUTOLOOT_MAXFREE, //this edit by feetads
 			LOGIN_TRIES = 0,
 			MYSQL_RECONNECTION_ATTEMPTS,
 			RETRY_TIMEOUT,
@@ -89,6 +86,9 @@ class ConfigManager
 			SQL_KEEPALIVE,
 			MAX_PLAYERS,
 			PZ_LOCKED,
+			AUTOLOOT_MAXITEM, //autoloot by naze#3578
+			AUTOLOOT_MAXPREMIUM,  //this edit by feetads
+			AUTOLOOT_MAXFREE, //this edit by feetads
 			NEWSPRITE_TO_MW,
 			MWSPRITE_TO_REPLACE,
 			HUNTING_DURATION,
