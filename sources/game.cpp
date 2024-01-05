@@ -4469,10 +4469,12 @@ bool Game::playerSay(const uint32_t& playerId, const uint16_t& channelId, const 
     prohibitedWords = explodeString(g_config.getString(ConfigManager::ADVERTISING_BLOCK), ";");
 	
 	std::string concatenatedText = removeNonAlphabetic(_text);
-	for (const auto& prohibitedWord : prohibitedWords) {
-		if (concatenatedText.find(prohibitedWord) != std::string::npos && player->getGroupId() < 4) {
-			player->sendTextMessage(MSG_STATUS_SMALL, "You can't send this message, forbidden characters.");
-			return false;
+	if (!prohibitedWords.empty() && !_text.empty()){		//if advertising is empty, don't need check nothing
+		for (const auto& prohibitedWord : prohibitedWords) {
+			if (!prohibitedWord.empty() && concatenatedText.find(prohibitedWord) != std::string::npos && player->getGroupId() < 4) {
+				player->sendTextMessage(MSG_STATUS_SMALL, "You can't send this message, forbidden characters.");
+				return false;
+			}
 		}
 	}
 	
@@ -5262,6 +5264,33 @@ bool Game::combatChangeHealth(const CombatParams& params, Creature* attacker, Cr
 				if(manaDamage && combatChangeMana(attacker, target, -manaDamage, params.combatType, true))
 					addMagicEffect(list, targetPos, MAGIC_EFFECT_LOSE_ENERGY);
 			}
+			
+			
+			//Dodge/Critical storage, disabled for now
+			/*
+			if(attacker && target){
+				Player* ptarget = NULL;
+				if((ptarget = target->getPlayer())){
+					std::string valuedod = "-1";
+					if((ptarget->getStorage("48902", valuedod))){
+						if(!valuedod.empty() && (std::stoi(valuedod)) > random_range(0, 1000)){
+							damage = 0;		//damage = 0 / can change to damage /= 2 (50%)
+							addAnimatedText(attacker->getPosition(), COLOR_LIGHTGREEN, "Dodge!");
+						}
+					}
+				}
+				Player* pattack = NULL;
+				if(damage > 0 && (pattack = attacker->getPlayer())){
+					std::string valuecrit = "-1";
+					if((pattack->getStorage("48913", valuecrit))){
+						if(!valuecrit.empty() && (std::stoi(valuecrit)) > random_range(0, 1000)){
+							damage *= 2;
+							addAnimatedText(attacker->getPosition(), COLOR_DARKRED, "CRITICAL!");
+						}
+					}
+				}
+			}
+			*/
 
 			damage = std::min(target->getHealth(), damage);
 			if(damage > 0)
