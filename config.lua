@@ -4,7 +4,7 @@
 	site = ""
 	host = ""
 	location = "Brasil"
-	advertisingBlock = "ba1ak;ip;b4iak;b4i4k;abertura;h0st;crle;c0nta;br;otserv;20.;21.;sv;ddns;inaugur;.com;online;war;baiak;192;m4caco;m4c4co;m4c4c0;pr3to;pr3t0;191;sv;balan;macaco;preto;b@i@k;net;servegame;org;pl;biz;tk;mapa;iiak;web;www;35;34;21"
+	advertisingBlock = "ba1ak;ip;b4iak;b4i4k;abertura;h0st;crle;c0nta;br;otserv;20.;21;sv;ddns;inaugur;.com;online;war;baiak;192;m4caco;m4c4co;m4c4c0;pr3to;pr3t0;191;sv;balan;macaco;preto;b@i@k;net;servegame;org;pl;biz;tk;mapa;iiak;web;www;35;34;21"
 
 	motd = "Bem vindo ao OTXSERVER!"
 	serverName = "OTXSERVER"
@@ -48,13 +48,15 @@
 	modifyExperienceInK= false
 	-- display broadcast in distro
 	displayBroadcastLog = true
+	-- enable dodge and critical in source (by storage)
+	enableCriticalAndDodgeSource = true
 
 	sqlType = "mysql"
 	sqlHost = "localhost"
 	sqlPort = 3306
 	sqlUser = "root"
 	sqlPass = ""
-	sqlDatabase = "database"
+	sqlDatabase = "db"
 	sqlFile = "schemas/otxserver.s3db"
 	sqlKeepAlive = 0
 	mysqlReadTimeout = 15000

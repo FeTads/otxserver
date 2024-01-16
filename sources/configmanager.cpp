@@ -132,6 +132,8 @@ bool ConfigManager::load()
 	m_confNumber[MWSPRITE_TO_REPLACE] = getGlobalNumber("mwSpriteId", 10180);
 	m_confBool[MW_REPLACE_ENABLE] = getGlobalBool("useMwReplaceSystem", false);
 	
+	m_confBool[CRITICALANDDODGE] = getGlobalBool("enableCriticalAndDodgeSource", false);
+	
 	m_confBool[ADD_FRAG_SAMEIP] = getGlobalBool("addFragToSameIp", false);
 	
 	m_confBool[USE_MAX_ABSORBALL] = getGlobalBool("useMaxAbsorbAll", false);

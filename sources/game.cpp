@@ -5267,8 +5267,8 @@ bool Game::combatChangeHealth(const CombatParams& params, Creature* attacker, Cr
 			
 			
 			//Dodge/Critical storage, disabled for now
-			/*
-			if(attacker && target){
+			bool useCritAndDodge = g_config.getBool(ConfigManager::CRITICALANDDODGE);
+			if(useCritAndDodge && attacker && target){
 				Player* ptarget = NULL;
 				if((ptarget = target->getPlayer())){
 					std::string valuedod = "-1";
@@ -5290,7 +5290,7 @@ bool Game::combatChangeHealth(const CombatParams& params, Creature* attacker, Cr
 					}
 				}
 			}
-			*/
+			
 
 			damage = std::min(target->getHealth(), damage);
 			if(damage > 0)

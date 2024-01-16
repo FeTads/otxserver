@@ -15,7 +15,13 @@ while true;
 do
     date=$(date "+%d-%m-%y-%H-%M-%S")
     filename="${servername}-${date}"
-    logfile="/home/togitcerto/serverlog/${filename}.log"
+    logdir="/media/server/serverlog"
+	logfile="${logdir}/${filename}.log"
+
+	# Verifica se o diretório de log existe, se não, cria
+	if [ ! -d "$logdir" ]; then
+		mkdir -p "$logdir"
+	fi
 
     expect -c "
         spawn gdb -ex \"set disable-randomization off\" -ex \"set detach-on-fork off\" --args ./theotxserver
