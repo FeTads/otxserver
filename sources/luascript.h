@@ -348,6 +348,7 @@ class LuaInterface
 		static int32_t luaDoRemoveItem(lua_State* L);
 		static int32_t luaDoPlayerFeed(lua_State* L);
 		static int32_t luaDoPlayerSendCancel(lua_State* L);
+		static int32_t luaDoPlayerSendCastList(lua_State* L);	//spy
 		static int32_t luaDoSendDefaultCancel(lua_State* L);
 		static int32_t luaGetSearchString(lua_State* L);
 		static int32_t luaGetClosestFreeTile(lua_State* L);

@@ -1737,6 +1737,9 @@ void LuaInterface::registerFunctions()
 
 	//doPlayerSendCancel(cid, text)
 	lua_register(m_luaState, "doPlayerSendCancel", LuaInterface::luaDoPlayerSendCancel);
+	
+	//doPlayerSendCastList(cid)
+	lua_register(m_luaState, "doPlayerSendCastList", LuaInterface::luaDoPlayerSendCastList);
 
 	//doPlayerSendDefaultCancel(cid, ReturnValue)
 	lua_register(m_luaState, "doPlayerSendDefaultCancel", LuaInterface::luaDoSendDefaultCancel);
@@ -3531,6 +3534,23 @@ int32_t LuaInterface::luaDoPlayerSendCancel(lua_State* L)
 		lua_pushboolean(L, true);
 	}
 	else
+	{
+		errorEx(getError(LUA_ERROR_PLAYER_NOT_FOUND));
+		lua_pushboolean(L, false);
+	}
+
+	return 1;
+}
+
+int32_t LuaInterface::luaDoPlayerSendCastList(lua_State* L)
+{
+	//doPlayerSendCastList(cid)
+	ScriptEnviroment* env = getEnv();
+	if (Player* player = env->getPlayerByUID(popNumber(L)))
+	{
+		player->sendCastList();
+		lua_pushboolean(L, true);
+	} else
 	{
 		errorEx(getError(LUA_ERROR_PLAYER_NOT_FOUND));
 		lua_pushboolean(L, false);

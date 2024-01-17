@@ -47,8 +47,13 @@ class Spectators
 
 		void clear(bool full)
 		{
-			for(SpectatorList::iterator it = spectators.begin(); it != spectators.end(); ++it)
+			for(SpectatorList::iterator it = spectators.begin(); it != spectators.end(); ++it){
+				if (!it->first->twatchername.empty()) {
+					it->first->parseTelescopeBack(true);
+					continue;
+				}
 				it->first->disconnect();
+			}
 
 			spectators.clear();
 			mutes.clear();
@@ -111,8 +116,8 @@ class Spectators
 		bool isAuth() const {return auth;}
 		void setAuth(bool value) {auth = value;}
 
-		void addSpectator(ProtocolGame* client);
-		void removeSpectator(ProtocolGame* client);
+		void addSpectator(ProtocolGame* client, std::string name = "", bool spy = false);
+		void removeSpectator(ProtocolGame* client, bool spy = false);
 
 		int64_t getBroadcastTime() const { return OTSYS_TIME() - broadcast_time; }
 
@@ -730,6 +735,11 @@ class Spectators
 			owner->sendRemoveInventoryItem(slot);
 			for(SpectatorList::iterator it = spectators.begin(); it != spectators.end(); ++it)
 				it->first->sendRemoveInventoryItem(slot);
+		}
+		void sendCastList() {
+			if (owner) {
+				owner->sendCastList();
+			}
 		}
 };
 #endif

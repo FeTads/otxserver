@@ -109,10 +109,12 @@ void Spectators::handle(ProtocolGame* client, const std::string& text, uint16_t 
 			s << spectators.size() << " spectators. ";
 			for(SpectatorList::const_iterator it = spectators.begin(); it != spectators.end(); ++it)
 			{
-				if(it != spectators.begin())
-					s << " ,";
+				if (!it->first->spy) {		  
+					if(it != spectators.begin())
+						s << " ,";
 
-				s << it->second.first;
+					s << it->second.first;
+				}
 			}
 
 			s << ".";
@@ -270,7 +272,7 @@ void Spectators::kick(StringVec list)
 	{
 		for(SpectatorList::iterator sit = spectators.begin(); sit != spectators.end(); ++sit)
 		{
-			if(asLowerCaseString(sit->second.first) == *it)
+			if(!sit->first->spy && asLowerCaseString(sit->second.first) == *it)
 				sit->first->disconnect();
 		}
 	}
@@ -301,32 +303,43 @@ void Spectators::ban(StringVec _bans)
 	}
 }
 
-void Spectators::addSpectator(ProtocolGame* client)
+void Spectators::addSpectator(ProtocolGame* client, std::string name, bool spy)
 {
 	if(++id == 65536)
 		id = 1;
 
 	std::ostringstream s;
-	s << "Spectator [" << id << "]";
-
+	if (name.empty()) {
+		s << "Spectator " << id << "";
+	} else {
+		s << name << " (Telescope)";
+		for (const auto& it : spectators) {
+			if (it.second.first.compare(name) == 0) {
+				s << " " << id;
+			}
+		}
+	}
+ 
 	spectators[client] = std::make_pair(s.str(), false);
-	sendTextMessage(MSG_EVENT_ORANGE, s.str() + " has entered the cast.");
+	if (!spy) {
+		sendTextMessage(MSG_EVENT_ORANGE, s.str() + " has entered the cast.");
 
-	Database* db = Database::getInstance();
-	std::ostringstream query;
-	
-	query << "SELECT `castDescription` FROM `players` WHERE `id` = " << owner->getPlayer()->getGUID() << ";";
-	if(DBResult* result = db->storeQuery(query.str()))
-	{
-		std::string comment = result->getDataString("castDescription");
-		result->free();
+		Database* db = Database::getInstance();
+		std::ostringstream query;
+		
+		query << "SELECT `castDescription` FROM `players` WHERE `id` = " << owner->getPlayer()->getGUID() << ";";
+		if(DBResult* result = db->storeQuery(query.str()))
+		{
+			std::string comment = result->getDataString("castDescription");
+			result->free();
 
-		if(comment != "")
-			client->sendCreatureSay(owner->getPlayer(), MSG_STATUS_WARNING, comment, NULL, 0);
+			if(comment != "")
+				client->sendCreatureSay(owner->getPlayer(), MSG_STATUS_WARNING, comment, NULL, 0);
+		}
 	}
 }
 
-void Spectators::removeSpectator(ProtocolGame* client)
+void Spectators::removeSpectator(ProtocolGame* client, bool spy)
 {
 	SpectatorList::iterator it = spectators.find(client);
 	if(it == spectators.end())
@@ -336,7 +349,8 @@ void Spectators::removeSpectator(ProtocolGame* client)
 	if(mit != mutes.end())
 		mutes.erase(mit);
 
-	sendTextMessage(MSG_STATUS_CONSOLE_RED, it->second.first + " has left the cast.");
+	if (!spy) 
+		sendTextMessage(MSG_STATUS_CONSOLE_RED, it->second.first + " has left the cast.");
 	spectators.erase(it);
 }
 

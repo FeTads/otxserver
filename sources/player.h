@@ -252,6 +252,13 @@ class Player : public Creature, public Cylinder
 		void setClientVersion(uint32_t version) {clientVersion = version;}
 
 		bool hasClient() const {return (client->getOwner() != NULL);}
+		ProtocolGame_ptr getClient() const {
+			if (client) {
+				return client->getOwner();
+			}
+			return NULL;
+		}
+		
 		bool isVirtual() const {return (getID() == 0);}
 		uint32_t getIP() const;
 		bool canOpenCorpse(uint32_t ownerId);
@@ -747,6 +754,10 @@ class Player : public Creature, public Cylinder
 			{if(client) client->sendLockRuleViolation();}
 		void sendRuleViolationCancel(const std::string& name)
 			{if(client) client->sendRuleViolationCancel(name);}
+			
+		void sendCastList() {
+			if (client) client->sendCastList();
+		}
 			
 		//sendProgressbar OTCv8 features
 		void sendProgressbar(const Creature* creature, uint32_t duration, bool ltr) {

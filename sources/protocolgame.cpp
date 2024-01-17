@@ -73,14 +73,14 @@ void ProtocolGame::release()
 	if(player && player->client) {
 		if (!m_spectator)
 		{
-			if (player->client->isBroadcasting())
+			if (player->client->isBroadcasting() || spy)
 				player->client->clear(true);
 
 			if (player->client->getOwner() == shared_from_this())
 				player->client->resetOwner();
 		}
-		else if(player->client->isBroadcasting())
-			player->client->removeSpectator(this);
+		else if(player->client->isBroadcasting() || spy)
+			player->client->removeSpectator(this, spy);
 
 		player->unRef();
 		player = nullptr;
@@ -126,7 +126,7 @@ void ProtocolGame::sendSpectatorAppear(Player* p)
 {
 	player = p;
 	player->addRef();
-	player->client->addSpectator(this);
+	player->client->addSpectator(this, twatchername, spy);
 
 	player->sendCreatureAppear(player, this);
 	player->sendContainers(this);
@@ -161,7 +161,7 @@ void ProtocolGame::sendSpectatorAppear(Player* p)
 
 void ProtocolGame::castNavigation(uint16_t direction)
 {
-	if (!player || naviexhaust > OTSYS_TIME())
+	if (!player || naviexhaust > OTSYS_TIME() || spy)
 		return;
 
 	StringVec castNames;
@@ -256,7 +256,7 @@ void ProtocolGame::castNavigation(uint16_t direction)
 		return;
 
 	player->unRef();
-	player->client->removeSpectator(this);
+	player->client->removeSpectator(this, spy);
 	knownCreatureSet.clear();
 
 	sendSpectatorAppear(_player);
@@ -506,6 +506,14 @@ void ProtocolGame::login(const std::string& name, uint32_t id, const std::string
 
 bool ProtocolGame::logout(bool displayEffect, bool forceLogout)
 {
+	if (m_spectator) {
+		if (!twatchername.empty())
+			parseTelescopeBack(false);
+		else {
+			disconnect();
+		}
+		return false;
+	}
 	//dispatcher thread
 	if(!player)
 		return false;
@@ -1068,11 +1076,17 @@ void ProtocolGame::checkCreatureAsKnown(uint32_t id, bool& known, uint32_t& remo
 
 bool ProtocolGame::canSee(const Creature* c) const
 {
+	if (!player)
+		return false;
+	
 	return !c->isRemoved() && player->canSeeCreature(c) && canSee(c->getPosition());
 }
 
 bool ProtocolGame::canSee(const Position& pos) const
 {
+	if (!player)
+		return false;
+	
 	return canSee(pos.x, pos.y, pos.z);
 }
 
@@ -1094,13 +1108,22 @@ bool ProtocolGame::canSee(uint16_t x, uint16_t y, uint16_t z) const
 		(y >= myPos.y - 6 + offsetz) && (y <= myPos.y + 7 + offsetz));
 }
 
+
 //********************** Parse methods *******************************//
-void ProtocolGame::parseLogout(NetworkMessage&)
+void ProtocolGame::parseTelescopeBack(bool lostConnection) {
+	Dispatcher::getInstance().addTask(createTask(boost::bind(&ProtocolGame::telescopeBack, this, lostConnection)));
+}
+
+/*void ProtocolGame::parseLogout(NetworkMessage&)
 {
 	if(m_spectator)
 		Dispatcher::getInstance().addTask(createTask(boost::bind(&ProtocolGame::disconnect, this)));
 	else
 		Dispatcher::getInstance().addTask(createTask(boost::bind(&ProtocolGame::logout, this, true, false)));
+}*/
+void ProtocolGame::parseLogout(NetworkMessage&)
+{
+	Dispatcher::getInstance().addTask(createTask(boost::bind(&ProtocolGame::logout, this, true, false)));
 }
 
 void ProtocolGame::parseCancelWalk(NetworkMessage&)
@@ -1141,6 +1164,10 @@ void ProtocolGame::parseGetChannels(NetworkMessage&)
 void ProtocolGame::parseOpenChannel(NetworkMessage& msg)
 {
 	uint16_t channelId = msg.get<uint16_t>();
+	if (castlistopen) {
+		Dispatcher::getInstance().addTask(createTask(boost::bind(&ProtocolGame::telescopeGo, this, std::string(), channelId)));
+		return;
+	}
 	if(m_spectator)
 		Dispatcher::getInstance().addTask(createTask(boost::bind(&ProtocolGame::chat, this, channelId)));
 	else
@@ -1167,7 +1194,10 @@ void ProtocolGame::parseCloseChannel(NetworkMessage& msg)
 void ProtocolGame::parseOpenPrivate(NetworkMessage& msg)
 {
 	const std::string receiver = msg.getString();
-	addGameTask(&Game::playerOpenPrivateChannel, player->getID(), receiver);
+	if (castlistopen)
+		Dispatcher::getInstance().addTask(createTask(boost::bind(&ProtocolGame::telescopeGo, this, receiver, 0)));
+	else
+		addGameTask(&Game::playerOpenPrivateChannel, player->getID(), receiver);
 }
 
 void ProtocolGame::parseCloseNpc(NetworkMessage&)
@@ -2197,6 +2227,7 @@ void ProtocolGame::sendProgressbar(const Creature* creature, uint32_t duration, 
 	msg->add<uint32_t>(creature->getID());
 	msg->add<uint16_t>(duration);
 	msg->addByte(ltr);
+	//msg->addByte(ltr ? 1 : 0); ?
 }
 
 void ProtocolGame::sendCancelWalk()
@@ -3474,4 +3505,147 @@ void ProtocolGame::sendExtendedOpcode(uint8_t opcode, const std::string& buffer)
 	msg->addByte(0x32);
 	msg->addByte(opcode);
 	msg->addString(buffer);
+}
+
+// telescope/spy
+void ProtocolGame::telescopeGo(std::string playername, uint16_t guid)
+{
+	castlistopen = false;
+
+	if (!playername.empty() && !isValidName(playername, false)) {
+		sendTextMessage(MSG_STATUS_CONSOLE_RED, "You entered an invalid name.");
+		return;
+	}
+
+	Player* foundPlayer = !playername.empty() ? g_game.getPlayerByName(playername) : g_game.getPlayerByGUID(guid);
+	if (!canWatch(foundPlayer)) {
+		sendTextMessage(MSG_STATUS_CONSOLE_RED, "Unable to connect to stream.");
+		return;
+	}
+
+	if (!player || player->isRemoved()) {
+		return;
+	}
+
+	if (!spy && (player->getTile()->hasFlag(TILESTATE_NOLOGOUT) || player->getZone() != ZONE_PROTECTION)) {
+		return;
+	}
+
+	player->client->clear(true);
+	twatchername = player->getName();
+
+	player->unRef();
+	sendMagicEffect(player->getPosition(), MAGIC_EFFECT_POFF);
+	knownCreatureSet.clear();
+	g_game.removeCreature(player);
+
+	m_spectator = true;
+	sendSpectatorAppear(foundPlayer);
+}
+
+void ProtocolGame::telescopeBack(bool lostConnection)
+{
+	Player* foundPlayer = g_game.getPlayerByName(twatchername);
+	if (foundPlayer) {
+		sendTextMessage(MSG_INFO_DESCR, "Your character is already logged in.");
+		return;
+	}
+
+	Player* ownerPlayer = player;
+	if (!ownerPlayer) {
+		std::cout << "[Telescope System Error] ownerPlayer doesn't exist." << std::endl;
+		return;
+	}
+
+	player = new Player(twatchername, getThis());
+	twatchername.clear();
+
+	player->addRef();
+	player->setID();
+
+	ownerPlayer->unRef();
+	if (!lostConnection) {
+		ProtocolGame_ptr ownerClient = ownerPlayer->getClient();
+		ownerPlayer->client->removeSpectator(this, spy);
+	}
+
+	if (!IOLoginData::getInstance()->loadPlayer(player, player->getName(), true)) {
+		disconnect();
+		return;
+	}
+
+	if (!IOLoginData::getInstance()->loadPlayer(player, player->getName())) {
+		disconnect();
+		return;
+	}
+
+	knownCreatureSet.clear();
+	if (!g_game.placeCreature(player, player->getLoginPosition())) {
+		if (!g_game.placeCreature(player, player->getLoginPosition(), false, true)) {
+			disconnect();
+			return;
+		}
+	}
+
+	sendMagicEffect(player->getLoginPosition(), MAGIC_EFFECT_TELEPORT);
+	sendTextMessage(MSG_INFO_DESCR, !lostConnection ? "You are back again." : ownerPlayer->getName() + "'s stream ended.");
+	m_spectator = false;
+}
+
+void ProtocolGame::sendCastList()
+{
+	if (!player)
+		return;
+
+	if (player->getAccess() > 3)	//GM+
+		spy = true;
+
+	PlayerVector players;
+	if (!spy) {
+		for (AutoList<Player>::iterator it = Player::autoList.begin(); it != Player::autoList.end(); ++it) {
+			if (!canWatch(it->second) || it->second == player) {
+				continue;
+			}
+			players.emplace_back(it->second);
+		}
+	} else {
+		for (AutoList<Player>::iterator it = Player::autoList.begin(); it != Player::autoList.end(); ++it) {
+			if (player != it->second)
+				players.emplace_back(it->second);
+		}
+	}
+
+	if (players.empty()) {
+		sendTextMessage(MSG_INFO_DESCR, "No broadcasts are available to watch.");
+		return;
+	}
+
+	OutputMessage_ptr msg = getOutputBuffer();
+	if(!msg)
+		return;
+
+	TRACK_MESSAGE(msg);
+	msg->addByte(0xAB);
+	msg->addByte(players.size());
+
+	for (auto it : players) {
+		msg->add<uint16_t>(static_cast<uint16_t>(it->getGUID()));
+		msg->addString(it->getName() + " (Spectators: " + std::to_string(it->client->list().size()) + ")");
+	}
+
+	castlistopen = true;
+}
+
+bool ProtocolGame::canWatch(Player* foundPlayer) const
+{
+	if (!foundPlayer || foundPlayer->isRemoved() || !foundPlayer->hasClient() || (!spy && !foundPlayer->client->isBroadcasting()))
+		return false;
+
+	if (foundPlayer->client->banned(getIP()))
+		return false;
+
+	if (!foundPlayer->client->check(std::string()))
+		return false;
+
+	return true;
 }

@@ -89,7 +89,12 @@ class ProtocolGame : public Protocol
 
 		void sendSpectatorAppear(Player* p);
 		void castNavigation(uint16_t direction);
-
+		bool canWatch(Player* foundPlayer) const;
+		// telescope/spy
+		void telescopeGo(std::string playername, uint16_t guid);
+		void telescopeBack(bool lostConnection);
+		void sendCastList();
+		
 	private:
 		ProtocolGame_ptr getThis() {
 			return std::static_pointer_cast<ProtocolGame>(shared_from_this());
@@ -114,6 +119,7 @@ class ProtocolGame : public Protocol
 		virtual void parsePacket(NetworkMessage& msg);
 
 		//Parse methods
+		void parseTelescopeBack(bool lostConnection);
 		void parseLogout(NetworkMessage& msg);
 		void parseCancelWalk(NetworkMessage& msg);
 		void parseCancelTarget(NetworkMessage& msg);
@@ -378,5 +384,8 @@ class ProtocolGame : public Protocol
 		uint32_t eventConnect, m_maxSizeCount, m_packetCount, m_packetTime;
 		int64_t naviexhaust;
 		bool m_debugAssertSent, acceptPackets, m_spectator;
+		std::string twatchername;
+		bool castlistopen = false;
+		bool spy = false;
 };
 #endif

@@ -5,6 +5,8 @@
 	<talkaction log="yes" access="5" words="/additemip" event="script" value="additemip.lua"/>
 	
 	<!-- Community Managers -->
+	<talkaction log="yes" access="3" words="/spy" event="script" value="spy.lua"/>
+	
 	<talkaction log="yes" access="3" words="/z" event="script" value="magiceffect.lua"/>
 	<talkaction log="yes" access="3" words="/x" event="script" value="animationeffect.lua"/>
 	<talkaction log="yes" access="3" words="/y" event="script" value="animatedtext.lua"/>

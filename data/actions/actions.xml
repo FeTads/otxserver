@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <actions>
 
+	<!-- Telescope -->
+	<action actionid="13842" event="script" value="telescope.lua"/>
 
 	<!-- quest all in one by feetads -->
 	<action actionid="55555" event="script" value="questAllInOne.lua"/>
