@@ -321,6 +321,15 @@ class Spectators
 			for(SpectatorList::iterator it = spectators.begin(); it != spectators.end(); ++it)
 				it->first->sendChangeSpeed(creature, speed);
 		}
+		void sendProgressbar(const Creature* creature, uint32_t duration, bool ltr = true)
+		{
+			if(!owner)
+				return;
+
+			owner->sendProgressbar(creature, duration, ltr);
+			for(SpectatorList::iterator it = spectators.begin(); it != spectators.end(); ++it)
+				it->first->sendProgressbar(creature, duration, ltr);
+		}
 		void sendCancelTarget()
 		{
 			if(!owner)

@@ -692,6 +692,10 @@ class Game
 		std::map<Item*, int32_t> grounds;
 #endif
 
+	void setCreatureSpeed(Creature* creature, int32_t speed);
+	//progressbar to otcv8
+	void startProgressbar(Creature* creature, uint32_t duration, bool ltr = true);
+
 	protected:
 		bool playerWhisper(Player* player, const std::string& text, const uint32_t& statementId);
 		bool playerYell(Player* player, const std::string& text, const uint32_t& statementId);

@@ -511,6 +511,11 @@ class LuaInterface
 		static int32_t luaGetCreatureHealth(lua_State* L);
 		static int32_t luaGetCreatureMaxHealth(lua_State* L);
 		static int32_t luaGetCreatureSpeed(lua_State* L);
+		static int32_t luaSetCreatureSpeed(lua_State* L);
+		
+		//sendProgressbar OTCv8 features
+		static int32_t luaSendProgressbar(lua_State* L);
+		
 		static int32_t luaGetCreatureBaseSpeed(lua_State* L);
 		static int32_t luaGetCreatureTarget(lua_State* L);
 		static int32_t luaGetCreatureLookDirection(lua_State* L);

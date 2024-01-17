@@ -2201,6 +2201,12 @@ void LuaInterface::registerFunctions()
 
 	//getCreatureSpeed(cid)
 	lua_register(m_luaState, "getCreatureSpeed", LuaInterface::luaGetCreatureSpeed);
+	
+	//setCreatureSpeed(cid)
+	lua_register(m_luaState, "setCreatureSpeed", LuaInterface::luaSetCreatureSpeed);
+	
+	//sendPlayerProgressBar(cid, duration, leftToRight)	
+	lua_register(m_luaState, "sendPlayerProgressBar", LuaInterface::luaSendProgressbar);
 
 	//getCreatureBaseSpeed(cid)
 	lua_register(m_luaState, "getCreatureBaseSpeed", LuaInterface::luaGetCreatureBaseSpeed);
@@ -9217,6 +9223,45 @@ int32_t LuaInterface::luaGetCreatureSpeed(lua_State* L)
 		lua_pushnumber(L, creature->getSpeed());
 	else
 	{
+		errorEx(getError(LUA_ERROR_CREATURE_NOT_FOUND));
+		lua_pushboolean(L, false);
+	}
+
+	return 1;
+}
+
+int32_t LuaInterface::luaSetCreatureSpeed(lua_State* L)
+{
+	//setCreatureSpeed(cid, speed)
+	int32_t speed = popNumber(L);
+	ScriptEnviroment* env = getEnv();
+	if (Creature* creature = env->getCreatureByUID(popNumber(L))) {
+		g_game.setCreatureSpeed(creature, speed);
+		lua_pushboolean(L, true);
+	} else {
+		errorEx(getError(LUA_ERROR_CREATURE_NOT_FOUND));
+		lua_pushboolean(L, false);
+	}
+
+	return 1;
+
+}
+
+int32_t LuaInterface::luaSendProgressbar(lua_State* L)
+{
+	//sendPlayerProgressBar(cid, duration, leftToRight)	
+	uint32_t params = lua_gettop(L), duration = 2;
+	bool leftToRight = true;
+	if(params > 2)
+		leftToRight = popBoolean(L);
+	if(params > 1)
+		duration = popNumber(L);
+	
+	ScriptEnviroment* env = getEnv();
+	if(Creature* creature = env->getCreatureByUID(popNumber(L))){
+		g_game.startProgressbar(creature, duration, leftToRight);
+		lua_pushboolean(L, true);
+	}else{
 		errorEx(getError(LUA_ERROR_CREATURE_NOT_FOUND));
 		lua_pushboolean(L, false);
 	}

@@ -2183,6 +2183,22 @@ void ProtocolGame::sendChangeSpeed(const Creature* creature, uint32_t speed)
 	msg->add<uint16_t>(speed);
 }
 
+void ProtocolGame::sendProgressbar(const Creature* creature, uint32_t duration, bool ltr/*=true*/)
+{
+	if(!canSee(creature))
+		return;
+
+	OutputMessage_ptr msg = getOutputBuffer();
+	if(!msg)
+		return;
+
+	TRACK_MESSAGE(msg);
+	msg->addByte(0x3b);
+	msg->add<uint32_t>(creature->getID());
+	msg->add<uint16_t>(duration);
+	msg->addByte(ltr);
+}
+
 void ProtocolGame::sendCancelWalk()
 {
 	OutputMessage_ptr msg = getOutputBuffer();

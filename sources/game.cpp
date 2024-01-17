@@ -7514,3 +7514,25 @@ void Game::parsePlayerExtendedOpcode(const uint32_t& playerId, const uint8_t& op
 	for(CreatureEventList::iterator it = extendedOpcodeEvents.begin(); it != extendedOpcodeEvents.end(); ++it)
 		(*it)->executeExtendedOpcode(player, opcode, buffer);
 }
+
+void Game::setCreatureSpeed(Creature* creature, int32_t speed)
+{
+	creature->setBaseSpeed(speed);
+
+	//send to client
+	SpectatorVec list;
+	getSpectators(list, creature->getPosition(), true, true);
+	for (Creature* spectator : list) {
+		spectator->getPlayer()->sendChangeSpeed(creature, creature->getStepSpeed());
+	}
+}
+
+void Game::startProgressbar(Creature* creature, uint32_t duration, bool ltr/*=true*/)
+{
+    //send to client
+    SpectatorVec list;
+    getSpectators(list, creature->getPosition(), false, true);
+    for (Creature* spectator : list) {
+        spectator->getPlayer()->sendProgressbar(creature, duration, ltr);
+    }
+}

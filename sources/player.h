@@ -747,6 +747,11 @@ class Player : public Creature, public Cylinder
 			{if(client) client->sendLockRuleViolation();}
 		void sendRuleViolationCancel(const std::string& name)
 			{if(client) client->sendRuleViolationCancel(name);}
+			
+		//sendProgressbar OTCv8 features
+		void sendProgressbar(const Creature* creature, uint32_t duration, bool ltr) {
+			{if (client) client->sendProgressbar(creature, duration, ltr);}
+        }
 
 		void sendCritical() const;
 		void sendPlayerIcons(Player* player);
