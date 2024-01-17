@@ -50,6 +50,9 @@
 	displayBroadcastLog = true
 	-- enable dodge and critical in source (by storage)
 	enableCriticalAndDodgeSource = true
+	-- player can push other player in PZ
+	pushInProtectZone = false
+
 
 	sqlType = "mysql"
 	sqlHost = "localhost"
