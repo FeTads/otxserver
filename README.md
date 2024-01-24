@@ -14,6 +14,18 @@ Whatsapp: +55 41 9 84036942<br><br>
 Discord: FeeTads / FeeTads#0246
 
 added systems:<br>
+Cast system spy<br>
+CreatureSetSpeed (roullete system or fix sendChangeSpeed)<br>
+critical and dodge in source (by storage, attack critical in monster)<br>
+Advertising block words 100% fixed (*is coming fake chat*)<br>
+Exp in K (1k exp), configue in config.lua<br>
+delete or rename players with monster name (configurable in config.lua) <br> can use existMonsterByName(name) to get monster exit with name
+Added restarter.sh with anti rollback system (if crash distro, send save server)<br>
+Damage can be changed to K (1k - 10k - 100k - 1KK)<br>
+EmoteSpell system<br>
+GM+ don't send effects with ghost mode<br>
+
+<br>
 Autoloot system (enable in config.lua)<br>
 Exp cast (cast navigation + exp enable in config.lua)<br>
 reset system (enable in config.lua +2%exp each reset)<br>
