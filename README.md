@@ -13,13 +13,20 @@ E-mail: felps18.082@gmail.com<br>
 Whatsapp: +55 41 9 84036942<br><br>
 Discord: FeeTads / FeeTads#0246
 
+soon:<br>
+Fake chat (send advertising words, only appear in player screen and player IP)<br>
+Some features to OTCv8 enable<br>
+New branches for alternative servers (dbo/nto)<br>
+
+
 added systems:<br>
 Cast system spy<br>
 CreatureSetSpeed (roullete system or fix sendChangeSpeed)<br>
 critical and dodge in source (by storage, attack critical in monster)<br>
 Advertising block words 100% fixed (*is coming fake chat*)<br>
 Exp in K (1k exp), configue in config.lua<br>
-delete or rename players with monster name (configurable in config.lua) <br> can use existMonsterByName(name) to get monster exit with name
+delete or rename players with monster name (configurable in config.lua) <br> 
+can use existMonsterByName(name) to get monster exit with name<br>
 Added restarter.sh with anti rollback system (if crash distro, send save server)<br>
 Damage can be changed to K (1k - 10k - 100k - 1KK)<br>
 EmoteSpell system<br>
