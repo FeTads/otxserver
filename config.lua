@@ -155,6 +155,9 @@
 	maxViolationCommentSize = 60
 	violationNameReportActionType = 2
 	
+	--optional PVP
+	optionalProtection = false
+	
 	-- Corpse Block
 		-- If set to true, players won't be able to immediately throw fields on top of corpses after killing the monster
 	allowCorpseBlock = false
@@ -304,8 +307,8 @@
 	allowChangeAddons = true
 	addonsOnlyPremium = false
 
-	ghostModeInvisibleEffect = false
-	ghostModeSpellEffects = false
+	ghostModeInvisibleEffect = true
+	ghostModeSpellEffects = true
 
 	idleWarningTime = 14 * 60 * 1000
 	idleKickTime = 15 * 60 * 1000

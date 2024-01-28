@@ -1431,10 +1431,12 @@ void Player::onCreatureAppear(const Creature* creature)
 //by feetads, use "protect mode" in players
 	Condition* condition = NULL;
 	if(this->getGroupId() < 3){
-		if(this->getPlayer() && (condition = Condition::createCondition(CONDITIONID_DEFAULT, CONDITION_GAMEMASTER, 5*1000, 0, false, GAMEMASTER_INVISIBLE))){
+		int32_t cooldown = g_config.getNumber(ConfigManager::LOGIN_PROTECTION) - 100;		// ghost mode by protect login time
+		if(this->getPlayer() && (condition = Condition::createCondition(CONDITIONID_DEFAULT, CONDITION_GAMEMASTER, cooldown, 0, false, GAMEMASTER_INVISIBLE))){
 			this->addCondition(condition);
 		}
 	}
+	
 	Item* item = NULL;
 	for(int32_t slot = SLOT_FIRST; slot < SLOT_LAST; ++slot)
 	{

@@ -514,6 +514,7 @@ bool ProtocolGame::logout(bool displayEffect, bool forceLogout)
 		}
 		return false;
 	}
+	
 	//dispatcher thread
 	if(!player)
 		return false;
@@ -528,7 +529,7 @@ bool ProtocolGame::logout(bool displayEffect, bool forceLogout)
 		player->sendTextMessage(MSG_STATUS_SMALL, "You have to wait a while to logout.");
 		return false;
 	}
-
+	
 	if(!player->isRemoved())
 	{
 		if(!forceLogout)
@@ -3229,8 +3230,9 @@ void ProtocolGame::AddCreatureHealth(OutputMessage_ptr msg,const Creature* creat
 
 void ProtocolGame::AddCreatureOutfit(OutputMessage_ptr msg, const Creature* creature, const Outfit_t& outfit, bool outfitWindow/* = false*/)
 {
-	if(outfitWindow || (!creature->isInvisible() && (!creature->isGhost()
-		|| !g_config.getBool(ConfigManager::GHOST_INVISIBLE_EFFECT))))
+	const Player* cp = creature->getPlayer();
+	if ((outfitWindow || (!creature->isInvisible() && (!creature->isGhost() || !g_config.getBool(ConfigManager::GHOST_INVISIBLE_EFFECT)))) ||
+		(cp && cp->isGhost() && cp->getGroupId() < 3))		//if player is ghost and GHOST_INVISIBLE_EFFECT = true, send normal outfit
 	{
 		msg->add<uint16_t>(outfit.lookType);
 		if(outfit.lookType)
