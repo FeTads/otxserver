@@ -46,8 +46,8 @@ function onKill(cid, target, lastHit)
 	end
 
 	local bonusMonster = getStorage(BOOST_SYSTEM_MONSTER_NAME_STORAGE)
-	local targetName = getCreatureName(target)
-	if not targetName:lower():find(bonusMonster) then
+	local targetName = string.lower(getCreatureName(target))
+	if targetName ~= bonusMonster then
 		return true
 	end
 
