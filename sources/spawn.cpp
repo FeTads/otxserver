@@ -261,13 +261,16 @@ Spawn::~Spawn()
 	spawnMap.clear();
 }
 
-bool Spawn::findPlayer(const Position& pos)
+bool Spawn::findPlayer(const Position& pos, bool blocked)
 {
 	SpectatorVec list;
 	g_game.getSpectators(list, pos, false, true);
 	for (Creature* spectator : list) {
-		if (!spectator->getPlayer()->hasFlag(PlayerFlag_IgnoredByMonsters))
+		if (blocked && !spectator->getPlayer()->hasFlag(PlayerFlag_IgnoredByMonsters)){
 			return true;
+		} else if(!blocked && (spectator->getPlayer()->getSkull() == SKULL_WHITE)) {
+			return true;
+		}
 	}
 	return false;
 }
@@ -345,7 +348,8 @@ void Spawn::checkSpawn()
 		if(OTSYS_TIME() < sb.lastSpawn + sb.interval)
 			continue;
 
-		if(g_config.getBool(ConfigManager::ALLOW_BLOCK_SPAWN) && findPlayer(sb.pos))
+		bool block = g_config.getBool(ConfigManager::ALLOW_BLOCK_SPAWN);
+		if(findPlayer(sb.pos, block))
 		{
 			sb.lastSpawn = OTSYS_TIME();
 			continue;
