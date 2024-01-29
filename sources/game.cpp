@@ -4467,13 +4467,14 @@ bool Game::playerSay(const uint32_t& playerId, const uint16_t& channelId, const 
 	std::string _text = asLowerCaseString(text);    
 	StringVec prohibitedWords;
     prohibitedWords = explodeString(g_config.getString(ConfigManager::ADVERTISING_BLOCK), ";");
+	bool fakeChat = false;
 	
 	std::string concatenatedText = removeNonAlphabetic(_text);
 	if (!prohibitedWords.empty() && !_text.empty()){		//if advertising is empty, don't need check nothing
 		for (const auto& prohibitedWord : prohibitedWords) {
 			if (!prohibitedWord.empty() && concatenatedText.find(prohibitedWord) != std::string::npos && player->getGroupId() < 4) {
-				player->sendTextMessage(MSG_STATUS_SMALL, "You can't send this message, forbidden characters.");
-				return false;
+				fakeChat = true;
+				break;
 			}
 		}
 	}
@@ -4511,24 +4512,24 @@ bool Game::playerSay(const uint32_t& playerId, const uint16_t& channelId, const 
 	switch (type)
 	{
 	case MSG_SPEAK_SAY:
-		return internalCreatureSay(player, MSG_SPEAK_SAY, text, false, NULL, NULL, statementId);
+		return internalCreatureSay(player, MSG_SPEAK_SAY, text, false, NULL, NULL, statementId, fakeChat);
 	case MSG_SPEAK_WHISPER:
-		return playerWhisper(player, text, statementId);
+		return playerWhisper(player, text, statementId, fakeChat);
 	case MSG_SPEAK_YELL:
-		return playerYell(player, text, statementId);
+		return playerYell(player, text, statementId, fakeChat);
 	case MSG_PRIVATE:
 	case MSG_GAMEMASTER_PRIVATE:
 	case MSG_RVR_ANSWER:
-		return playerSpeakTo(player, type, receiver, text, statementId, notify);
+		return playerSpeakTo(player, type, receiver, text, statementId, notify, fakeChat);
 	case MSG_CHANNEL:
 	case MSG_CHANNEL_HIGHLIGHT:
 	case MSG_GAMEMASTER_CHANNEL:
 	case MSG_GAMEMASTER_ANONYMOUS:
 	{
-		if (playerSpeakToChannel(player, type, text, channelId, statementId))
+		if (playerSpeakToChannel(player, type, text, channelId, statementId, fakeChat))
 			return true;
 
-		return internalCreatureSay(player, MSG_SPEAK_SAY, text, false, NULL, NULL, statementId);
+		return internalCreatureSay(player, MSG_SPEAK_SAY, text, false, NULL, NULL, statementId, fakeChat);
 	}
 	case MSG_NPC_TO:
 		return playerSpeakToNpc(player, text);
@@ -4548,15 +4549,15 @@ bool Game::playerSay(const uint32_t& playerId, const uint16_t& channelId, const 
 	return false;
 }
 
-bool Game::playerWhisper(Player* player, const std::string& text, const uint32_t& statementId)
+bool Game::playerWhisper(Player* player, const std::string& text, const uint32_t& statementId, bool fakeChat/*= false*/)
 {
 	SpectatorVec list;
 	getSpectators(list, player->getPosition(), false, false, 1, 1);
-	internalCreatureSay(player, MSG_SPEAK_WHISPER, text, false, &list, NULL, statementId);
+	internalCreatureSay(player, MSG_SPEAK_WHISPER, text, false, &list, NULL, statementId, fakeChat);
 	return true;
 }
 
-bool Game::playerYell(Player* player, const std::string& text, const uint32_t& statementId)
+bool Game::playerYell(Player* player, const std::string& text, const uint32_t& statementId, bool fakeChat/*= false*/)
 {
 	if(player->getLevel() < 20 && !player->hasFlag(PlayerFlag_CannotBeMuted) && player->getPremiumDays() < 1)
 	{
@@ -4576,12 +4577,12 @@ bool Game::playerYell(Player* player, const std::string& text, const uint32_t& s
 			player->addCondition(condition);
 	}
 
-	internalCreatureSay(player, MSG_SPEAK_YELL, asUpperCaseString(text), false, NULL, NULL, statementId);
+	internalCreatureSay(player, MSG_SPEAK_YELL, asUpperCaseString(text), false, NULL, NULL, statementId, fakeChat);
 	return true;
 }
 
 bool Game::playerSpeakTo(Player* player, MessageClasses type, const std::string& receiver,
-	const std::string& text, const uint32_t& statementId, bool notify/*= true*/)
+	const std::string& text, const uint32_t& statementId, bool notify/*= true*/, bool fakeChat/*= false*/)
 {
 	Player* toPlayer = getPlayerByName(receiver);
 	if((!toPlayer || toPlayer->isRemoved()) && notify)
@@ -4613,14 +4614,14 @@ bool Game::playerSpeakTo(Player* player, MessageClasses type, const std::string&
 	}
 	
 	char buffer[80];
-	toPlayer->sendCreatureSay(player, type, text, NULL, statementId);
-	toPlayer->onCreatureSay(player, type, text);
+	if(fakeChat && toPlayer->getIP() == player->getIP()){
+		toPlayer->sendCreatureSay(player, type, text, NULL, statementId);
+		toPlayer->onCreatureSay(player, type, text);
+	}
 
-	if (!canSee && notify)
-	{
+	if (!canSee && notify){
 		player->sendTextMessage(MSG_STATUS_SMALL, "A player with this name is not online.");
-	}else 
-	{
+	}else {
 		if(notify){
 			sprintf(buffer, "Message sent to %s.", toPlayer->getName().c_str());
 			player->sendTextMessage(MSG_STATUS_SMALL, buffer);
@@ -4630,7 +4631,7 @@ bool Game::playerSpeakTo(Player* player, MessageClasses type, const std::string&
 	return true;
 }
 
-bool Game::playerSpeakToChannel(Player* player, MessageClasses type, const std::string& text, const uint16_t& channelId, const uint32_t& statementId)
+bool Game::playerSpeakToChannel(Player* player, MessageClasses type, const std::string& text, const uint16_t& channelId, const uint32_t& statementId, bool fakeChat/*= false*/)
 {
 	if(player->hasCondition(CONDITION_EXHAUST, EXHAUST_PLAYERSPEAK))
 	{
@@ -4677,7 +4678,7 @@ bool Game::playerSpeakToChannel(Player* player, MessageClasses type, const std::
 	}
 
 	if(text.length() < 251)
-		return g_chat.talk(player, type, text, channelId, statementId, false);
+		return g_chat.talk(player, type, text, channelId, statementId, false, fakeChat);
 
 	player->sendCancelMessage(RET_NOTPOSSIBLE);
 	return false;
@@ -4785,7 +4786,7 @@ bool Game::internalCreatureTurn(Creature* creature, const Direction& dir)
 }
 
 bool Game::internalCreatureSay(Creature* creature, MessageClasses type, const std::string& text,
-	bool ghostMode, SpectatorVec* spectators/* = NULL*/, Position* pos/* = NULL*/, uint32_t statementId/* = 0*/, bool isSpell/* = false*/)
+	bool ghostMode, SpectatorVec* spectators/* = NULL*/, Position* pos/* = NULL*/, uint32_t statementId/* = 0*/, bool isSpell/* = false*/, bool fakeChat/*= false*/)
 {
 	Player* player = creature->getPlayer();
 	if(player && player->isAccountManager() && !ghostMode)
@@ -4797,6 +4798,25 @@ bool Game::internalCreatureSay(Creature* creature, MessageClasses type, const st
 	Position destPos = creature->getPosition();
 	if(pos)
 		destPos = (*pos);
+	
+	if (fakeChat && player){
+		if(isSpell && g_config.getBool(ConfigManager::EMOTE_SPELLS)){
+			std::string value;
+			if(player->getStorage("35001", value)){
+				if(std::stoi(value) == 1)
+					player->sendCreatureSay(creature, MSG_SPEAK_YELL, text, &destPos, statementId);
+				else if(std::stoi(value) == 2){
+					//player->sendCreatureSay(creature, MSG_NONE, text, &destPos, statementId); //no message needed
+				}else
+					player->sendCreatureSay(creature, type, text, &destPos, statementId);
+			}
+			else
+				player->sendCreatureSay(creature, type, text, &destPos, statementId);
+		}
+		else
+			player->sendCreatureSay(creature, type, text, &destPos, statementId);
+		return true;
+	}
 
 	SpectatorVec list;
 	SpectatorVec::const_iterator it;

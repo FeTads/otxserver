@@ -153,7 +153,7 @@ bool ChatChannel::removeUser(Player* player, bool/* exclude = false*/)
 	return true;
 }
 
-bool ChatChannel::talk(Player* player, MessageClasses type, const std::string& text, uint32_t statementId)
+bool ChatChannel::talk(Player* player, MessageClasses type, const std::string& text, uint32_t statementId, bool fakeChat/*= false*/)
 {
 	UsersMap::iterator it = m_users.find(player->getID());
 	if(it == m_users.end())
@@ -174,10 +174,12 @@ bool ChatChannel::talk(Player* player, MessageClasses type, const std::string& t
 		if(Condition* condition = m_condition->clone())
 			player->addCondition(condition);
 	}
-
-	for(it = m_users.begin(); it != m_users.end(); ++it)
-		it->second->sendCreatureChannelSay(player, ntype, text, m_id, statementId);
-
+	
+	if(!fakeChat){	//if fake chat, send only to player, not in others screen
+		for(it = m_users.begin(); it != m_users.end(); ++it)
+			it->second->sendCreatureChannelSay(player, ntype, text, m_id, statementId);
+	}
+	
 	if(hasFlag(CHANNELFLAG_LOGGED) && m_file->is_open())
 		*m_file << "[" << formatDate() << "] " << player->getName() << ": " << text << std::endl;
 
@@ -583,7 +585,7 @@ void Chat::removeUserFromChannels(Player* player)
 }
 
 bool Chat::talk(Player* player, MessageClasses type, const std::string& text, uint16_t channelId,
-	uint32_t statementId, bool anonymous/* = false*/)
+	uint32_t statementId, bool anonymous/* = false*/, bool fakeChat/*= false*/)
 {
 	if(text.empty())
 		return false;
@@ -642,8 +644,8 @@ bool Chat::talk(Player* player, MessageClasses type, const std::string& text, ui
 
 		if(anonymous)
 			return channel->talk("", type, text);
-
-		return channel->talk(player, type, text, statementId);
+		
+		return channel->talk(player, type, text, statementId, fakeChat);
 	}
 
 	if(!player->getGuildId())

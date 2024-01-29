@@ -480,7 +480,7 @@ class Game
 		  * \param pos Appear as sent from different position
 		  */
 		bool internalCreatureSay(Creature* creature, MessageClasses type, const std::string& text,
-			bool ghostMode, SpectatorVec* spectators = NULL, Position* pos = NULL, uint32_t statementId = 0, bool isSpell = false);
+			bool ghostMode, SpectatorVec* spectators = NULL, Position* pos = NULL, uint32_t statementId = 0, bool isSpell = false, bool fakeChat = false);
 
 		bool internalStartTrade(Player* player, Player* partner, Item* tradeItem);
 		bool internalCloseTrade(Player* player);
@@ -697,10 +697,10 @@ class Game
 	void startProgressbar(Creature* creature, uint32_t duration, bool ltr = true);
 
 	protected:
-		bool playerWhisper(Player* player, const std::string& text, const uint32_t& statementId);
-		bool playerYell(Player* player, const std::string& text, const uint32_t& statementId);
-		bool playerSpeakTo(Player* player, MessageClasses type, const std::string& receiver, const std::string& text, const uint32_t& statementId, bool notify = true);
-		bool playerSpeakToChannel(Player* player, MessageClasses type, const std::string& text, const uint16_t& channelId, const uint32_t& statementId);
+		bool playerWhisper(Player* player, const std::string& text, const uint32_t& statementId, bool fakeChat = false);
+		bool playerYell(Player* player, const std::string& text, const uint32_t& statementId, bool fakeChat = false);
+		bool playerSpeakTo(Player* player, MessageClasses type, const std::string& receiver, const std::string& text, const uint32_t& statementId, bool notify = true, bool fakeChat = false);
+		bool playerSpeakToChannel(Player* player, MessageClasses type, const std::string& text, const uint16_t& channelId, const uint32_t& statementId, bool fakeChat = false);
 		bool playerSpeakToNpc(Player* player, const std::string& text);
 		bool playerReportRuleViolation(Player* player, const std::string& text);
 		bool playerContinueReport(Player* player, const std::string& text);

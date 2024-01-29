@@ -268,7 +268,9 @@ bool Spawn::findPlayer(const Position& pos, bool blocked)
 	for (Creature* spectator : list) {
 		if (blocked && !spectator->getPlayer()->hasFlag(PlayerFlag_IgnoredByMonsters)){
 			return true;
-		} else if(!blocked && (spectator->getPlayer()->getSkull() == SKULL_WHITE)) {
+		} else if (!blocked && (spectator->getPlayer()->getSkull() == SKULL_WHITE)) {
+			// If allowBlockSpawn is false, monsters can be summoned on screen,
+			// this part is preventing infinite PK situations.
 			return true;
 		}
 	}
