@@ -4512,7 +4512,7 @@ bool Game::playerSay(const uint32_t& playerId, const uint16_t& channelId, const 
 	switch (type)
 	{
 	case MSG_SPEAK_SAY:
-		return internalCreatureSay(player, MSG_SPEAK_SAY, text, false, NULL, NULL, statementId, fakeChat);
+		return internalCreatureSay(player, MSG_SPEAK_SAY, text, false, NULL, NULL, statementId, false, fakeChat);
 	case MSG_SPEAK_WHISPER:
 		return playerWhisper(player, text, statementId, fakeChat);
 	case MSG_SPEAK_YELL:
@@ -4529,7 +4529,7 @@ bool Game::playerSay(const uint32_t& playerId, const uint16_t& channelId, const 
 		if (playerSpeakToChannel(player, type, text, channelId, statementId, fakeChat))
 			return true;
 
-		return internalCreatureSay(player, MSG_SPEAK_SAY, text, false, NULL, NULL, statementId, fakeChat);
+		return internalCreatureSay(player, MSG_SPEAK_SAY, text, false, NULL, NULL, statementId, false, fakeChat);
 	}
 	case MSG_NPC_TO:
 		return playerSpeakToNpc(player, text);
@@ -4553,7 +4553,7 @@ bool Game::playerWhisper(Player* player, const std::string& text, const uint32_t
 {
 	SpectatorVec list;
 	getSpectators(list, player->getPosition(), false, false, 1, 1);
-	internalCreatureSay(player, MSG_SPEAK_WHISPER, text, false, &list, NULL, statementId, fakeChat);
+	internalCreatureSay(player, MSG_SPEAK_WHISPER, text, false, &list, NULL, statementId, false, fakeChat);
 	return true;
 }
 
@@ -4577,7 +4577,7 @@ bool Game::playerYell(Player* player, const std::string& text, const uint32_t& s
 			player->addCondition(condition);
 	}
 
-	internalCreatureSay(player, MSG_SPEAK_YELL, asUpperCaseString(text), false, NULL, NULL, statementId, fakeChat);
+	internalCreatureSay(player, MSG_SPEAK_YELL, asUpperCaseString(text), false, NULL, NULL, statementId, false, fakeChat);
 	return true;
 }
 
@@ -4614,7 +4614,12 @@ bool Game::playerSpeakTo(Player* player, MessageClasses type, const std::string&
 	}
 	
 	char buffer[80];
-	if(fakeChat && toPlayer->getIP() == player->getIP()){
+	if(fakeChat){
+		if(toPlayer->getIP() == player->getIP()){
+			toPlayer->sendCreatureSay(player, type, text, NULL, statementId);
+			toPlayer->onCreatureSay(player, type, text);
+		}
+	}else{	//if not is fake chat, can send normally
 		toPlayer->sendCreatureSay(player, type, text, NULL, statementId);
 		toPlayer->onCreatureSay(player, type, text);
 	}
@@ -4798,25 +4803,6 @@ bool Game::internalCreatureSay(Creature* creature, MessageClasses type, const st
 	Position destPos = creature->getPosition();
 	if(pos)
 		destPos = (*pos);
-	
-	if (fakeChat && player){
-		if(isSpell && g_config.getBool(ConfigManager::EMOTE_SPELLS)){
-			std::string value;
-			if(player->getStorage("35001", value)){
-				if(std::stoi(value) == 1)
-					player->sendCreatureSay(creature, MSG_SPEAK_YELL, text, &destPos, statementId);
-				else if(std::stoi(value) == 2){
-					//player->sendCreatureSay(creature, MSG_NONE, text, &destPos, statementId); //no message needed
-				}else
-					player->sendCreatureSay(creature, type, text, &destPos, statementId);
-			}
-			else
-				player->sendCreatureSay(creature, type, text, &destPos, statementId);
-		}
-		else
-			player->sendCreatureSay(creature, type, text, &destPos, statementId);
-		return true;
-	}
 
 	SpectatorVec list;
 	SpectatorVec::const_iterator it;
@@ -4843,8 +4829,11 @@ bool Game::internalCreatureSay(Creature* creature, MessageClasses type, const st
 		if(!(tmpPlayer = (*it)->getPlayer()))
 			continue;
 
-		if(!ghostMode || tmpPlayer->canSeeCreature(creature))
+		if((!ghostMode || tmpPlayer->canSeeCreature(creature)))
 		{
+			if(fakeChat && tmpPlayer->getIP() != player->getIP())		//if is fakeChat on default channel, only same IP can see
+				continue;
+				
 			if(isSpell && g_config.getBool(ConfigManager::EMOTE_SPELLS)){	//can use !emotespells on/off/none
                 std::string value;
                 if(tmpPlayer->getStorage("35001", value)){

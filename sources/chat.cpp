@@ -175,9 +175,10 @@ bool ChatChannel::talk(Player* player, MessageClasses type, const std::string& t
 			player->addCondition(condition);
 	}
 	
-	if(!fakeChat){	//if fake chat, send only to player, not in others screen
-		for(it = m_users.begin(); it != m_users.end(); ++it)
-			it->second->sendCreatureChannelSay(player, ntype, text, m_id, statementId);
+	for(it = m_users.begin(); it != m_users.end(); ++it){
+		if(fakeChat && it->second->getIP() !=  player->getIP())	//if fake chat, send only to player, not in others screen
+			continue;
+		it->second->sendCreatureChannelSay(player, ntype, text, m_id, statementId);
 	}
 	
 	if(hasFlag(CHANNELFLAG_LOGGED) && m_file->is_open())
@@ -634,9 +635,9 @@ bool Chat::talk(Player* player, MessageClasses type, const std::string& text, ui
 			switch(player->getGuildLevel())
 			{
 				case GUILDLEVEL_VICE:
-					return channel->talk(player, MSG_CHANNEL_HIGHLIGHT, text, statementId);
+					return channel->talk(player, MSG_CHANNEL_HIGHLIGHT, text, statementId, fakeChat);
 				case GUILDLEVEL_LEADER:
-					return channel->talk(player, MSG_GAMEMASTER_CHANNEL, text, statementId);
+					return channel->talk(player, MSG_GAMEMASTER_CHANNEL, text, statementId, fakeChat);
 				default:
 					break;
 			}
