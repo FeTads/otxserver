@@ -646,7 +646,7 @@ void otserv(StringVec, ServiceManager* services)
 		DatabaseManager::getInstance()->checkTriggers();
 		DatabaseManager::getInstance()->checkEncryption();
 		if(g_config.getBool(ConfigManager::OPTIMIZE_DATABASE) && !DatabaseManager::getInstance()->optimizeTables())
-			std::clog << "> No tables were optimized." << std::endl;
+			std::clog << "\033[32m>>> [Done] No tables to optimize.\033[0m" << std::endl;
 	}
 	else
 		startupErrorMessage("Couldn't estabilish connection to SQL database!");
@@ -791,8 +791,8 @@ void otserv(StringVec, ServiceManager* services)
 	std::clog << ">> Loading experience stages" << std::endl;
 	if(!g_game.loadExperienceStages())
 		startupErrorMessage("Unable to load experience stages!");
-
-	std::clog << ">> Loading mods:" << std::endl;
+	
+	std::clog << "\033[31m[Mods cannot use LIB functions, add functions in mod file]\033[0m " << std::endl << ">> Loading mods:" << std::endl;
 	if(!ScriptManager::getInstance()->loadMods())
 		startupErrorMessage();
 

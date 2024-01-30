@@ -191,10 +191,11 @@ void ServicePort::open(uint16_t port)
 		accept();
 	} catch (boost::system::system_error& e) {
 		std::cout << "[ServicePort::open] Error: " << e.what() << std::endl;
+		std::cout << "\033[38;5;208m>> if bind adress already in use, send cmd 'killall -9 theotxserver'.\033[0m" << std::endl;
 
 		pendingStart = true;
 		Scheduler::getInstance().addEvent(createSchedulerTask(15000,
-		                     std::bind(&ServicePort::openAcceptor, std::weak_ptr<ServicePort>(shared_from_this()), port)));
+		    std::bind(&ServicePort::openAcceptor, std::weak_ptr<ServicePort>(shared_from_this()), port)));
 	}
 }
 

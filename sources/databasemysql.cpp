@@ -25,9 +25,6 @@
 #include "configmanager.h"
 #include "tools.h"
 
-#include <chrono>
-#include <thread>
-
 #ifdef _MSC_VER
 #include <errmsg.h>
 #else
@@ -72,19 +69,17 @@ bool DatabaseMySQL::connect()
 		g_config.getNumber(ConfigManager::SQL_PORT),
 		NULL, 0))
 	{
-		std::clog << std::endl << "Failed connecting to database - MYSQL ERROR: " << mysql_error(m_handle) << " (" << mysql_errno(m_handle) << ")" << std::endl;
+		std::clog << std::endl << "\033[31m[MySQL]: Failed connecting to database - MYSQL ERROR: \033[0m" << std::endl;
+		std::clog << "\033[36m>> " << mysql_error(m_handle) << " (" << mysql_errno(m_handle) << ")\033[0m" << std::endl;
+		
+		std::clog << "\033[38;5;208m[config.lua] Check 'sqlPass' or 'sqlUser'.\033[0m" << std::endl;
+		
 		return false;
 	}
 	else
 	{
 		m_connected = true;
 	}
-
-    if (!m_connected)
-    {
-        std::clog << "Failed to connect after multiple attempts. Exiting." << std::endl;
-        return false;
-    }
 	
     timeout = g_config.getNumber(ConfigManager::SQL_KEEPALIVE) * 1000;
     if (timeout)

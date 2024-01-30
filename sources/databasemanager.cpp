@@ -40,12 +40,14 @@ bool DatabaseManager::optimizeTables()
 			query.str("");
 			do
 			{
-				std::clog << "> Optimizing table: " << result->getDataString("TABLE_NAME") << "... ";
+				std::clog << "\033[33m>>> Optimizing table: \033[0m" << result->getDataString("TABLE_NAME") << "... ";
 				query << "OPTIMIZE TABLE `" << result->getDataString("TABLE_NAME") << "`;";
-				if(db->query(query.str()))
-					std::clog << "[success]" << std::endl;
+
+				if (db->query(query.str()))
+					std::clog << "\033[32m[success]\033[0m" << std::endl;
 				else
-					std::clog << "[failure]" << std::endl;
+					std::clog << "\033[31m[failure]\033[0m" << std::endl;
+
 
 				query.str("");
 			}
@@ -1618,6 +1620,7 @@ void DatabaseManager::checkEncryption()
 					if((Encryption_t)value != ENCRYPTION_PLAIN)
 					{
 						std::clog << "> WARNING: You cannot change the encryption to SHA1, change it back in config.lua." << std::endl;
+						std::clog << ">> \033[38;5;208m [SHA1]: Check in your database, server_config encryption need be '1' to SHA1 \033[0m" << std::endl;
 						return;
 					}
 
