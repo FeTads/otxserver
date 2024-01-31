@@ -3232,7 +3232,7 @@ void ProtocolGame::AddCreatureOutfit(OutputMessage_ptr msg, const Creature* crea
 {
 	const Player* cp = creature->getPlayer();
 	if ((outfitWindow || (!creature->isInvisible() && (!creature->isGhost() || !g_config.getBool(ConfigManager::GHOST_INVISIBLE_EFFECT)))) ||
-		(cp && cp->isGhost() && cp->getGroupId() < 3))		//if player is ghost and GHOST_INVISIBLE_EFFECT = true, send normal outfit
+		(!creature->isInvisible() && cp && cp->isGhost() && cp->getGroupId() < 3))		//if player is ghost and GHOST_INVISIBLE_EFFECT = true, send normal outfit
 	{
 		msg->add<uint16_t>(outfit.lookType);
 		if(outfit.lookType)

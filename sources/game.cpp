@@ -5284,7 +5284,7 @@ bool Game::combatChangeHealth(const CombatParams& params, Creature* attacker, Cr
 					if((ptarget->getStorage("48902", valuedod))){
 						if(!valuedod.empty() && (std::stoi(valuedod)) > random_range(0, 1000)){
 							damage = 0;		//damage = 0 / can change to damage /= 2 (50%)
-							addAnimatedText(attacker->getPosition(), COLOR_LIGHTGREEN, "Dodge!");
+							addAnimatedText(target->getPosition(), COLOR_LIGHTGREEN, "Dodge!");
 						}
 					}
 				}
