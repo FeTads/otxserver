@@ -92,6 +92,11 @@ class Monster : public Creature
 
 		void setSpawn(Spawn* _spawn) {spawn = _spawn;}
 		void setRaid(Raid* _raid) {raid = _raid;}
+		
+		bool canWalkOnFieldType(CombatType_t combatType) const;
+		bool isIgnoringFieldDamage() const {
+			return ignoreFieldDamage;
+		}
 
 		virtual void onTarget(Creature* target);
 		virtual void onTargetDisappear(bool isLogout);
@@ -158,6 +163,9 @@ class Monster : public Creature
 
 		bool isMasterInRange;
 		bool teleportToMaster;
+		
+		bool randomStepping;
+		bool ignoreFieldDamage;
 
 		virtual void onCreatureEnter(Creature* creature);
 		virtual void onCreatureLeave(Creature* creature);
@@ -210,6 +218,8 @@ class Monster : public Creature
 		virtual uint16_t getLookCorpse() {return mType->lookCorpse;}
 		virtual uint16_t getLookCorpse() const {return mType->lookCorpse;}
 		virtual void getPathSearchParams(const Creature* creature, FindPathParams& fpp) const;
-		virtual bool useCacheMap() const {return true;}
+		virtual bool useCacheMap() const {
+			return !randomStepping;
+		}
 };
 #endif

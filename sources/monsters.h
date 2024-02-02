@@ -94,7 +94,7 @@ class MonsterType
 		bool createChildLootOld(Container* parent, const LootBlock& lootBlock); //this edit by feetads, not use autoloot
 
 		bool isSummonable, isIllusionable, isConvinceable, isAttackable, isHostile, isPassive, isLureable,
-			isWalkable, canPushItems, canPushCreatures, pushable, hideName, hideHealth, eliminable, ignoreSpawnBoost;
+			isWalkable, canPushItems, canPushCreatures, pushable, hideName, hideHealth, eliminable, ignoreSpawnBoost, canWalkOnEnergy, canWalkOnFire, canWalkOnPoison;
 
 		Outfit_t outfit;
 		RaceType_t race;

@@ -41,6 +41,8 @@ void MonsterType::reset()
 {
 	canPushItems = canPushCreatures = isSummonable = isIllusionable = isConvinceable = isLureable = isWalkable = hideName = hideHealth = eliminable = isPassive = ignoreSpawnBoost = false;
 	pushable = isAttackable = isHostile = true;
+	//If the monsters can't get to you, they will run over the fields, even if they take damage.
+	canWalkOnEnergy = canWalkOnFire = canWalkOnPoison = true;
 
 	outfit.lookHead = outfit.lookBody = outfit.lookLegs = outfit.lookFeet = outfit.lookType = outfit.lookTypeEx = outfit.lookAddons = 0;
 	runAwayHealth = healthMin = manaCost = lightLevel = lightColor = yellSpeedTicks = yellChance = changeTargetSpeed = changeTargetChance = 0;
@@ -1254,6 +1256,16 @@ bool Monsters::loadMonster(const std::string& file, const std::string& monsterNa
 					
 					if(readXMLString(tmpNode, "ignorespawnboost", strValue))
 						mType->ignoreSpawnBoost = booleanString(strValue);		//true = don't change spawn time with spawndivider boost system
+					
+					// Can non-immune monsters walk on fields if there is no available path? 
+					if(readXMLString(tmpNode, "canwalkonenergy", strValue))  // <flags> canwalkonenergy = false to disable that monster to walk field
+						mType->canWalkOnEnergy = booleanString(strValue);
+					
+					if(readXMLString(tmpNode, "canwalkonfire", strValue))
+						mType->canWalkOnFire = booleanString(strValue);
+
+					if(readXMLString(tmpNode, "canwalkonpoison", strValue))
+						mType->canWalkOnPoison = booleanString(strValue);
 				}
 			}
 

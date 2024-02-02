@@ -633,6 +633,20 @@ void Monster::onAttacking(uint32_t interval)
 	doHealing(interval);
 }
 
+bool Monster::canWalkOnFieldType(CombatType_t combatType) const
+{
+	switch (combatType) {
+		case COMBAT_ENERGYDAMAGE:
+			return mType->canWalkOnEnergy;
+		case COMBAT_FIREDAMAGE:
+			return mType->canWalkOnFire;
+		case COMBAT_EARTHDAMAGE:
+			return mType->canWalkOnPoison;
+		default:
+			return true;
+	}
+}
+
 void Monster::doAttacking(uint32_t interval)
 {
 	if(!attackedCreature || (isSummon() && attackedCreature == this))
@@ -688,6 +702,8 @@ void Monster::doAttacking(uint32_t interval)
 			extraMeleeAttack = true;
 	}
 
+	if(updateLook)
+		updateLookDirection();
 	if(resetTicks)
 		attackTicks = 0;
 }
@@ -988,14 +1004,22 @@ bool Monster::getNextStep(Direction& dir, uint32_t& flags)
 	bool result = false;
 	if((!followCreature || !hasFollowPath) && !isSummon())
 	{
-		if(getWalkDelay() <= 0 && getTimeSinceLastMove() > 1000) //choose a random direction
+		if(getWalkDelay() <= 0 && getTimeSinceLastMove() > 1000){ //choose a random direction
+			randomStepping = true;				  
 			result = getRandomStep(getPosition(), dir);
+		}
 	}
 	else if(isSummon() || followCreature)
 	{
+		randomStepping = false;				 
 		result = Creature::getNextStep(dir, flags);
 		if(!result)
 		{
+			if (ignoreFieldDamage) {
+				ignoreFieldDamage = false;
+				updateMapCache();
+			}
+			
 			//target dancing
 			if(attackedCreature && attackedCreature == followCreature)
 			{
@@ -1428,6 +1452,10 @@ void Monster::resetLight()
 void Monster::drainHealth(Creature* attacker, CombatType_t combatType, int32_t damage)
 {
 	Creature::drainHealth(attacker, combatType, damage);
+	if (damage > 0 && randomStepping) {
+		ignoreFieldDamage = true;
+		updateMapCache();
+	}				
 	if(isInvisible())
 		removeCondition(CONDITION_INVISIBLE);
 }
