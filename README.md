@@ -19,6 +19,7 @@ New branches for alternative servers (dbo/nto)<br>
 
 
 added systems:<br>
+Monster walk in fields (monsters can walk on the magic field even if they take damage, if there is no free tile until you)<br>
 Fake chat (send advertising words, only appear in player screen and player IP)<br>
 Cast system spy<br>
 CreatureSetSpeed (roullete system or fix sendChangeSpeed)<br>

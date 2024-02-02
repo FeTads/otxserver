@@ -1,6 +1,9 @@
 [ OTX SERVER 2X - FEETADS EDITS]
 
 	//02/02
+	-- Monsters can walk on the magic field even if they take damage, if there is no free tile until you.
+		-- flags canWalkOnEnergy, canWalkOnFire, canWalkOnPoison.
+	
 	-- SpawnDivider system, the more players online, the faster the spawn
 	-- some changes when send error, modified with colors
 
