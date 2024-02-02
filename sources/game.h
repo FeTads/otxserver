@@ -687,6 +687,8 @@ class Game
 		void startDecay(Item* item);
 		
 		void loadNamesFromXml();
+		
+		uint32_t spawnDivider(MonsterType* mType = nullptr);
 
 #ifdef __GROUND_CACHE__
 		std::map<Item*, int32_t> grounds;

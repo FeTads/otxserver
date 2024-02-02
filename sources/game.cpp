@@ -7545,3 +7545,19 @@ void Game::startProgressbar(Creature* creature, uint32_t duration, bool ltr/*=tr
         spectator->getPlayer()->sendProgressbar(creature, duration, ltr);
     }
 }
+
+uint32_t Game::spawnDivider(MonsterType* mType)
+{
+    uint32_t multiplier = 1;
+    if (mType && !mType->ignoreSpawnBoost) {
+        uint32_t size = getPlayersOnline();
+        if (size >= 100 && size < 199) {
+            multiplier = 2;
+        } else if (size >= 200 && size < 299) {
+            multiplier = 3;
+        } else if (size >= 300) {
+            multiplier = 4;
+        }
+    }
+    return multiplier;
+}

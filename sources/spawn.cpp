@@ -145,6 +145,7 @@ bool Spawns::parseSpawnNode(xmlNodePtr p, bool checkDuplicate)
 			}
 
 			interval *= 1000;
+			interval /= 2;	 
 			Position placePos = centerPos;
 			if(readXMLInteger(tmpNode, "x", intValue))
 				placePos.x += intValue;
@@ -229,10 +230,12 @@ bool Spawns::isInZone(const Position& centerPos, int32_t radius, const Position&
 		(pos.y >= centerPos.y - radius) && (pos.y <= centerPos.y + radius));
 }
 
-void Spawn::startEvent()
+void Spawn::startEvent(MonsterType* mType)
 {
-	if(!checkSpawnEvent)
-		checkSpawnEvent = Scheduler::getInstance().addEvent(createSchedulerTask(getInterval(), boost::bind(&Spawn::checkSpawn, this)));
+	if(!checkSpawnEvent){
+		//checkSpawnEvent = Scheduler::getInstance().addEvent(createSchedulerTask(getInterval(), boost::bind(&Spawn::checkSpawn, this)));
+		checkSpawnEvent = Scheduler::getInstance().addEvent(createSchedulerTask(getInterval() / g_game.spawnDivider(mType), boost::bind(&Spawn::checkSpawn, this)));
+	}
 }
 
 Spawn::Spawn(const Position& _pos, int32_t _radius)
@@ -341,13 +344,16 @@ void Spawn::checkSpawn()
 	}
 
 	uint32_t spawnCount = 0;
+	uint32_t interval = 1;
+	
 	for(SpawnMap::iterator it = spawnMap.begin(); it != spawnMap.end(); ++it)
 	{
 		spawnBlock_t& sb = it->second;
+		interval = g_game.spawnDivider(sb.mType);
 		if(spawnedMap.count(it->first))
 			continue;
 
-		if(OTSYS_TIME() < sb.lastSpawn + sb.interval)
+		if(OTSYS_TIME() < sb.lastSpawn + (sb.interval / interval))			
 			continue;
 
 		bool block = g_config.getBool(ConfigManager::ALLOW_BLOCK_SPAWN);
@@ -365,7 +371,7 @@ void Spawn::checkSpawn()
 	}
 
 	if(spawnedMap.size() < spawnMap.size())
-		checkSpawnEvent = Scheduler::getInstance().addEvent(createSchedulerTask(getInterval(), boost::bind(&Spawn::checkSpawn, this)));
+		checkSpawnEvent = Scheduler::getInstance().addEvent(createSchedulerTask(getInterval() / interval, boost::bind(&Spawn::checkSpawn, this)));
 #ifdef __DEBUG_SPAWN__
 	else
 		std::clog << "[Notice] Spawn::checkSpawn stopped " << this << std::endl;

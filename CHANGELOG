@@ -1,4 +1,18 @@
 [ OTX SERVER 2X - FEETADS EDITS]
+
+	//02/02
+	-- SpawnDivider system, the more players online, the faster the spawn
+	-- some changes when send error, modified with colors
+
+	//30/01
+	-- Fake chat, blocking prohibited words, they only appear on the screen of the sender and have the same IP as the sender
+	-- Cast Spy system, /spy to see player without notification
+	-- CreatureSetSpeed system, this system is same to roullete or fix changeSpeed
+	-- EXP and Damage can be change to K, 1K, 1KK
+	-- Added restarter.sh if the server crashes, it would be saved at the time of the crash, making it not rollback.
+	-- Rename ou Delete players with monster name, saving names in cache, you can change to "rename ou Delete" in config.lua, prevents PK RED.
+	-- EmoteSpells and Effects can be enabled by player.
+
 	//25/10
 	-- added system to fix max absorb percent all, prevent +100% damage absorb
 	-- added system to replace names ou delete players with forbidden/monster name

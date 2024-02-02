@@ -82,7 +82,7 @@ class Spawn
 		Position getPosition() const {return centerPos;}
 		uint32_t getInterval() const {return interval;}
 
-		void startEvent();
+		void startEvent(MonsterType* mType);
 		void stopEvent();
 
 		void startup();

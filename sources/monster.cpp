@@ -173,7 +173,7 @@ void Monster::onCreatureDisappear(const Creature* creature, bool isLogout)
 	if(creature == this)
 	{
 		if(spawn)
-			spawn->startEvent();
+			spawn->startEvent(mType);
 
 		setIdle(true);
 	}

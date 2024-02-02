@@ -14,12 +14,12 @@ Whatsapp: +55 41 9 84036942<br><br>
 Discord: FeeTads / FeeTads#0246
 
 soon:<br>
-Fake chat (send advertising words, only appear in player screen and player IP)<br>
 Some features to OTCv8 enable<br>
 New branches for alternative servers (dbo/nto)<br>
 
 
 added systems:<br>
+Fake chat (send advertising words, only appear in player screen and player IP)<br>
 Cast system spy<br>
 CreatureSetSpeed (roullete system or fix sendChangeSpeed)<br>
 critical and dodge in source (by storage, attack critical in monster)<br>

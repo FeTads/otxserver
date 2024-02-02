@@ -1579,20 +1579,16 @@ void Player::onCreatureAppear(const Creature* creature)
 	}
 
 	g_game.checkPlayersRecord(this);
-	if(!isGhost())
+	
+	//update online status for players with ghost protection
+	IOLoginData::getInstance()->updateOnlineStatus(guid, true);
+	for(AutoList<Player>::iterator it = autoList.begin(); it != autoList.end(); ++it)
 	{
-		IOLoginData::getInstance()->updateOnlineStatus(guid, true);
-		for(AutoList<Player>::iterator it = autoList.begin(); it != autoList.end(); ++it)
+		if(it->second->canSeeCreature(this))
 			it->second->notifyLogIn(this);
 	}
-	else
-	{
-		for(AutoList<Player>::iterator it = autoList.begin(); it != autoList.end(); ++it)
-		{
-			if(it->second->canSeeCreature(this))
-				it->second->notifyLogIn(this);
-		}
-	}
+
+	
 
 	if(g_config.getBool(ConfigManager::DISPLAY_LOGGING))
 		std::clog << name << " has logged in." << std::endl;
