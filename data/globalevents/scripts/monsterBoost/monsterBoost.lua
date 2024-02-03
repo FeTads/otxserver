@@ -30,7 +30,8 @@ function onStartup()
 	doSetStorage(BOOST_SYSTEM_MONSTER_NAME_STORAGE, monsterToday:lower())
 	doSetStorage(BOOST_SYSTEM_LOOT_BONUS_STORAGE, math.random(10, 50))
 	doSetStorage(BOOST_SYSTEM_EXP_BONUS_STORAGE, math.random(20, 48))
-	doCreateMonster(monsterToday, monsterPosition, false, true)
+	local getMonster = doCreateMonster(monsterToday, monsterPosition, false, true)
+	doCreatureSetLookDirection(getMonster, EAST)
 	func("INSERT INTO monster_boost (monster, loot, exp) VALUES ('"..monsterToday.."', '"..getStorage(BOOST_SYSTEM_LOOT_BONUS_STORAGE).."', '"..getStorage(BOOST_SYSTEM_EXP_BONUS_STORAGE).."')")
 	return true
 end
@@ -43,10 +44,12 @@ function onThink()
 
 	local creature = getTopCreature(monsterPosition)
 	if not creature or creature.uid == 0 then 
-		doCreateMonster(monsterName, monsterPosition, false, true)
+		local getMonster = doCreateMonster(monsterName, monsterPosition, false, true)
+		doCreatureSetLookDirection(getMonster, EAST)
 	elseif getCreatureName(creature.uid):lower() ~= monsterName then
 		doRemoveCreature(creature.uid)
-		doCreateMonster(monsterName, monsterPosition, false, true)
+		local getMonster = doCreateMonster(monsterName, monsterPosition, false, true)
+		doCreatureSetLookDirection(getMonster, EAST)
 	end
 
 	--doSendAnimatedText(monsterPosition, string.upperAllFirst(monsterName), COLOR_LIGHTBLUE)
@@ -55,3 +58,52 @@ function onThink()
 
   return true
 end
+
+
+
+--- ### FUNCTIONS TO WINDOWS ### ---
+--[[
+function onStartup()
+  local dayOfWeek = os.date("%A")
+  local monsterList = days[dayOfWeek]
+  if not monsterList then
+      return true 
+  end
+
+  math.randomseed(os.clock() * 1000000000)
+  local selectedMonsterIndex = math.random(1, #monsterList)
+  local selectedMonster = monsterList[selectedMonsterIndex]
+  local func = db.query or db.executeQuery
+
+  doSetStorage(BOOST_SYSTEM_MONSTER_NAME_STORAGE, string.lower(selectedMonster))
+  doSetStorage(BOOST_SYSTEM_EXP_BONUS_STORAGE, math.random(10, 15))
+  doSetStorage(BOOST_SYSTEM_LOOT_BONUS_STORAGE, math.random(10, 50))
+  local getMonster = doCreateMonster(selectedMonster, monsterPosition, false, true)
+  doCreatureSetLookDirection(getMonster, EAST)
+
+  func("INSERT INTO monster_boost (monster, loot, exp) VALUES ('"..selectedMonster.."', '"..getStorage(BOOST_SYSTEM_LOOT_BONUS_STORAGE).."', '"..getStorage(BOOST_SYSTEM_EXP_BONUS_STORAGE).."')")
+  return true
+end
+
+function onThink()
+	local monsterName = getStorage(BOOST_SYSTEM_MONSTER_NAME_STORAGE)
+	if monsterName == EMPTY_STORAGE then 
+		return true
+	end
+
+    local creature = getTopCreature(monsterPosition)
+	if not creature or creature.uid == 0 then 
+		local getMonster = doCreateMonster(monsterName, monsterPosition, false, true)
+		doCreatureSetLookDirection(getMonster, EAST)
+	elseif string.lower(getCreatureName(creature.uid)) ~= monsterName then
+		doRemoveCreature(creature.uid)
+		local getMonster = doCreateMonster(monsterName, monsterPosition, false, true)
+		doCreatureSetLookDirection(getMonster, EAST)
+	end
+
+  --doSendAnimatedText(monsterPosition, string.upperAllFirst(monsterName), COLOR_LIGHTBLUE)
+  doSendAnimatedText(lootBoostPosition, "Loot +" .. getStorage(BOOST_SYSTEM_LOOT_BONUS_STORAGE) .. "%", 194)
+  doSendAnimatedText(expBoostPosition, "Exp +" .. getStorage(BOOST_SYSTEM_EXP_BONUS_STORAGE) .. "%", 194)
+
+return true
+end]]--
