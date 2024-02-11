@@ -43,6 +43,19 @@ m_interface("Spell Interface")
 	spellId = 0;
 }
 
+// add here and in Enum.s 
+std::map<std::string, Exhaust_t> spellGroupMap = {
+    {"attack", EXHAUST_SPELLGROUP_ATTACK},
+    {"attacking", EXHAUST_SPELLGROUP_ATTACK},
+    {"heal", EXHAUST_SPELLGROUP_HEALING},
+    {"healing", EXHAUST_SPELLGROUP_HEALING},
+    {"support", EXHAUST_SPELLGROUP_SUPPORT},
+    {"supporting", EXHAUST_SPELLGROUP_SUPPORT},
+    {"special", EXHAUST_SPELLGROUP_SPECIAL},
+    {"ultimate", EXHAUST_SPELLGROUP_SPECIAL}
+    // sdicione mais conforme necessário
+};
+
 ReturnValue Spells::onPlayerSay(Player* player, const std::string& words)
 {
 	std::string reWords = words;
@@ -617,14 +630,13 @@ bool Spell::configureSpell(xmlNodePtr p)
 	if(readXMLString(p, "aggressive", strValue))
 		isAggressive = booleanString(strValue);
 
-	if(readXMLString(p, "exhaustedGroup", strValue))
-	{
-		std::string tmpStrValue = asLowerCaseString(strValue);
-		if(tmpStrValue == "attack" || tmpStrValue == "attacking" || tmpStrValue == "heal" || tmpStrValue == "healing" || tmpStrValue == "support"
-			|| tmpStrValue == "supporting" || tmpStrValue == "special" || tmpStrValue == "ultimate")
-				exhaustedGroup = tmpStrValue;
-		else
+	if (readXMLString(p, "exhaustedGroup", strValue)) {
+		auto it = spellGroupMap.find(strValue);
+		if (it != spellGroupMap.end()) {
+			exhaustedGroup = strValue;
+		} else {
 			std::clog << "[Warning - Spell::configureSpell] exhaustedGroup \"" << strValue << "\" does not exist." << std::endl;
+		}
 	}
 	else
 	{
@@ -672,59 +684,25 @@ bool Spell::checkSpell(Player* player) const
 
 	if(!player->hasFlag(PlayerFlag_HasNoExhaustion))
 	{
-		if(player->hasCondition(CONDITION_EXHAUST, EXHAUST_SPELLGROUP_NONE) && exhaustedGroup == "none")
-		{
-			player->sendCancelMessage(RET_YOUAREEXHAUSTED);
-			if(isInstant() && !player->isGhost())
-				player->sendMagicEffect(player->getPosition(), MAGIC_EFFECT_POFF);
-			return false;
-		}
-		if(g_config.getBool(ConfigManager::NO_ATTACKHEALING_SIMULTANEUS))
-		{
-			if((player->hasCondition(CONDITION_EXHAUST, EXHAUST_SPELLGROUP_ATTACK) && (exhaustedGroup == "heal" || exhaustedGroup == "healing")) ||
-				(player->hasCondition(CONDITION_EXHAUST, EXHAUST_SPELLGROUP_HEALING) && (exhaustedGroup == "attack" || exhaustedGroup == "attack")))
-			{
+		Exhaust_t exhaustedGroupType = spellGroupMap[exhaustedGroup];
+		if (g_config.getBool(ConfigManager::NO_ATTACKHEALING_SIMULTANEUS)) {
+			if ((player->hasCondition(CONDITION_EXHAUST, EXHAUST_SPELLGROUP_ATTACK) &&
+				 (exhaustedGroupType == EXHAUST_SPELLGROUP_HEALING || exhaustedGroupType == EXHAUST_SPELLGROUP_HEALING)) ||
+				(player->hasCondition(CONDITION_EXHAUST, EXHAUST_SPELLGROUP_HEALING) &&
+				 (exhaustedGroupType == EXHAUST_SPELLGROUP_ATTACK || exhaustedGroupType == EXHAUST_SPELLGROUP_ATTACK))) {
 				player->sendCancelMessage(RET_YOUAREEXHAUSTED);
-				if(isInstant() && !player->isGhost())
+				if (isInstant() && !player->isGhost())
 					player->sendMagicEffect(player->getPosition(), MAGIC_EFFECT_POFF);
-
 				return false;
 			}
 		}
 
-		if(player->hasCondition(CONDITION_EXHAUST, EXHAUST_SPELLGROUP_ATTACK) && (exhaustedGroup == "attack" || exhaustedGroup == "attacking" ))
-		{
+		if (player->hasCondition(CONDITION_EXHAUST, exhaustedGroupType)) {
 			player->sendCancelMessage(RET_YOUAREEXHAUSTED);
-			if(isInstant() && !player->isGhost())
+			if (isInstant() && !player->isGhost())
 				player->sendMagicEffect(player->getPosition(), MAGIC_EFFECT_POFF);
-
 			return false;
 		}
-		if(player->hasCondition(CONDITION_EXHAUST, EXHAUST_SPELLGROUP_HEALING) && (exhaustedGroup == "heal" || exhaustedGroup == "healing"))
-		{
-			player->sendCancelMessage(RET_YOUAREEXHAUSTED);
-			if(isInstant() && !player->isGhost())
-				player->sendMagicEffect(player->getPosition(), MAGIC_EFFECT_POFF);
-
-			return false;
-		}
-		if(player->hasCondition(CONDITION_EXHAUST, EXHAUST_SPELLGROUP_SUPPORT) && (exhaustedGroup == "support" || exhaustedGroup == "supporting"))
-		{
-			player->sendCancelMessage(RET_YOUAREEXHAUSTED);
-			if(isInstant() && !player->isGhost())
-				player->sendMagicEffect(player->getPosition(), MAGIC_EFFECT_POFF);
-
-			return false;
-		}
-		if(player->hasCondition(CONDITION_EXHAUST, EXHAUST_SPELLGROUP_SPECIAL) && (exhaustedGroup == "special" || exhaustedGroup == "ultimate"))
-		{
-			player->sendCancelMessage(RET_YOUAREEXHAUSTED);
-			if(isInstant() && !player->isGhost())
-				player->sendMagicEffect(player->getPosition(), MAGIC_EFFECT_POFF);
-
-			return false;
-		}
-
 	}
 
 	if(isPremium() && !player->isPremium())
@@ -1134,24 +1112,17 @@ bool Spell::checkRuneSpell(Player* player, const Position& toPos)
 
 void Spell::postSpell(Player* player) const
 {
-	if(!player->hasFlag(PlayerFlag_HasNoExhaustion) && exhaustion > 0)
-	{
-		if(exhaustedGroup == "none")
-			player->addExhaust(exhaustion, EXHAUST_SPELLGROUP_NONE);
-		else if(exhaustedGroup == "attack" || exhaustedGroup == "attacking")
-			player->addExhaust(exhaustion, EXHAUST_SPELLGROUP_ATTACK);
-		else if(exhaustedGroup == "heal" || exhaustedGroup == "healing")
-			player->addExhaust(exhaustion, EXHAUST_SPELLGROUP_HEALING);
-		else if(exhaustedGroup == "support" || exhaustedGroup == "supporting")
-			player->addExhaust(exhaustion, EXHAUST_SPELLGROUP_SUPPORT);
-		else if(exhaustedGroup == "special" || exhaustedGroup == "ultimate")
-			player->addExhaust(exhaustion, EXHAUST_SPELLGROUP_SPECIAL);
-	}
+    if (!player->hasFlag(PlayerFlag_HasNoExhaustion) && exhaustion > 0){
+        auto it = spellGroupMap.find(exhaustedGroup);
+        if (it != spellGroupMap.end()) {
+            player->addExhaust(exhaustion, it->second);
+        }
+    }
 
-	if(isAggressive && !player->hasFlag(PlayerFlag_NotGainInFight))
-		player->addInFightTicks(false);
+    if (isAggressive && !player->hasFlag(PlayerFlag_NotGainInFight))
+        player->addInFightTicks(false);
 
-	postSpell(player, (uint32_t)getManaCost(player), (uint32_t)getSoulCost());
+    postSpell(player, static_cast<uint32_t>(getManaCost(player)), static_cast<uint32_t>(getSoulCost()));
 }
 
 void Spell::postSpell(Player* player, uint32_t manaCost, uint32_t soulCost) const
