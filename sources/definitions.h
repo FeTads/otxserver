@@ -25,11 +25,11 @@
 
 #define TRACK_MESSAGE(x)
 
-#define SOFTWARE_NAME "FeeTads Server"
+#define SOFTWARE_NAME "OTX Server Fe Edition"
 #define SOFTWARE_VERSION "1"
 #define MINOR_VERSION "15"
 #define SOFTWARE_CODENAME "SNAPSHOT"
-#define SOFTWARE_DEVELOPERS "FeeTads"
+#define SOFTWARE_DEVELOPERS "https://github.com/FeTads/otxserver"
 
 //#define CLIENT_VERSION_DATA
 #define CLIENT_VERSION_DAT 0
