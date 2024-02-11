@@ -672,70 +672,36 @@ bool Actions::useItemEx(Player* player, const Position& fromPos, const Position&
 
 	//Potions
 	uint16_t itemi = item->getID();
-	if (player->hasCondition(CONDITION_EXHAUST, EXHAUST_POTION))
-	{
-		if (itemi == 7588 ||
-			itemi == 7589 ||
-			itemi == 7590 ||
-			itemi == 7591 ||
-			itemi == 8472 ||
-			itemi == 8473 ||
-			itemi == 7618 ||
-			itemi == 7620 ||
-			itemi == 8704)
-		{
-			return false;
-		}
+
+	const std::vector<uint16_t> potionItems = {7588, 7589, 7590, 7591, 8472, 8473, 7618, 7620, 8704};
+	const std::vector<uint16_t> macheteItems = {2420, 2293};
+
+	if (player->hasCondition(CONDITION_EXHAUST, EXHAUST_POTION) && std::find(potionItems.begin(), potionItems.end(), itemi) != potionItems.end()){
+		return false;
 	}
 
-	if (player->hasCondition(CONDITION_EXHAUST, EXHAUST_MACHETE))
-	{
-		if (itemi == 2420 ||
-			itemi == 2293)
-		{
-			return false;
-		}
+	if (player->hasCondition(CONDITION_EXHAUST, EXHAUST_MACHETE) && std::find(macheteItems.begin(), macheteItems.end(), itemi) != macheteItems.end()){
+		return false;
 	}
 
 	player->setNextActionTask(NULL);
 	player->stopWalk();
 
-	if ((itemi == 7588 ||
-		itemi == 7589 ||
-		itemi == 7590 ||
-		itemi == 7591 ||
-		itemi == 8472 ||
-		itemi == 8473 ||
-		itemi == 7618 ||
-		itemi == 7620 ||
-		itemi == 8704 ||
-		itemi == 2420 ||
-		itemi == 2293))
-	{
-		if (itemi == 7588 ||
-			itemi == 7589 ||
-			itemi == 7590 ||
-			itemi == 7591 ||
-			itemi == 8472 ||
-			itemi == 8473 ||
-			itemi == 7618 ||
-			itemi == 7620 ||
-			itemi == 8704)
-		{
-			if (Condition * privCondition = Condition::createCondition(CONDITIONID_DEFAULT, CONDITION_EXHAUST, g_config.getNumber(ConfigManager::EX_ACTIONS_DELAY_INTERVAL), 0, false, EXHAUST_POTION))
+	const std::vector<uint16_t> allItems = {7588, 7589, 7590, 7591, 8472, 8473, 7618, 7620, 8704, 2420, 2293};
+
+	if (std::find(allItems.begin(), allItems.end(), itemi) != allItems.end()){
+		if (std::find(potionItems.begin(), potionItems.end(), itemi) != potionItems.end()){
+			if (Condition* privCondition = Condition::createCondition(CONDITIONID_DEFAULT, CONDITION_EXHAUST, g_config.getNumber(ConfigManager::EX_ACTIONS_DELAY_INTERVAL), 0, false, EXHAUST_POTION))
 				player->addCondition(privCondition);
 		}
 
-		if (itemi == 2420 ||
-			itemi == 2293)
-		{
-			if (Condition * privCondition = Condition::createCondition(CONDITIONID_DEFAULT, CONDITION_EXHAUST, g_config.getNumber(ConfigManager::EX_ACTIONS_DELAY_INTERVAL), 0, false, EXHAUST_MACHETE))
+		if (std::find(macheteItems.begin(), macheteItems.end(), itemi) != macheteItems.end()){
+			if (Condition* privCondition = Condition::createCondition(CONDITIONID_DEFAULT, CONDITION_EXHAUST, g_config.getNumber(ConfigManager::EX_ACTIONS_DELAY_INTERVAL), 0, false, EXHAUST_MACHETE))
 				player->addCondition(privCondition);
 		}
 	}
-	else
-	{
-		if (Condition * privCondition = Condition::createCondition(CONDITIONID_DEFAULT, CONDITION_EXHAUST, g_config.getNumber(ConfigManager::EX_ACTIONS_DELAY_INTERVAL), 0, false, 21))
+	else{
+		if (Condition* privCondition = Condition::createCondition(CONDITIONID_DEFAULT, CONDITION_EXHAUST, g_config.getNumber(ConfigManager::EX_ACTIONS_DELAY_INTERVAL), 0, false, EXHAUST_USEITEM))
 			player->addCondition(privCondition);
 	}
 
