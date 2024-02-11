@@ -52,7 +52,8 @@ std::map<std::string, Exhaust_t> spellGroupMap = {
     {"support", EXHAUST_SPELLGROUP_SUPPORT},
     {"supporting", EXHAUST_SPELLGROUP_SUPPORT},
     {"special", EXHAUST_SPELLGROUP_SPECIAL},
-    {"ultimate", EXHAUST_SPELLGROUP_SPECIAL}
+    {"ultimate", EXHAUST_SPELLGROUP_SPECIAL},
+	{"none", EXHAUST_SPELLGROUP_NONE},
     // sdicione mais conforme necessário
 };
 
@@ -684,6 +685,14 @@ bool Spell::checkSpell(Player* player) const
 
 	if(!player->hasFlag(PlayerFlag_HasNoExhaustion))
 	{
+		if(player->hasCondition(CONDITION_EXHAUST, EXHAUST_SPELLGROUP_NONE) && exhaustedGroup == "none")
+		{
+			player->sendCancelMessage(RET_YOUAREEXHAUSTED);
+			if(isInstant() && !player->isGhost())
+				player->sendMagicEffect(player->getPosition(), MAGIC_EFFECT_POFF);
+			return false;
+		}
+		
 		Exhaust_t exhaustedGroupType = spellGroupMap[exhaustedGroup];
 		if (g_config.getBool(ConfigManager::NO_ATTACKHEALING_SIMULTANEUS)) {
 			if ((player->hasCondition(CONDITION_EXHAUST, EXHAUST_SPELLGROUP_ATTACK) &&
