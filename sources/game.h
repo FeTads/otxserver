@@ -350,9 +350,6 @@ class Game
 		uint32_t getMonstersOnline() {return (uint32_t)Monster::autoList.size();}
 		uint32_t getNpcsOnline() {return (uint32_t)Npc::autoList.size();}
 		uint32_t getCreaturesOnline() {return (uint32_t)autoList.size();}
-		uint32_t getPlayersWithMcLimit();
-
-		uint32_t getUniquePlayersOnline();
 		
 		bool existMonsterByName(const std::string& name);
 

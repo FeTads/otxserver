@@ -7078,52 +7078,6 @@ void Game::checkPlayersRecord(Player* player)
 	playersRecord = count;
 }
 
-uint32_t Game::getPlayersWithMcLimit()
-{
-	std::map<uint32_t, uint32_t> ips;
-	uint32_t count = 0;
-
-	for (AutoList<Player>::iterator it = Player::autoList.begin(); it != Player::autoList.end(); ++it)
-	{
-		if (!it->second->isRemoved() && it->second->getIdleTime() < 960000)
-		{
-			uint32_t ip = it->second->getIP();
-
-			if (ips.find(ip) == ips.end())
-			{
-				ips[ip] = 1;
-				count++;
-			}
-			else if (ips[ip] < 4)
-			{
-				ips[ip]++;
-				count++;
-			}
-		}
-	}
-
-	return count;
-}
-
-uint32_t Game::getUniquePlayersOnline()
-{
-	std::vector<uint32_t> ips;
-	std::vector<uint32_t>::iterator itt;
-
-	for(AutoList<Player>::iterator it = Player::autoList.begin(); it != Player::autoList.end(); ++it) {
-
-		if(!it->second->isRemoved() && it->second->getIdleTime() < 960000) {
-
-			itt = std::find(ips.begin(), ips.end(), it->second->getIP());
-			if(itt == ips.end()) {
-				ips.push_back(it->second->getIP());
-			}
-		}
-	}
-
-	return ips.size();
-}
-
 void Game::loadPlayersRecord()
 {
 	Database* db = Database::getInstance();
