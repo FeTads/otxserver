@@ -52,6 +52,10 @@
 	enableCriticalAndDodgeSource = true
 	-- player can push other player in PZ
 	pushInProtectZone = false
+	-- set time to exhaust potion 1500 = 1.5s
+	exhaustPotionMiliSeconds = 1500
+	-- when using potion, it will exhaust other use item, MW / SD etc..., don't let use pot + rune
+	exhaustItemAtUsePotion = true
 
 
 	sqlType = "mysql"
@@ -254,7 +258,7 @@
 	houseProtection = false
 
 	timeBetweenActions = 200
-	timeBetweenExActions = 500
+	timeBetweenExActions = 1000
 	timeBetweenCustomActions = 0
 	checkCorpseOwner = true
 	hotkeyAimbotEnabled = true

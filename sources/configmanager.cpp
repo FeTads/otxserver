@@ -143,10 +143,14 @@ bool ConfigManager::load()
 	
 	m_confBool[DELETE_PLAYER_MONSTER_NAME] = getGlobalBool("deletePlayersWithMonsterName", false);
 	
+	m_confBool[POTION_CAN_EXHAUST_ITEM] = getGlobalBool("exhaustItemAtUsePotion", false);
+	
 	m_confBool[USEDAMAGE_IN_K] = getGlobalBool("modifyDamageInK", false);
 	m_confBool[USEEXP_IN_K] = getGlobalBool("modifyExperienceInK", false);
 	
 	m_confBool[DISPLAY_BROADCAST] = getGlobalBool("displayBroadcastLog", true);  //by kizuno18
+	
+	m_confNumber[EXHAUST_POTION] = getGlobalNumber("exhaustPotionMiliSeconds", 1500);
 	
 	m_confString[MAP_AUTHOR] = getGlobalString("mapAuthor", "Unknown");
 	m_confNumber[LOGIN_TRIES] = getGlobalNumber("loginTries", 3);

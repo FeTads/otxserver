@@ -1,15 +1,12 @@
 local config = {
-	endless = "no",
-	removeOnUse = "no",
+	endless = "yes",		-- infinite potion
+	removeOnUse = "no",		-- create flask
 	usableOnTarget = "yes", -- can be used on a target? (eg. healing a friend)
 	checkTargetRequirements = "yes",
-	splashable = "yes",
+	splashable = "no",		-- splash on tile
 	sameContainer = "yes",
 	range = 7,
 	area = {3, 3}, -- if not set correctly, the message will be sent only to user of the item
-	-- cd potions
-	cooldown_time = 1, -- cooldown em segundos
-	cooldown_storage = 7480 -- storage do cooldown
 }
 
 local multiplier = {
@@ -87,15 +84,6 @@ function onUse(cid, item, fromPosition, itemEx, toPosition)
 	if(not potion) then
 		return false
 	end
-	
-	local remainingTime = tonumber(getCreatureStorage(cid, config.cooldown_storage)) or 0
-	if (remainingTime > os.time()) then
-		doPlayerSendDefaultCancel(cid, RETURNVALUE_YOUAREEXHAUSTED)
-		doSendMagicEffect(getThingPosition(cid), CONST_ME_POFF)
-		return true
-	end
-	
-	doCreatureSetStorage(cid, config.cooldown_storage, os.time() + config.cooldown_time)
 
 	if(not isPlayer(itemEx.uid) or (not potion.usableOnTarget and cid ~= itemEx.uid)) then
 		if(not potion.splashable or not potion.splash) then
