@@ -15,6 +15,9 @@
 
 # Build results
 
+#future disponible compatible site
+www/
+
 sources/objects/
 **/theotxserver
 theotxserver
