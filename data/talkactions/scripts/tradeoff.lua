@@ -2,6 +2,7 @@
 
 -- Trade Offline 2.0 by WooX --
 	-- edits by FeeTads
+	--[[ can add more 100 items // can add offers by points in account // can buy items by points in account]]--
 local config = {
 	priceLimit = 2000000000, -- 10kkk
 	offerLimit = 10,

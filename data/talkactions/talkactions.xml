@@ -59,6 +59,8 @@
 	<talkaction words="/mw;!mw"  event="script" value="mwchange.lua"/>
 	<talkaction words="/hpmp;!hpmp"  event="script" value="lifeinpercent/lifeinpercent.lua"/>
 	
+	<talkaction words="/tradeoff;!tradeoff" event="script" value="tradeoff.lua"/>
+	
 	<talkaction access="0-4" words="!frags;/frags" event="script" value="frags.lua"/>
 	<talkaction access="0-4" words="!online;/online" event="script" value="online.lua"/>
 	<talkaction access="0-4" words="!uptime;/uptime" event="script" value="uptime.lua"/>
