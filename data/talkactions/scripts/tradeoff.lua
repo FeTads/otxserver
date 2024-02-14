@@ -14,9 +14,9 @@ local config = {
 	helpMsg = "Enter the parameters (add, remove, active, buy, info).",
 	goldItems = {2148, 2152, 2160, 9971},	-- gold dentro do jogo, gold/crystal/gold bar...
 	itemsVIP = {4540, 4545, 4560},			-- items vips
-	blokedItems = {12716, 12717, 12718, 12745, 12746, 12747, 12748, 12749, 12750, 2122, 12707, 12708, 11302}		-- items que você não quer no tradeOff
-	id_points = {2157, 12778, 12779, 12780, 12781}	-- items que vc usa como ponto, gold nugget, scarab coin ... se não usar, deixar sem nada dentro
-	blockedAttributes = {"lifeleech", "manaleech"}  -- atributos custom no server que não podem ir pro tradeoff
+	blokedItems = {12716, 12717, 12718, 12745, 12746, 12747, 12748, 12749, 12750, 2122, 12707, 12708, 11302},		-- items que você não quer no tradeOff
+	id_points = {2157, 12778, 12779, 12780, 12781},	-- items que vc usa como ponto, gold nugget, scarab coin ... se não usar, deixar sem nada dentro
+	blockedAttributes = {"lifeleech", "manaleech"},  -- atributos custom no server que não podem ir pro tradeoff
 }
 
 function onSay(cid, words, param, channel)
@@ -52,8 +52,8 @@ function onSay(cid, words, param, channel)
                 return true
 			end
 			
-			for i=1, #config.blockedAttributes then
-				local attr = getItemAttribute(item.itemid, config.blockedAttributes[i])
+			for i=1, #config.blockedAttributes do
+				local attr = getItemAttribute(item.uid, config.blockedAttributes[i])
 				if attr and attr > 0 then
 					doPlayerSendTextMessage(cid, config.errorMsgType, "Desculpe, você não pode vender item com o atributo: "..config.blockedAttributes[i]..".")
 					setPlayerStorageValue(cid, 666, os.time()+10)

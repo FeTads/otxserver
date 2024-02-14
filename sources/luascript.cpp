@@ -1936,6 +1936,9 @@ void LuaInterface::registerFunctions()
 
 	//doPlayerAddOutfit(cid, looktype, addon)
 	lua_register(m_luaState, "doPlayerAddOutfit", LuaInterface::luaDoPlayerAddOutfit);
+	
+	//getOutfitIdByLooktype(looktype)
+	lua_register(m_luaState, "getOutfitIdByLooktype", LuaInterface::luaGetOutfitIdByLooktype);
 
 	//doPlayerRemoveOutfit(cid, looktype[, addon = 0])
 	lua_register(m_luaState, "doPlayerRemoveOutfit", LuaInterface::luaDoPlayerRemoveOutfit);
@@ -8622,6 +8625,15 @@ int32_t LuaInterface::luaDoAddContainerItem(lua_State* L)
 		return ret;
 
 	lua_pushnil(L);
+	return 1;
+}
+
+int32_t LuaInterface::luaGetOutfitIdByLooktype(lua_State *L)
+{
+
+	//getOutfitIdByLooktype(looktype)
+	uint32_t lookType = popNumber(L);
+	lua_pushnumber(L, Outfits::getInstance()->getOutfitId(lookType));
 	return 1;
 }
 

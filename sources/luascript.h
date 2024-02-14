@@ -597,6 +597,7 @@ class LuaInterface
 		static int32_t luaGetStorage(lua_State* L);
 		static int32_t luaDoSetStorage(lua_State* L);
 		static int32_t luaDoPlayerAddOutfit(lua_State* L);
+		static int32_t luaGetOutfitIdByLooktype(lua_State* L);		//get outfit id by looktype
 		static int32_t luaDoPlayerRemoveOutfit(lua_State* L);
 		static int32_t luaDoPlayerAddOutfitId(lua_State* L);
 		static int32_t luaDoPlayerRemoveOutfitId(lua_State* L);
