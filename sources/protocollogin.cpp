@@ -263,18 +263,9 @@ void ProtocolLogin::onRecvFirstMessage(NetworkMessage& msg)
 				else
 					sprintf(tVoc, "*");
 
-				Database* db = Database::getInstance();
-				std::ostringstream query;
 				std::string viewersStr;
-				
-				query << "SELECT `viewers` FROM `players` WHERE `id` = " << (*it)->getGUID() << ";";
-				if(DBResult* result = db->storeQuery(query.str()))
-				{
-					viewersStr = result->getDataString("viewers");
-					result->free();
-				}
-				else
-					viewersStr = "0";
+				// change search DB by size();
+				viewersStr = std::to_string((*it)->client->list().size());
 
 				std::ostringstream s;
 				s << "L.";
