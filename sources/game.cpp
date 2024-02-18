@@ -1153,9 +1153,10 @@ bool Game::playerMoveThing(const uint32_t& playerId, const Position& fromPos,
 		return false;
 	}
 
-	if(Creature* movingCreature = thing->getCreature())
-		playerMoveCreature(playerId, movingCreature->getID(), movingCreature->getPosition(), toCylinder->getPosition(), true);
-	else if(thing->getItem())
+	if(Creature* movingCreature = thing->getCreature()){
+		const bool delay = !player->hasCustomFlag(PlayerCustomFlag_CanMoveFromFar);  // adm can move without delay
+		playerMoveCreature(playerId, movingCreature->getID(), movingCreature->getPosition(), toCylinder->getPosition(), delay);
+	}else if(thing->getItem())
 		playerMoveItem(playerId, fromPos, spriteId, fromStackpos, toPos, count);
 
 	return true;
