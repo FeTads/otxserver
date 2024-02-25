@@ -35,7 +35,7 @@ for key, combat in pairs(combat_types) do
 	function onGetFormulaValues(cid, level, skill, attack, factor)
 		local arma = getPlayerWeaponHand(cid)
 		local extra = ((arma ~= 0) and (weapons[arma.itemid] and weapons[arma.itemid].extraDano or 0) or 0)
-		return -(((skill*2 + (level/5))+(2*extra))*2), -(((skill*5 + (level/2.5)))+(2*extra))*3)		--minimo, maximo solo
+		return -(((skill*2 + (level/5))+(2*extra))*2), -(((skill*2 + (level/2.5))+(2*extra))*3)		--minimo, maximo solo
 	end
 	setCombatCallback(combat.object, CALLBACK_PARAM_LEVELMAGICVALUE, "onGetFormulaValues")
 
