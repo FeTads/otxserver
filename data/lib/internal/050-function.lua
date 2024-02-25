@@ -278,7 +278,9 @@ function doBroadcastMessage(text, class)
 		doPlayerSendTextMessage(pid, class, text)
 	end
 
-	print("> Broadcasted message: \"" .. text .. "\".")
+	if getConfigValue('displayBroadcastLog') then
+        print("> Broadcasted message: "" .. text .. "".")
+    end
 	return true
 end
 

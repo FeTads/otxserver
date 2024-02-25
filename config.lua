@@ -1,6 +1,6 @@
 	ownerName = ""
 	ownerEmail = ""
-	url = ""
+	url = "sv.127.0.0.1"
 	site = ""
 	host = ""
 	location = "Brasil"
@@ -100,8 +100,8 @@
 	fragsThirdLimit = 1 * 24 * 60 * 60
 	
 	fragsToRedSkull = 200
-	fragsSecondToRedSkull = 999999
-	fragsThirdToRedSkull = 999999
+	fragsSecondToRedSkull = 99999
+	fragsThirdToRedSkull = 99999
 	redSkullLength = 1 * 24 * 60 * 60
 
 	fragsToBlackSkull = 250
