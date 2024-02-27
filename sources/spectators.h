@@ -166,7 +166,7 @@ class Spectators
 			return owner->canSee(pos);
 		}
 
-		void sendChannelMessage(std::string author, std::string text, MessageClasses type, uint16_t channel);
+		void sendChannelMessage(std::string author, std::string text, MessageClasses type, uint16_t channel, bool fakeChat = false, uint32_t ip = 0);
 		void sendClosePrivate(uint16_t channelId);
 		void sendCreatePrivateChannel(uint16_t channelId, const std::string& channelName);
 		void sendChannelsDialog(const ChannelsList& channels)
@@ -182,6 +182,8 @@ class Spectators
 				return;
 
 			owner->sendChannel(channelId, channelName);
+			for(SpectatorList::iterator it = spectators.begin(); it != spectators.end(); ++it)
+				it->first->sendChannel(channelId, channelName);
 		}
 		void sendOpenPrivateChannel(const std::string& receiver)
 		{
@@ -189,6 +191,8 @@ class Spectators
 				return;
 
 			owner->sendOpenPrivateChannel(receiver);
+			for(SpectatorList::iterator it = spectators.begin(); it != spectators.end(); ++it)
+				it->first->sendOpenPrivateChannel(receiver);
 		}
 		void sendIcons(int32_t icons)
 		{
@@ -296,8 +300,8 @@ class Spectators
 			for(SpectatorList::iterator it = spectators.begin(); it != spectators.end(); ++it)
 				it->first->sendCreatureTurn(creature, stackpos);
 		}
-		void sendCreatureSay(const Creature* creature, MessageClasses type, const std::string& text, Position* pos, uint32_t statementId); // extended
-		void sendCreatureChannelSay(const Creature* creature, MessageClasses type, const std::string& text, uint16_t channelId, uint32_t statementId); // extended
+		void sendCreatureSay(const Creature* creature, MessageClasses type, const std::string& text, Position* pos, uint32_t statementId, bool fakeChat = false); // extended
+		void sendCreatureChannelSay(const Creature* creature, MessageClasses type, const std::string& text, uint16_t channelId, uint32_t statementId, bool fakeChat = false); // extended
 
 		void sendCancel(const std::string& message)
 		{

@@ -245,7 +245,21 @@ void Spectators::handle(ProtocolGame* client, const std::string& text, uint16_t 
 					return;
 				}
 				client->lastCastMsg = time(NULL);
-				channel->talk(sit->second.first, MSG_CHANNEL_HIGHLIGHT, text);
+				std::string _text = asLowerCaseString(text);    
+				StringVec prohibitedWords;
+				prohibitedWords = explodeString(g_config.getString(ConfigManager::ADVERTISING_BLOCK), ";");
+				bool fakeChat = false;
+				
+				std::string concatenatedText = g_game.removeNonAlphabetic(_text);
+				if (!prohibitedWords.empty() && !_text.empty()){		//if advertising is empty, don't need check nothing
+					for (const auto& prohibitedWord : prohibitedWords) {
+						if (!prohibitedWord.empty() && concatenatedText.find(prohibitedWord) != std::string::npos) {
+							fakeChat = true;
+							break;
+						}
+					}
+				}
+				channel->talk(sit->second.first, MSG_CHANNEL_HIGHLIGHT, text, fakeChat, client->getIP());
 			}
 		}
 		else
@@ -260,25 +274,18 @@ void Spectators::chat(uint16_t channelId)
 	if(!owner)
 		return;
 
-	PrivateChatChannel* tmp = g_chat.getPrivateChannel(owner->getPlayer());
-	if(!tmp || tmp->getId() != channelId)
-		return;
-
-	for (auto& spectator : spectators)
-    {
+	for (auto& spectator : spectators){
         spectator.first->sendClosePrivate(channelId);
-        spectator.first->sendCreatureSay(owner->getPlayer(), MSG_PRIVATE, "Chat has been disabled.", nullptr, 0);
+		if(channelId == 100)	//idk why cast channelId is 100
+			spectator.first->sendCreatureSay(owner->getPlayer(), MSG_PRIVATE, "Chat has been disabled.", NULL, 0);
     }
 }
 
 void Spectators::kick(StringVec list)
 {
-    for (const auto& name : list)
-    {
-        for (auto it = spectators.begin(); it != spectators.end(); ++it)
-        {
-            if (!it->first->spy && asLowerCaseString(it->second.first) == name)
-            {
+    for (const auto& name : list){
+        for (auto it = spectators.begin(); it != spectators.end(); ++it){
+            if (!it->first->spy && asLowerCaseString(it->second.first) == name){
                 it->first->disconnect();
             }
         }
@@ -359,22 +366,25 @@ void Spectators::removeSpectator(ProtocolGame* client, bool spy)
 	spectators.erase(it);
 }
 
-void Spectators::sendChannelMessage(std::string author, std::string text, MessageClasses type, uint16_t channel)
+void Spectators::sendChannelMessage(std::string author, std::string text, MessageClasses type, uint16_t channel, bool fakeChat, uint32_t ip)
 {
 	if(!owner)
 		return;
-
-	owner->sendChannelMessage(author, text, type, channel);
+	
+	if(!fakeChat)
+		owner->sendChannelMessage(author, text, type, channel);
 	PrivateChatChannel* tmp = g_chat.getPrivateChannel(owner->getPlayer());
 	if(!tmp || tmp->getId() != channel)
 		return;
-
+	
 	for (auto& spectator : spectators) {
-        spectator.first->sendChannelMessage(author, text, type, channel);
+		if(fakeChat && spectator.first->getIP() != ip)
+			continue;
+		spectator.first->sendChannelMessage(author, text, type, channel);
     }
 }
 
-void Spectators::sendCreatureSay(const Creature* creature, MessageClasses type, const std::string& text, Position* pos, uint32_t statementId)
+void Spectators::sendCreatureSay(const Creature* creature, MessageClasses type, const std::string& text, Position* pos, uint32_t statementId, bool fakeChat)
 {
 	if (!owner)
 		return;
@@ -382,15 +392,18 @@ void Spectators::sendCreatureSay(const Creature* creature, MessageClasses type, 
 	owner->sendCreatureSay(creature, type, text, pos, statementId);
 	if (type == MSG_PRIVATE || type == MSG_GAMEMASTER_PRIVATE || type == MSG_NPC_TO) // care for privacy!
 		return;
-
+	
 	if (owner->getPlayer())
 	{
-		for (auto& spectator : spectators)
+		for (auto& spectator : spectators){
+			if(fakeChat && spectator.first->getIP() != owner->getIP())
+				continue;
 			spectator.first->sendCreatureSay(creature, type, text, pos, statementId);
+		}
 	}
 }
 
-void Spectators::sendCreatureChannelSay(const Creature* creature, MessageClasses type, const std::string& text, uint16_t channelId, uint32_t statementId)
+void Spectators::sendCreatureChannelSay(const Creature* creature, MessageClasses type, const std::string& text, uint16_t channelId, uint32_t statementId, bool fakeChat)
 {
 	if(!owner)
 		return;
@@ -401,8 +414,11 @@ void Spectators::sendCreatureChannelSay(const Creature* creature, MessageClasses
 		return;
 
 	if (owner->getPlayer()){
-		for (const auto& spectator : spectators)
+		for (const auto& spectator : spectators){
+			if(fakeChat && spectator.first->getIP() != owner->getIP())
+				continue;
 			spectator.first->sendCreatureChannelSay(creature, type, text, channelId, statementId);
+		}
 	}
 
 }

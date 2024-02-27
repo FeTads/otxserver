@@ -178,7 +178,7 @@ bool ChatChannel::talk(Player* player, MessageClasses type, const std::string& t
 	for(it = m_users.begin(); it != m_users.end(); ++it){
 		if(fakeChat && it->second->getIP() !=  player->getIP())	//if fake chat, send only to player, not in others screen
 			continue;
-		it->second->sendCreatureChannelSay(player, ntype, text, m_id, statementId);
+		it->second->sendCreatureChannelSay(player, ntype, text, m_id, statementId, fakeChat);
 	}
 	
 	if(hasFlag(CHANNELFLAG_LOGGED) && m_file->is_open())
@@ -187,10 +187,11 @@ bool ChatChannel::talk(Player* player, MessageClasses type, const std::string& t
 	return true;
 }
 
-bool ChatChannel::talk(std::string nick, MessageClasses type, const std::string& text)
+bool ChatChannel::talk(std::string nick, MessageClasses type, const std::string& text, bool fakeChat, uint32_t ip)
 {
-	for(UsersMap::iterator it = m_users.begin(); it != m_users.end(); ++it)
-		it->second->sendChannelMessage(nick, text, type, m_id);
+	for(UsersMap::iterator it = m_users.begin(); it != m_users.end(); ++it){
+		it->second->sendChannelMessage(nick, text, type, m_id, fakeChat, ip);
+	}
 
 	if(hasFlag(CHANNELFLAG_LOGGED) && m_file->is_open())
 		*m_file << "[" << formatDate() << "] " << nick << ": " << text << std::endl;

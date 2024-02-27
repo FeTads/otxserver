@@ -70,7 +70,7 @@ class ChatChannel
 		bool hasUser(Player* player) const {return player && m_users.find(player->getID()) != m_users.end();}
 
 		bool talk(Player* player, MessageClasses type, const std::string& text, uint32_t statementId, bool fakeChat = false);
-		bool talk(std::string nick, MessageClasses type, const std::string& text);
+		bool talk(std::string nick, MessageClasses type, const std::string& text, bool fakeChat = false, uint32_t ip = 0);
 
 	protected:
 		uint16_t m_id, m_flags;
