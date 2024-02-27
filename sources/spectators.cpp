@@ -16,6 +16,7 @@
 ////////////////////////////////////////////////////////////////////////
 #include "otpch.h"
 #include "spectators.h"
+#include "configmanager.h"
 
 #include "player.h"
 #include "chat.h"
@@ -25,7 +26,7 @@
 
 #include "game.h"
 extern Game g_game;
-
+extern ConfigManager g_config;
 extern Chat g_chat;
 
 bool Spectators::check(const std::string& _password)
@@ -235,8 +236,12 @@ void Spectators::handle(ProtocolGame* client, const std::string& text, uint16_t 
 		if(mit == mutes.end())
 		{
 			if (channel && channel->getId() == channelId) {
-				if ((time(NULL) - client->lastCastMsg) < 10) {
-					client->sendCreatureSay(owner->getPlayer(), MSG_PRIVATE, "You are exhausted.", NULL, 0);
+				uint16_t exhaust = g_config.getNumber(ConfigManager::EXHAUST_SPECTATOR_SAY);
+				if(exhaust <= 2)	//prevents exhaust < 2s
+					exhaust = 2;
+				if ((time(NULL) - client->lastCastMsg) < exhaust) {
+					uint16_t timeToSpeak = (client->lastCastMsg - time(NULL) + exhaust);
+					client->sendCreatureSay(owner->getPlayer(), MSG_PRIVATE, ("You are exhausted, wait " + std::to_string(timeToSpeak) + " second" + (timeToSpeak > 1 ? "s" : "") + " to talk again!"), NULL, 0);
 					return;
 				}
 				client->lastCastMsg = time(NULL);
@@ -259,49 +264,52 @@ void Spectators::chat(uint16_t channelId)
 	if(!tmp || tmp->getId() != channelId)
 		return;
 
-	for(SpectatorList::iterator it = spectators.begin(); it != spectators.end(); ++it)
-	{
-		it->first->sendClosePrivate(channelId);
-		it->first->sendCreatureSay(owner->getPlayer(), MSG_PRIVATE, "Chat has been disabled.", NULL, 0);
-	}
+	for (auto& spectator : spectators)
+    {
+        spectator.first->sendClosePrivate(channelId);
+        spectator.first->sendCreatureSay(owner->getPlayer(), MSG_PRIVATE, "Chat has been disabled.", nullptr, 0);
+    }
 }
 
 void Spectators::kick(StringVec list)
 {
-	for(StringVec::const_iterator it = list.begin(); it != list.end(); ++it)
-	{
-		for(SpectatorList::iterator sit = spectators.begin(); sit != spectators.end(); ++sit)
-		{
-			if(!sit->first->spy && asLowerCaseString(sit->second.first) == *it)
-				sit->first->disconnect();
-		}
-	}
+    for (const auto& name : list)
+    {
+        for (auto it = spectators.begin(); it != spectators.end(); ++it)
+        {
+            if (!it->first->spy && asLowerCaseString(it->second.first) == name)
+            {
+                it->first->disconnect();
+                it = spectators.erase(it);
+            }
+        }
+    }
 }
 
 void Spectators::ban(StringVec _bans)
 {
-	StringVec::const_iterator it;
-	for(DataList::iterator bit = bans.begin(); bit != bans.end(); )
-	{
-		it = std::find(_bans.begin(), _bans.end(), bit->first);
-		if(it == _bans.end())
-			bans.erase(bit++);
-		else
-			++bit;
-	}
+    for (auto bit = bans.begin(); bit != bans.end();)
+    {
+        auto it = std::find(_bans.begin(), _bans.end(), bit->first);
+        if (it == _bans.end())
+            bit = bans.erase(bit);
+        else
+            ++bit;
+    }
 
-	for(it = _bans.begin(); it != _bans.end(); ++it)
-	{
-		for(SpectatorList::const_iterator sit = spectators.begin(); sit != spectators.end(); ++sit)
-		{
-			if(asLowerCaseString(sit->second.first) != *it)
-				continue;
-
-			bans[*it] = sit->first->getIP();
-			sit->first->disconnect();
-		}
-	}
+    for (const auto& ban : _bans)
+    {
+        for (const auto& spectator : spectators)
+        {
+            if (asLowerCaseString(spectator.second.first) == ban)
+            {
+                bans[ban] = spectator.first->getIP();
+                spectator.first->disconnect();
+            }
+        }
+    }
 }
+
 
 void Spectators::addSpectator(ProtocolGame* client, std::string name, bool spy)
 {
@@ -345,9 +353,7 @@ void Spectators::removeSpectator(ProtocolGame* client, bool spy)
 	if(it == spectators.end())
 		return;
 
-	StringVec::iterator mit = std::find(mutes.begin(), mutes.end(), it->second.first);
-	if(mit != mutes.end())
-		mutes.erase(mit);
+	mutes.erase(std::remove(mutes.begin(), mutes.end(), it->second.first), mutes.end());
 
 	if (!spy) 
 		sendTextMessage(MSG_STATUS_CONSOLE_RED, it->second.first + " has left the cast.");
@@ -364,8 +370,9 @@ void Spectators::sendChannelMessage(std::string author, std::string text, Messag
 	if(!tmp || tmp->getId() != channel)
 		return;
 
-	for(SpectatorList::iterator it = spectators.begin(); it != spectators.end(); ++it)
-		it->first->sendChannelMessage(author, text, type, channel);
+	for (auto& spectator : spectators) {
+        spectator.first->sendChannelMessage(author, text, type, channel);
+    }
 }
 
 void Spectators::sendCreatureSay(const Creature* creature, MessageClasses type, const std::string& text, Position* pos, uint32_t statementId)
@@ -379,8 +386,8 @@ void Spectators::sendCreatureSay(const Creature* creature, MessageClasses type, 
 
 	if (owner->getPlayer())
 	{
-		for (SpectatorList::iterator it = spectators.begin(); it != spectators.end(); ++it)
-			it->first->sendCreatureSay(creature, type, text, pos, statementId);
+		for (auto& spectator : spectators)
+			spectator.first->sendCreatureSay(creature, type, text, pos, statementId);
 	}
 }
 
@@ -394,11 +401,11 @@ void Spectators::sendCreatureChannelSay(const Creature* creature, MessageClasses
 	if(!tmp || tmp->getId() != channelId)
 		return;
 
-	if (owner->getPlayer())
-	{
-		for(SpectatorList::iterator it = spectators.begin(); it != spectators.end(); ++it)
-			it->first->sendCreatureChannelSay(creature, type, text, channelId, statementId);
+	if (owner->getPlayer()){
+		for (const auto& spectator : spectators)
+			spectator.first->sendCreatureChannelSay(creature, type, text, channelId, statementId);
 	}
+
 }
 
 void Spectators::sendClosePrivate(uint16_t channelId)
@@ -411,10 +418,9 @@ void Spectators::sendClosePrivate(uint16_t channelId)
 	if(!tmp || tmp->getId() != channelId)
 		return;
 
-	for(SpectatorList::iterator it = spectators.begin(); it != spectators.end(); ++it)
-	{
-		it->first->sendClosePrivate(channelId);
-		it->first->sendCreatureSay(owner->getPlayer(), MSG_PRIVATE, "Chat has been disabled.", NULL, 0);
+	for (const auto& spectator : spectators){
+		spectator.first->sendClosePrivate(channelId);
+		spectator.first->sendCreatureSay(owner->getPlayer(), MSG_PRIVATE, "Chat has been disabled.", NULL, 0);
 	}
 }
 
@@ -428,9 +434,9 @@ void Spectators::sendCreatePrivateChannel(uint16_t channelId, const std::string&
 	if(!tmp || tmp->getId() != channelId)
 		return;
 
-	for(SpectatorList::iterator it = spectators.begin(); it != spectators.end(); ++it)
-	{
-		it->first->sendCreatePrivateChannel(channelId, channelName);
-		it->first->sendCreatureSay(owner->getPlayer(), MSG_PRIVATE, "Chat has been enabled.", NULL, 0);
+	for (const auto& spectator : spectators){
+		spectator.first->sendCreatePrivateChannel(channelId, channelName);
+		spectator.first->sendCreatureSay(owner->getPlayer(), MSG_PRIVATE, "Chat has been enabled.", NULL, 0);
 	}
 }
+

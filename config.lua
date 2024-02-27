@@ -56,6 +56,8 @@
 	exhaustPotionMiliSeconds = 1500
 	-- when using potion, it will exhaust other use item, MW / SD etc..., don't let use pot + rune
 	exhaustItemAtUsePotion = true
+	-- exhaust for the spectator speak again in seconds
+	exhaust_spectatorSay = 5
 
 
 	sqlType = "mysql"

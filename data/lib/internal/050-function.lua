@@ -279,7 +279,7 @@ function doBroadcastMessage(text, class)
 	end
 
 	if getConfigValue('displayBroadcastLog') then
-        print("> Broadcasted message: "" .. text .. "".")
+        print("> Broadcasted message: ".. text .. ".")
     end
 	return true
 end
