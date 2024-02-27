@@ -280,7 +280,6 @@ void Spectators::kick(StringVec list)
             if (!it->first->spy && asLowerCaseString(it->second.first) == name)
             {
                 it->first->disconnect();
-                it = spectators.erase(it);
             }
         }
     }
