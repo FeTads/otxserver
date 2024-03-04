@@ -133,6 +133,7 @@ void ProtocolStatus::sendStatusString()
 	std::map<uint32_t, uint32_t> mcLimit4;
     std::vector<uint32_t> uniqueIp;
     uint32_t count = 0;
+	uint32_t uniqueOnline = 0;
 
     for (const auto& player : Player::autoList) {
 		if (!player.second->isRemoved() && player.second->getIdleTime() < 900000 && player.second->getIP() != 0) {
@@ -147,12 +148,16 @@ void ProtocolStatus::sendStatusString()
 			}
 			if (std::find(uniqueIp.begin(), uniqueIp.end(), ip) == uniqueIp.end()) {	//unique IP
 				uniqueIp.push_back(ip);
+				++uniqueOnline;
 			}
 		}
 	}
 	
 	sprintf(buffer, "%d", count);
 	xmlSetProp(p, (const xmlChar*)"online", (const xmlChar*)buffer);
+	
+	sprintf(buffer, "%d", uniqueOnline));
+	xmlSetProp(p, (const xmlChar*)"unique", (const xmlChar*)buffer);
 
 	sprintf(buffer, "%d", (int32_t)g_config.getNumber(ConfigManager::MAX_PLAYERS));
 	xmlSetProp(p, (const xmlChar*)"max", (const xmlChar*)buffer);
@@ -162,9 +167,6 @@ void ProtocolStatus::sendStatusString()
 
 	//this get function in game.cpp with limit = 1 by IP (Unique Players) to otservlist. Xinn can check here https://github.com/FeTads/otxserver/blob/a9bef7ac0fe7584a924a7426aae0f44ec372fe12/sources/game.cpp#L7108
 	//sprintf(buffer, "%d", g_game.getUniquePlayersOnline());
-	
-	sprintf(buffer, "%d", static_cast<int>(uniqueIp.size()));
-	xmlSetProp(p, (const xmlChar*)"unique_players", (const xmlChar*)buffer);
 
 	xmlAddChild(root, p);
 
