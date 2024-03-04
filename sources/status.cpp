@@ -156,7 +156,7 @@ void ProtocolStatus::sendStatusString()
 	sprintf(buffer, "%d", count);
 	xmlSetProp(p, (const xmlChar*)"online", (const xmlChar*)buffer);
 	
-	sprintf(buffer, "%d", uniqueOnline));
+	sprintf(buffer, "%d", uniqueOnline);
 	xmlSetProp(p, (const xmlChar*)"unique", (const xmlChar*)buffer);
 
 	sprintf(buffer, "%d", (int32_t)g_config.getNumber(ConfigManager::MAX_PLAYERS));
