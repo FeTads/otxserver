@@ -5,7 +5,7 @@ I want to create an OTX with several functionalities, in addition to those that 
   - custom source with scripts and modifications / improvements, based on Mattyx's OTX 2.x source, this has a global lib with several changes and optimizations, based on my source used in deletebra OT
 
 ### How Compile:
-Mattyx tutorial - [Windows Tutorial](https://github.com/mattyx14/otxserver/wiki/Compilling-on-Windows) - [Linux(Ubuntu) Tutorial](https://github.com/mattyx14/otxserver/wiki/Compiling-OTX2-on-Ubuntu)
+Mattyx tutorial - [Windows Tutorial](https://github.com/mattyx14/otxserver/wiki/Compilling-on-Windows) - [Linux(Ubuntu) Tutorial](https://github.com/FeTads/otxserver/wiki/Compiling-OTXSERVER-by-FeTads-on-Ubuntu)
 
 ### Contacts:
 - <b>FeeTads(Portuguese):</b><br>
