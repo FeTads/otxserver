@@ -1108,11 +1108,20 @@ void ValueCallback::getMinMaxValues(Player* player, CombatParams& params, int32_
 						attack += bow->getAttack() + bow->getExtraAttack();
 				}
 
-				if(weapon->getElementType() != COMBAT_NONE)
+				/*Fix infinite damage at physical*/
+				if (weapon->getElementType() != COMBAT_NONE)
 				{
-					attack -= weapon->getElementDamage();
-					lua_pushnumber(L, attack);
+					int32_t absAttack = std::abs(static_cast<int>(attack));
+					if (weapon->getElementDamage() >= absAttack)
+					{
+						attack = weapon->getElementDamage() - absAttack;
+					}
+					else
+					{
+						attack -= weapon->getElementDamage();
+					}
 
+					lua_pushnumber(L, attack);
 					lua_pushnumber(L, weapon->getElementDamage());
 					params.element.type = weapon->getElementType();
 				}
