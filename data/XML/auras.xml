@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<auras>
+<aura id="1" clientid="368" name="exemple 1" speed="20" />
+<aura id="2" clientid="369" name="exemple 2" speed="20" />
+<aura id="3" clientid="370" name="exemple 3" speed="20" />
+</auras>

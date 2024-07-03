@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wings>
+<wing id="1" clientid="2119" name="exemple 1" speed="200" />
+<wing id="2" clientid="2120" name="exemple 2" speed="200" />
+</wings>

@@ -676,16 +676,6 @@ bool Monsters::deserializeSpell(xmlNodePtr node, spellBlock_t& sb, const std::st
 
 					if(readXMLInteger(tmpNode, "addons", intValue))
 						outfit.lookAddons = intValue;
-					
-					if(readXMLInteger(tmpNode, "wings", intValue)) {
-					Wing* wing = Wings::getInstance()->getWing(intValue);
-					outfit.lookWing = wing ? wing->clientId : 0;
-					}
-
-					if(readXMLInteger(tmpNode, "aura", intValue)) {
-					Aura* aura = Auras::getInstance()->getAura(intValue);
-					outfit.lookAura = aura ? aura->clientId : 0;
-					}
 
 					outfits.push_back(outfit);
 				}

@@ -152,17 +152,7 @@ bool Npcs::parseNpcNode(xmlNodePtr node, FileType_t path, bool reloading/* = fal
 
 				if(readXMLInteger(q, "addons", intValue))
 					nType->outfit.lookAddons = intValue;
-
-				if(readXMLInteger(q, "wings", intValue)) {
-					Wing* wing = Wings::getInstance()->getWing(intValue);
-					nType->outfit.lookWing = wing ? wing->clientId : 0;
-				}
-
-				if(readXMLInteger(q, "aura", intValue)) {
-					Aura* aura = Auras::getInstance()->getAura(intValue);
-					nType->outfit.lookAura = aura ? aura->clientId : 0;
-				}
-
+				
 			}
 			else if(readXMLInteger(q, "typeex", intValue))
 				nType->outfit.lookTypeEx = intValue;
