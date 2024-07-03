@@ -1337,7 +1337,8 @@ void ProtocolGame::parseSetOutfit(NetworkMessage& msg)
 		newOutfit.lookAddons = msg.get<char>();
 	else
 		msg.skipBytes(1);
-
+    if (player->isUsingOtclient())
+	{
 	newOutfit.lookWing = msg.get<uint16_t>();
 	newOutfit.lookAura = msg.get<uint16_t>();
 
@@ -1347,6 +1348,7 @@ void ProtocolGame::parseSetOutfit(NetworkMessage& msg)
 
 	newOutfit.healthBackground = msg.get<uint16_t>();
 	newOutfit.manaBackground = msg.get<uint16_t>();
+	}
 
 	addGameTask(&Game::playerChangeOutfit, player->getID(), newOutfit);
 }
@@ -2824,7 +2826,7 @@ void ProtocolGame::sendOutfitWindow()
 			msg->addString("Your outfit");
 			msg->addByte(player->getDefaultOutfit().lookAddons);
 		}
-
+         if (player->isUsingOtclient()) {     
 				std::vector<Wing*> wingList;
 		for (std::map<uint32_t, Wing*>::iterator it = player->wings.begin(); it != player->wings.end(); ++it)
 		{
@@ -2878,13 +2880,14 @@ void ProtocolGame::sendOutfitWindow()
 				msg->add<uint16_t>(shader->id);
 				msg->addString(shader->name);
 			}
+			
 		} else {
 			msg->addByte(0);
 		}
 
 		msg->addByte(0);
 		msg->addByte(0);
-
+}
 		player->hasRequestedOutfit(true);
 	}
 }
@@ -3300,22 +3303,36 @@ void ProtocolGame::AddCreatureHealth(OutputMessage_ptr msg,const Creature* creat
 
 void ProtocolGame::AddCreatureOutfit(OutputMessage_ptr msg, const Creature* creature, const Outfit_t& outfit, bool outfitWindow/* = false*/)
 {
-	const Player* cp = creature->getPlayer();
+    const Player* cp = creature->getPlayer();
 	if ((outfitWindow || (!creature->isInvisible() && (!creature->isGhost() || !g_config.getBool(ConfigManager::GHOST_INVISIBLE_EFFECT)))) ||
 		(!creature->isInvisible() && cp && cp->isGhost() && cp->getGroupId() < 3))		//if player is ghost and GHOST_INVISIBLE_EFFECT = true, send normal outfit
 	{
-		msg->add<uint16_t>(outfit.lookType);
-		if(outfit.lookType)
-		{
-			msg->addByte(outfit.lookHead);
-			msg->addByte(outfit.lookBody);
-			msg->addByte(outfit.lookLegs);
-			msg->addByte(outfit.lookFeet);
-			msg->addByte(outfit.lookAddons);
+        msg->add<uint16_t>(outfit.lookType);
+        if (outfit.lookType)
+        {
+            msg->addByte(outfit.lookHead);
+            msg->addByte(outfit.lookBody);
+            msg->addByte(outfit.lookLegs);
+            msg->addByte(outfit.lookFeet);
+            msg->addByte(outfit.lookAddons);
+        }
+        else if (outfit.lookTypeEx)
+        {
+            msg->addItemId(outfit.lookTypeEx, player);
+        }
+        else
+        {
+            msg->add<uint16_t>(outfit.lookTypeEx);
+        }
 		}
-		else if(outfit.lookTypeEx)
-			msg->addItemId(outfit.lookTypeEx, player);
 		else
+		{
+			msg->add<uint32_t>(0x00);
+		}
+
+		if (player->isUsingOtclient())
+	{
+
 			msg->add<uint16_t>(outfit.lookTypeEx);
 		    msg->add<uint16_t>(outfit.lookWing);
 		    msg->add<uint16_t>(outfit.lookAura);
@@ -3325,8 +3342,6 @@ void ProtocolGame::AddCreatureOutfit(OutputMessage_ptr msg, const Creature* crea
 		    msg->add<uint16_t>(outfit.healthBackground);
 		    msg->add<uint16_t>(outfit.manaBackground);
 	}
-	    else
-		    msg->add<uint32_t>(0x00);
 }
 
 void ProtocolGame::AddWorldLight(OutputMessage_ptr msg, const LightInfo& lightInfo)
@@ -3741,7 +3756,6 @@ void ProtocolGame::parseNewPing(NetworkMessage& msg)
 	addGameTask(&Game::playerReceiveNewPing, player->getID(), localPing, fps);
 	Dispatcher::getInstance().addTask(createTask(std::bind(&ProtocolGame::sendNewPing, getThis(), pingId)));
 }
-
 
 void ProtocolGame::sendNewPing(uint32_t pingId)
 {
