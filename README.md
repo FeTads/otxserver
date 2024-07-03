@@ -43,6 +43,9 @@ Fixed bugs get in otx2<br>
 Added new features<br>
 
 <br>
-// Novos sistemas será adicionado para otc custom.
+// Correção reset system
+<br>
+// Adicionado newping otcv8
+--
 
 
