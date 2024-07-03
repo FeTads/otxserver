@@ -1,15 +1,15 @@
---[[
+.--[[
 
--- CASO SAIBA USAR O MODO SIMPLIFICADO, USE ABAIXO, SE NÃO, USE A TABELA PADRÃO
+-- CASO SAIBA USAR O MODO SIMPLIFICADO, USE ABAIXO, SE NÃƒO, USE A TABELA PADRÃƒO
 
 ResetSystem = {
 	back_to_level = 8, -- level que vai voltar
 	use_back_level = true,
 	resets = {},
-	incrementToReset = 250, -- qual a diferença de level a cada rr?
+	incrementToReset = 250, -- qual a diferenÃ§a de level a cada rr?
 	firstResetAt = 1500,	-- qual o level do PRIMEIRO rr
 	
-	-- incrementToReset se for 250 e firstResetAt = 1000, os resets serão 1000/1250/1500/1750
+	-- incrementToReset se for 250 e firstResetAt = 1000, os resets serÃ£o 1000/1250/1500/1750
 }
 
 for i = 0, 100 do
@@ -102,7 +102,7 @@ end
 
 function ResetSystem:execute(pid)
 	local playerLevel = getPlayerLevel(pid)
-	if (playerLevel > self.back_to_level and use_back_level) then
+	if (playerLevel > self.back_to_level and self.use_back_level) then
 		doPlayerAddExperience(pid, getExperienceForLevel(self.back_to_level) - getPlayerExperience(pid))
 		playerLevel = self.back_to_level
 	end
@@ -111,7 +111,7 @@ function ResetSystem:execute(pid)
 	self:updateHealthAndMana(pid)
 	local bonus = self:getInfo(pid)
 	if (bonus) then
-		local message = "Você efetuou seu " .. self:getCount(pid) .. "° reset."
+		local message = "VocÃª efetuou seu " .. self:getCount(pid) .. "Â° reset."
 		if (bonus.damage_percent) then
 			message = message .. "\n+" .. bonus.damage_percent .. "% de dano"
 		end
