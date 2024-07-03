@@ -620,6 +620,9 @@ class Game
 		void addTrash(Position pos) {trash.push_back(pos);}
 		void addRefreshTile(Tile* tile, RefreshBlock_t rb) {refreshTiles[tile] = rb;}
 
+		//ping otcv8
+		void playerReceiveNewPing(uint32_t playerId, uint16_t ping, uint16_t fps);
+
 		//Events
 		void checkCreatureWalk(const uint32_t& creatureId);
 		void updateCreatureWalk(const uint32_t& creatureId);

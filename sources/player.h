@@ -798,6 +798,24 @@ class Player : public Creature, public Cylinder
 		void unlearnInstantSpell(const std::string& name);
 		bool hasLearnedInstantSpell(const std::string& name) const;
 		
+	   //ping otcv8
+	   void setFPS(uint16_t value)
+	   {
+		fps = value;
+	   }
+	   void setLocalPing(uint16_t value)
+	   {
+		localPing = value;
+	   }
+	   uint16_t getFPS() const
+	   {
+		return fps;
+	   }
+	   uint16_t getLocalPing() const
+	   {
+	 	return localPing;
+	   }
+
 		//Autoloot by: Naze
 		std::list<uint16_t> getAutoLoot() {
 			return AutoLoot;

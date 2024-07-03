@@ -854,6 +854,7 @@ void ProtocolGame::parsePacket(NetworkMessage &msg)
 			case 0x14: parseLogout(msg); break;
 			case 0x1E: parseReceivePing(msg); break;
 			case 0x32: parseExtendedOpcode(msg); break;
+			case 0x40: parseNewPing(msg); break;
 			case 0x64: parseAutoWalk(msg); break;
 			case 0x65:
 			case 0x66:
@@ -3650,4 +3651,32 @@ bool ProtocolGame::canWatch(Player* foundPlayer) const
 		return false;
 
 	return true;
+}
+
+void ProtocolGame::parseNewPing(NetworkMessage& msg)
+{
+	if (!player->isUsingOtclient()) {
+        return; // Não envia o ping se não estiver usando otclientv8
+    }
+	uint32_t pingId = msg.get<uint32_t>();
+	uint16_t localPing = msg.get<uint16_t>();
+	uint16_t fps = msg.get<uint16_t>();
+
+	addGameTask(&Game::playerReceiveNewPing, player->getID(), localPing, fps);
+	g_dispatcher.addTask(createTask(std::bind(&ProtocolGame::sendNewPing, getThis(), pingId)));
+}
+
+void ProtocolGame::sendNewPing(uint32_t pingId)
+{
+	if (!player->isUsingOtclient()) {
+        return; // Não envia o ping se não estiver usando otclientv8
+    }
+	
+  OutputMessage_ptr msg = getOutputBuffer();
+  if(!msg)
+    return;
+
+  msg->addByte(0x40);
+  msg->add<uint32_t>(pingId);
+  TRACK_MESSAGE(msg);
 }

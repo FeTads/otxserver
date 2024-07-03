@@ -369,8 +369,13 @@ class ProtocolGame : public Protocol
 		//shop
 		void AddShopItem(OutputMessage_ptr msg, const ShopInfo& item);
 
+
 		void parseExtendedOpcode(NetworkMessage& msg);
 		void sendExtendedOpcode(uint8_t opcode, const std::string& buffer);
+
+		//PING OTCV8
+        void parseNewPing(NetworkMessage& msg);
+        void sendNewPing(uint32_t pingId);
 
 		#define addGameTask(f, ...) addGameTaskInternal(0, boost::bind(f, &g_game, __VA_ARGS__))
 		#define addGameTaskTimed(delay, f, ...) addGameTaskInternal(delay, boost::bind(f, &g_game, __VA_ARGS__))

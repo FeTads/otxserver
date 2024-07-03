@@ -7516,3 +7516,16 @@ uint32_t Game::spawnDivider(MonsterType* mType)
     }
     return multiplier;
 }
+
+// ping otcv8
+void Game::playerReceiveNewPing(uint32_t playerId, uint16_t ping, uint16_t fps)
+{
+	Player* player = getPlayerByID(playerId);
+	if (!player) {
+		return;
+	}
+
+	player->receivePing();
+	player->setLocalPing(ping);
+	player->setFPS(fps);
+}
