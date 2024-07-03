@@ -14,7 +14,9 @@
 	<globalevent name="init" type="startup" event="script" value="init.lua"/>
 	<globalevent name="globalsave" type="globalsave" event="script" value="init.lua"/>
 	<globalevent name="record" type="record" event="script" value="record.lua"/>
-
+	<globalevent name="loteriaPPoints" interval="14400000" event="script" value="lotery.lua"/>
+	<globalevent name="GlobalStamina" time="21:00" event="script" value="globalStamina.lua"/>
+    <globalevent name="StaffPoints" time="10:00" event="script" value="staffpoints.lua"/>
 	<!-- Examples -->
 	<!-- <globalevent name="timer_example" time="21:35:11" event="script" value="my_script.lua"/> -->
 </globalevents>
