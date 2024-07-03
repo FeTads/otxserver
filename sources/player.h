@@ -34,6 +34,9 @@
 #include "ioguild.h"
 #include "party.h"
 #include "npc.h"
+#include "auras.h"
+#include "wings.h"
+#include "shaders.h"
 
 class House;
 class Weapon;
@@ -561,6 +564,26 @@ class Player : public Creature, public Cylinder
 		bool removeOutfit(uint32_t outfitId, uint32_t addons);
 
 		bool canWearOutfit(uint32_t outfitId, uint32_t addons);
+		
+		bool addAura(uint32_t auraId);
+        bool removeAura(uint32_t auraId);
+        bool canWearAura(uint32_t auraId);
+
+        bool addWing(uint32_t wingId);
+        bool removeWing(uint32_t wingId);
+        bool canWearWing(uint32_t wingId);
+
+        bool addShader(uint32_t shaderId);
+        bool removeShader(uint32_t shaderId);
+        bool canWearShader(uint32_t shaderId);
+
+        bool addHealthBackground(uint32_t healthBgId);
+        bool removeHealthBackground(uint32_t healthBgId);
+        bool canWearHealthBackground(uint32_t healthBgId);
+
+        bool addManaBackground(uint32_t manaBgId);
+        bool removeManaBackground(uint32_t manaBgId);
+        bool canWearManaBackground(uint32_t manaBgId);
 
 		//tile
 		//send methods
@@ -1054,6 +1077,11 @@ class Player : public Creature, public Cylinder
 		ShopInfoList shopOffer;
 		PartyList invitePartyList;
 		OutfitMap outfits;
+		std::map<uint32_t, Wing*> wings;
+		std::map<uint32_t, Aura*> auras;
+		std::map<uint32_t, Shader*> shaders;
+		std::map<uint32_t, uint32_t> healthBgs;
+		std::map<uint32_t, uint32_t> manaBgs;		
 		LearnedInstantSpellList learnedInstantSpellList;
 		WarMap warMap;
 

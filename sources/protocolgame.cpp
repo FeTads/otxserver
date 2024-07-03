@@ -1339,6 +1339,16 @@ void ProtocolGame::parseSetOutfit(NetworkMessage& msg)
 	else
 		msg.skipBytes(1);
 
+	newOutfit.lookWing = msg.get<uint16_t>();
+	newOutfit.lookAura = msg.get<uint16_t>();
+
+	std::string shaderName = msg.getString();
+	Shader* shader = Shaders::getInstance()->getShaderByName(shaderName);
+	newOutfit.lookShader = shader ? shader->id : 0;
+
+	newOutfit.healthBackground = msg.get<uint16_t>();
+	newOutfit.manaBackground = msg.get<uint16_t>();
+
 	addGameTask(&Game::playerChangeOutfit, player->getID(), newOutfit);
 }
 
@@ -2816,6 +2826,66 @@ void ProtocolGame::sendOutfitWindow()
 			msg->addByte(player->getDefaultOutfit().lookAddons);
 		}
 
+				std::vector<Wing*> wingList;
+		for (std::map<uint32_t, Wing*>::iterator it = player->wings.begin(); it != player->wings.end(); ++it)
+		{
+			if (player->canWearWing(it->first))
+				wingList.push_back(it->second);
+		}
+
+		if (wingList.size())
+		{
+			msg->addByte(wingList.size());
+			for (const Wing* wing: wingList)
+			{
+				msg->add<uint16_t>(wing->clientId);
+				msg->addString(wing->name);
+			}
+		} else {
+			msg->addByte(0);
+		}
+
+		std::vector<Aura*> auraList;
+		for (std::map<uint32_t, Aura*>::iterator it = player->auras.begin(); it != player->auras.end(); ++it)
+		{
+			if (player->canWearAura(it->first))
+				auraList.push_back(it->second);
+		}
+
+		if (auraList.size())
+		{
+			msg->addByte(auraList.size());
+			for (const Aura* aura: auraList)
+			{
+				msg->add<uint16_t>(aura->clientId);
+				msg->addString(aura->name);
+			}
+		} else {
+			msg->addByte(0);
+		}
+
+		std::vector<Shader*> shaderList;
+		for (std::map<uint32_t, Shader*>::iterator it = player->shaders.begin(); it != player->shaders.end(); ++it)
+		{
+			if (player->canWearShader(it->first))
+				shaderList.push_back(it->second);
+		}
+
+		if (shaderList.size())
+		{
+			msg->addByte(shaderList.size());
+			for (const Shader* shader: shaderList)
+			{
+				msg->add<uint16_t>(shader->id);
+				msg->addString(shader->name);
+			}
+		} else {
+			msg->addByte(0);
+		}
+
+		msg->addByte(0);
+		msg->addByte(0);
+
 		player->hasRequestedOutfit(true);
 	}
 }
@@ -3248,9 +3318,16 @@ void ProtocolGame::AddCreatureOutfit(OutputMessage_ptr msg, const Creature* crea
 			msg->addItemId(outfit.lookTypeEx, player);
 		else
 			msg->add<uint16_t>(outfit.lookTypeEx);
+		    msg->add<uint16_t>(outfit.lookWing);
+		    msg->add<uint16_t>(outfit.lookAura);
+			
+		    Shader* shader = Shaders::getInstance()->getShader(outfit.lookShader);
+		    msg->addString(shader ? shader->name : "");
+		    msg->add<uint16_t>(outfit.healthBackground);
+		    msg->add<uint16_t>(outfit.manaBackground);
 	}
-	else
-		msg->add<uint32_t>(0x00);
+	    else
+		    msg->add<uint32_t>(0x00);
 }
 
 void ProtocolGame::AddWorldLight(OutputMessage_ptr msg, const LightInfo& lightInfo)

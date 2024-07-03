@@ -48,6 +48,9 @@
 #include "protocolgame.h"
 #include "protocolold.h"
 #include "protocolhttp.h"
+#include "auras.h"
+#include "wings.h"
+#include "shaders.h"
 
 #include "status.h"
 #include "manager.h"
@@ -771,6 +774,18 @@ void otserv(StringVec, ServiceManager* services)
 	std::clog << ">> Loading outfits" << std::endl;
 	if(!Outfits::getInstance()->loadFromXml())
 		startupErrorMessage("Unable to load outfits!");
+	
+	std::cout << ">> Loading wings" << std::endl;
+	if(!Wings::getInstance()->loadFromXml())
+		startupErrorMessage("Unable to load wings!");
+
+	std::cout << ">> Loading auras" << std::endl;
+	if(!Auras::getInstance()->loadFromXml())
+		startupErrorMessage("Unable to load auras!");
+
+	std::cout << ">> Loading shader" << std::endl;
+	if(!Shaders::getInstance()->loadFromXml())
+		startupErrorMessage("Unable to load shader!");
 
 	std::clog << ">> Loading quests" << std::endl;
 	if(!Quests::getInstance()->loadFromXml())

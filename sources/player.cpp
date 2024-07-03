@@ -879,10 +879,192 @@ bool Player::setStorage(const std::string& key, const std::string& value)
 			std::clog << "[Warning - Player::setStorage] Invalid addons value key: " << key
 				<< ", value: " << value << " for player: " << getName() << std::endl;
 	}
+		else if (IS_IN_KEYRANGE(numericKey, AURA_RANGE))
+	{
+		uint32_t auraId = atoi(value.c_str()) >> 16;
+		return addAura(auraId);
+	}
+	else if (IS_IN_KEYRANGE(numericKey, WING_RANGE))
+	{
+		uint32_t wingId = atoi(value.c_str()) >> 16;
+		return addWing(wingId);
+	}
+	else if (IS_IN_KEYRANGE(numericKey, SHADER_RANGE))
+	{
+		uint32_t shaderId = atoi(value.c_str()) >> 16;
+		return addShader(shaderId);
+	}
+	else if (IS_IN_KEYRANGE(numericKey, HEALTHBG_RANGE))
+	{
+		uint32_t healthBgId = atoi(value.c_str()) >> 16;
+		return addHealthBackground(healthBgId);
+	}
+	else if (IS_IN_KEYRANGE(numericKey, MANABG_RANGE))
+	{
+		uint32_t manaBgId = atoi(value.c_str()) >> 16;
+		return addManaBackground(manaBgId);
+	}
 	else
 		std::clog << "[Warning - Player::setStorage] Unknown reserved key: " << key << " for player: " << getName() << std::endl;
 
 	return false;
+}
+
+bool Player::canWearAura(uint32_t auraId)
+{
+	std::map<uint32_t, Aura*>::iterator it = auras.find(auraId);
+	if(it == auras.end())
+		return false;
+
+	return true;
+}
+
+bool Player::addAura(uint32_t auraId)
+{
+	Aura* aura = Auras::getInstance()->getAura(auraId);
+	if(!aura)
+		return false;
+
+	std::map<uint32_t, Aura*>::iterator it = auras.find(auraId);
+	if(it != auras.end())
+		return false;
+
+	auras[auraId] = aura;
+	return true;
+}
+
+bool Player::removeAura(uint32_t auraId)
+{
+	std::map<uint32_t, Aura*>::iterator it = auras.find(auraId);
+	if(it == auras.end())
+		return false;
+
+	auras.erase(it);
+	return true;
+}
+
+bool Player::canWearWing(uint32_t wingId)
+{
+	std::map<uint32_t, Wing*>::iterator it = wings.find(wingId);
+	if(it == wings.end())
+		return false;
+
+	return true;
+}
+
+bool Player::addWing(uint32_t wingId)
+{
+	Wing* wing = Wings::getInstance()->getWing(wingId);
+	if(!wing)
+		return false;
+
+	std::map<uint32_t, Wing*>::iterator it = wings.find(wingId);
+	if(it != wings.end())
+		return false;
+
+	wings[wingId] = wing;
+	return true;
+}
+
+bool Player::removeWing(uint32_t wingId)
+{
+	std::map<uint32_t, Wing*>::iterator it = wings.find(wingId);
+	if(it == wings.end())
+		return false;
+
+	wings.erase(it);
+	return true;
+}
+
+bool Player::canWearShader(uint32_t shaderId)
+{
+	std::map<uint32_t, Shader*>::iterator it = shaders.find(shaderId);
+	if(it == shaders.end())
+		return false;
+
+	return true;
+}
+
+bool Player::addShader(uint32_t shaderId)
+{
+	Shader* shader = Shaders::getInstance()->getShader(shaderId);
+	if(!shader)
+		return false;
+
+	std::map<uint32_t, Shader*>::iterator it = shaders.find(shaderId);
+	if(it != shaders.end())
+		return false;
+
+	shaders[shaderId] = shader;
+	return true;
+}
+
+bool Player::removeShader(uint32_t shaderId)
+{
+	std::map<uint32_t, Shader*>::iterator it = shaders.find(shaderId);
+	if(it == shaders.end())
+		return false;
+
+	shaders.erase(it);
+	return true;
+}
+
+bool Player::canWearHealthBackground(uint32_t healthIdBg)
+{
+	std::map<uint32_t, uint32_t>::iterator it = healthBgs.find(healthIdBg);
+	if(it == healthBgs.end())
+		return false;
+
+	return true;
+}
+
+bool Player::addHealthBackground(uint32_t healthIdBg)
+{
+	std::map<uint32_t, uint32_t>::iterator it = healthBgs.find(healthIdBg);
+	if(it != healthBgs.end())
+		return false;
+
+	healthBgs[healthIdBg] = healthIdBg;
+	return true;
+}
+
+bool Player::removeHealthBackground(uint32_t healthIdBg)
+{
+	std::map<uint32_t, uint32_t>::iterator it = healthBgs.find(healthIdBg);
+	if(it == healthBgs.end())
+		return false;
+
+	healthBgs.erase(it);
+	return true;
+}
+
+bool Player::canWearManaBackground(uint32_t manaIdBg)
+{
+	std::map<uint32_t, uint32_t>::iterator it = manaBgs.find(manaIdBg);
+	if(it == manaBgs.end())
+		return false;
+
+	return true;
+}
+
+bool Player::addManaBackground(uint32_t manaIdBg)
+{
+	std::map<uint32_t, uint32_t>::iterator it = manaBgs.find(manaIdBg);
+	if(it != manaBgs.end())
+		return false;
+
+	manaBgs[manaIdBg] = manaIdBg;
+	return true;
+}
+
+bool Player::removeManaBackground(uint32_t manaIdBg)
+{
+	std::map<uint32_t, uint32_t>::iterator it = manaBgs.find(manaIdBg);
+	if(it == manaBgs.end())
+		return false;
+
+	manaBgs.erase(it);
+	return true;
 }
 
 void Player::eraseStorage(const std::string& key)
@@ -4618,6 +4800,66 @@ void Player::generateReservedStorage()
 			continue;
 
 		std::clog << "[Warning - Player::genReservedStorageRange] Player " << getName() << " with more than 500 outfits!" << std::endl;
+		break;
+	}
+	
+	key = PSTRG_AURA_RANGE_START + 1;
+	const AurasMap& defaultAuras = Auras::getInstance()->getAuras();
+	for (std::map<uint32_t, Aura*>::const_iterator it = auras.begin(); it != auras.end(); ++it)
+	{
+		AurasMap::const_iterator dit = defaultAuras.find(it->first);
+		if (dit == defaultAuras.end())
+			continue;
+
+		std::stringstream ssk, ssv;
+		ssk << key++; // this may not work as intended, revalidate it
+		ssv << (it->first << 16);
+		storageMap[ssk.str()] = ssv.str();
+
+		if (key <= PSTRG_AURA_RANGE_START + PSTRG_AURA_RANGE_SIZE)
+			continue;
+
+		std::cout << "[Warning - Player::genReservedStorageRange] Player " << getName() << " with more than " << PSTRG_AURA_RANGE_SIZE << " auras!" << std::endl;
+		break;
+	}
+
+	key = PSTRG_WING_RANGE_START + 1;
+	const WingsMap& defaultWings = Wings::getInstance()->getWings();
+	for (std::map<uint32_t, Wing*>::const_iterator it = wings.begin(); it != wings.end(); ++it)
+	{
+		WingsMap::const_iterator dit = defaultWings.find(it->first);
+		if (dit == defaultWings.end())
+			continue;
+
+		std::stringstream ssk, ssv;
+		ssk << key++; // this may not work as intended, revalidate it
+		ssv << (it->first << 16);
+		storageMap[ssk.str()] = ssv.str();
+
+		if (key <= PSTRG_WING_RANGE_START + PSTRG_WING_RANGE_SIZE)
+			continue;
+
+		std::cout << "[Warning - Player::genReservedStorageRange] Player " << getName() << " with more than " << PSTRG_WING_RANGE_SIZE << " wings!" << std::endl;
+		break;
+	}
+
+	key = PSTRG_SHADER_RANGE_START + 1;
+	const ShadersMap& defaultShaders = Shaders::getInstance()->getShaders();
+	for (std::map<uint32_t, Shader*>::const_iterator it = shaders.begin(); it != shaders.end(); ++it)
+	{
+		ShadersMap::const_iterator dit = defaultShaders.find(it->first);
+		if (dit == defaultShaders.end())
+			continue;
+
+		std::stringstream ssk, ssv;
+		ssk << key++; // this may not work as intended, revalidate it
+		ssv << (it->first << 16);
+		storageMap[ssk.str()] = ssv.str();
+
+		if (key <= PSTRG_SHADER_RANGE_START + PSTRG_SHADER_RANGE_SIZE)
+			continue;
+
+		std::cout << "[Warning - Player::genReservedStorageRange] Player " << getName() << " with more than " << PSTRG_SHADER_RANGE_SIZE << " shaders!" << std::endl;
 		break;
 	}
 }
