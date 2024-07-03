@@ -48,7 +48,7 @@ Added new features<br>
 
 <br>
 Correção reset system<br>
-// Update 0.1
+- <b>Update 0.1</b><br>
 newping otcv8<br>
 uint16 skills<br>
 uint32 health/mana<br>
