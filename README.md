@@ -41,3 +41,8 @@ life and mana in percent 100/100 can be change normal in config.lua<br>
 max connections in same IP (send only 4 for otservlist)<br>
 Fixed bugs get in otx2<br>
 Added new features<br>
+
+<br>
+// Novos sistemas será adicionado para otc custom.
+
+
