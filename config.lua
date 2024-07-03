@@ -222,7 +222,6 @@
 	maxPlayers = 1200
 	useFilaOnStartup = true
 	displayOnOrOffAtCharlist = false
-	onePlayerOnlinePerAccount = false
 	allowClones = 0
 	statusTimeout = 1000
 	replaceKickOnLogin = true

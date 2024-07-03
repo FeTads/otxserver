@@ -403,27 +403,26 @@ void ProtocolGame::login(const std::string& name, uint32_t id, const std::string
 		player->setClientVersion(version);		
 		player->setOperatingSystem(operatingSystem);					  
 
-		if(g_config.getBool(ConfigManager::ONE_PLAYER_ON_ACCOUNT) && !player->isAccountManager() &&
-			!IOLoginData::getInstance()->hasCustomFlag(id, PlayerCustomFlag_CanLoginMultipleCharacters))
-		{
-			bool found = false;
-			PlayerVector tmp = g_game.getPlayersByAccount(id);
-			for(PlayerVector::iterator it = tmp.begin(); it != tmp.end(); ++it)
-			{
-				if((*it)->getName() != name)
-					continue;
+      if(!player->isAccountManager() && !IOLoginData::getInstance()->hasCustomFlag(id, PlayerCustomFlag_CanLoginMultipleCharacters))
+    {
+      bool found = false;
+      PlayerVector tmp = g_game.getPlayersByAccount(id);
+         uint32_t max_per_account = (player->isPremium() ? 10 : 5);
+      for(PlayerVector::iterator it = tmp.begin(); it != tmp.end(); ++it)
+      {
+        if((*it)->getName() != name)
+          continue;
 
-				found = true;
-				break;
-			}
+        found = true;
+        break;
+      }
 
-			if(tmp.size() > 0 && !found)
-			{
-				disconnectClient(0x14, "You may only login with one character\nof your account at the same time.");
-				return;
-			}
-		}
-
+      if((tmp.size() > max_per_account) && !found)
+      {
+        disconnectClient(0x14, "You have reached maximum online characters\nof your account at the same time.");
+        return;
+      }
+    }
 		if(!WaitingList::getInstance()->login(player))
 		{
 			auto output = OutputMessagePool::getOutputMessage();
