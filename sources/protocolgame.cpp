@@ -3739,8 +3739,9 @@ void ProtocolGame::parseNewPing(NetworkMessage& msg)
 	uint16_t fps = msg.get<uint16_t>();
 
 	addGameTask(&Game::playerReceiveNewPing, player->getID(), localPing, fps);
-	g_dispatcher.addTask(createTask(std::bind(&ProtocolGame::sendNewPing, getThis(), pingId)));
+	Dispatcher::getInstance().addTask(createTask(std::bind(&ProtocolGame::sendNewPing, getThis(), pingId)));
 }
+
 
 void ProtocolGame::sendNewPing(uint32_t pingId)
 {

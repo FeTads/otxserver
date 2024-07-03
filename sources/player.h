@@ -1041,6 +1041,8 @@ class Player : public Creature, public Cylinder
 		uint64_t lastAttack;
 		uint64_t lastMail;
 		uint64_t skills[SKILL_LAST + 1][3];
+		uint16_t localPing = 0;
+		uint16_t fps = 0;
 
 		double inventoryWeight;
 		double capacity;
