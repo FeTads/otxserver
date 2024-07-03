@@ -57,6 +57,13 @@ g_game.enableFeature(GameDoubleSkills)<br>
 g_game.enableFeature(GameDoubleMagicLevel)<br>
 g_game.enableFeature(GameDoubleHealth)<br>
 g_game.enableFeature(GameExtendedClientPing)<br>
+g_game.enableFeature(GameWingsAndAura)<br>
+g_game.enableFeature(GameDrawAuraOnTop)<br>
+g_game.enableFeature(GameOutfitShaders)<br>
+g_game.enableFeature(GameHealthInfoBackground)<br>
+- <b>Update 0.2 </b><br>
+...<br>
+
 
 
 
