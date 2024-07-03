@@ -11,7 +11,11 @@ Mattyx tutorial - [Windows Tutorial](https://github.com/mattyx14/otxserver/wiki/
 - <b>FeeTads(Portuguese):</b><br>
 E-mail: felps18.082@gmail.com<br>
 Whatsapp: +55 41 9 84036942<br><br>
-Discord: FeeTads / FeeTads#0246
+Discord: FeeTads / FeeTads#0246<br>
+
+- <b>Matheus(Portuguese):</b><br>
+Discord: matheusdeveloping
+
 
 soon:<br>
 Some features to OTCv8 enable<br>
@@ -43,9 +47,16 @@ Fixed bugs get in otx2<br>
 Added new features<br>
 
 <br>
-// Correção reset system
-<br>
-// Adicionado newping otcv8
---
+Correção reset system<br>
+// Update 0.1
+newping otcv8<br>
+uint16 skills<br>
+uint32 health/mana<br>
+uint16 magic level<br>
+g_game.enableFeature(GameDoubleSkills)<br>
+g_game.enableFeature(GameDoubleMagicLevel)<br>
+g_game.enableFeature(GameDoubleHealth)<br>
+g_game.enableFeature(GameExtendedClientPing)<br>
+
 
 
