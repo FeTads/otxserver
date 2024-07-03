@@ -1157,6 +1157,11 @@ void LuaInterface::pushOutfit(lua_State* L, const Outfit_t& outfit)
 	setField(L, "lookLegs", outfit.lookLegs);
 	setField(L, "lookFeet", outfit.lookFeet);
 	setField(L, "lookAddons", outfit.lookAddons);
+	setField(L, "lookWing", outfit.lookWing);
+	setField(L, "lookAura", outfit.lookAura);
+	setField(L, "lookShader", outfit.lookShader);
+	setField(L, "healthBackground", outfit.healthBackground);
+	setField(L, "manaBackground", outfit.manaBackground);
 }
 
 void LuaInterface::pushCallback(lua_State* L, int32_t callback)
@@ -1266,6 +1271,11 @@ int32_t LuaInterface::popCallback(lua_State* L)
 Outfit_t LuaInterface::popOutfit(lua_State* L)
 {
 	Outfit_t outfit;
+	outfit.manaBackground = getField(L, "manaBackground");
+	outfit.healthBackground = getField(L, "healthBackground");
+	outfit.lookShader = getField(L, "lookShader");
+	outfit.lookAura = getField(L, "lookAura");
+	outfit.lookWing = getField(L, "lookWing");
 	outfit.lookAddons = getField(L, "lookAddons");
 
 	outfit.lookFeet = getField(L, "lookFeet");
@@ -1945,6 +1955,72 @@ void LuaInterface::registerFunctions()
 
 	//doPlayerAddOutfitId(cid, outfitId, addon)
 	lua_register(m_luaState, "doPlayerAddOutfitId", LuaInterface::luaDoPlayerAddOutfitId);
+	
+	//doSetAuraOutfit(cid, aura)
+	lua_register(m_luaState, "doSetAuraOutfit", LuaInterface::luaDoSetAuraOutfit);
+
+	//doPlayerAddAura(cid, auraid)
+	lua_register(m_luaState, "doPlayerAddAura", LuaInterface::luaDoPlayerAddAura);
+
+	//doPlayerRemoveAura(cid, auraid)
+	lua_register(m_luaState, "doPlayerRemoveAura", LuaInterface::luaDoPlayerRemoveAura);
+
+	//canPlayerWearAura(cid, auraid)
+	lua_register(m_luaState, "canPlayerWearAura", LuaInterface::luaCanPlayerWearAura);
+
+	//canPlayerWearAuraType(cid, auratype)
+	lua_register(m_luaState, "canPlayerWearAuraType", LuaInterface::luaCanPlayerWearAuraType);
+
+	//doSetWingOutfit(cid, wing)
+	lua_register(m_luaState, "doSetWingOutfit", LuaInterface::luaDoSetWingOutfit);
+
+	//doPlayerAddWing(cid, wingid)
+	lua_register(m_luaState, "doPlayerAddWing", LuaInterface::luaDoPlayerAddWing);
+
+	//doPlayerRemoveWing(cid, wingid)
+	lua_register(m_luaState, "doPlayerRemoveWing", LuaInterface::luaDoPlayerRemoveWing);
+
+	//canPlayerWearWing(cid, wingid)
+	lua_register(m_luaState, "canPlayerWearWing", LuaInterface::luaCanPlayerWearWing);
+
+	//canPlayerWearWingType(cid, wingtype)
+	lua_register(m_luaState, "canPlayerWearWingType", LuaInterface::luaCanPlayerWearWingType);
+
+	//doSetShaderOutfit(cid, shader)
+	lua_register(m_luaState, "doSetShaderOutfit", LuaInterface::luaDoSetShaderOutfit);
+
+	//doPlayerAddShader(cid, shaderid)
+	lua_register(m_luaState, "doPlayerAddShader", LuaInterface::luaDoPlayerAddShader);
+
+	//doPlayerRemoveShader(cid, shaderid)
+	lua_register(m_luaState, "doPlayerRemoveShader", LuaInterface::luaDoPlayerRemoveShader);
+
+	//canPlayerWearShader(cid, shaderid)
+	lua_register(m_luaState, "canPlayerWearShader", LuaInterface::luaCanPlayerWearShader);
+
+	//doSetHealthBackgroundOutfit(cid, healthBackground)
+	lua_register(m_luaState, "doSetHealthBackgroundOutfit", LuaInterface::luaDoSetHealthBackgroundOutfit);
+
+	//doPlayerAddHealthBackground(cid, healthBackgroundId)
+	lua_register(m_luaState, "doPlayerAddHealthBackground", LuaInterface::luaDoPlayerAddHealthBackground);
+
+	//doPlayerRemoveHealthBackground(cid, healthBackgroundId)
+	lua_register(m_luaState, "doPlayerRemoveHealthBackground", LuaInterface::luaDoPlayerRemoveHealthBackground);
+
+	//canPlayerWearHealthBackground(cid, healthBackgroundId)
+	lua_register(m_luaState, "canPlayerWearHealthBackground", LuaInterface::luaCanPlayerWearHealthBackground);
+
+	//doSetManaBackgroundOutfit(cid, manaBackground)
+	lua_register(m_luaState, "doSetManaBackgroundOutfit", LuaInterface::luaDoSetManaBackgroundOutfit);
+
+	//doPlayerAddManaBackground(cid, manaBackgroundId)
+	lua_register(m_luaState, "doPlayerAddManaBackground", LuaInterface::luaDoPlayerAddManaBackground);
+
+	//doPlayerRemoveManaBackground(cid, manaBackgroundId)
+	lua_register(m_luaState, "doPlayerRemoveManaBackground", LuaInterface::luaDoPlayerRemoveManaBackground);
+
+	//canPlayerWearManaBackground(cid, manaBackgroundId)
+	lua_register(m_luaState, "canPlayerWearManaBackground", LuaInterface::luaCanPlayerWearManaBackground);
 
 	//doPlayerRemoveOutfitId(cid, outfitId[, addon = 0])
 	lua_register(m_luaState, "doPlayerRemoveOutfitId", LuaInterface::luaDoPlayerRemoveOutfitId);
@@ -8656,6 +8732,439 @@ int32_t LuaInterface::luaDoPlayerAddOutfit(lua_State *L)
 	if(Outfits::getInstance()->getOutfit(lookType, outfit))
 	{
 		lua_pushboolean(L, player->addOutfit(outfit.outfitId, addon));
+		return 1;
+	}
+
+	lua_pushboolean(L, false);
+	return 1;
+}
+
+int32_t LuaInterface::luaDoSetAuraOutfit(lua_State* L)
+{
+	//doSetAuraOutfit(cid, aura)
+	ScriptEnviroment* env = getEnv();
+	uint16_t aura = popNumber(L);
+	const Creature* creature = env->getCreatureByUID(popNumber(L));
+	if (!creature) {
+		errorEx(getError(LUA_ERROR_CREATURE_NOT_FOUND));
+		lua_pushboolean(L, false);
+		return 1;
+	}
+	Outfit_t outfit = creature->getCurrentOutfit();
+	outfit.lookAura = aura;
+	g_game.internalCreatureChangeOutfit(const_cast<Creature*>(creature), outfit, true);
+	lua_pushboolean(L, true);
+	return 1;
+}
+
+int32_t LuaInterface::luaDoPlayerAddAura(lua_State *L)
+{
+	//doPlayerAddAura(cid, auraid)
+	uint32_t auraId = popNumber(L);
+	ScriptEnviroment* env = getEnv();
+
+	Player* player = env->getPlayerByUID((uint32_t)popNumber(L));
+	if(!player)
+	{
+		errorEx(getError(LUA_ERROR_PLAYER_NOT_FOUND));
+		lua_pushboolean(L, false);
+		return 1;
+	}
+
+	lua_pushboolean(L, player->addAura(auraId));
+	return 1;
+}
+
+int32_t LuaInterface::luaDoPlayerRemoveAura(lua_State *L)
+{
+	//doPlayerRemoveAura(cid, auraId
+	uint32_t auraId = popNumber(L);
+	ScriptEnviroment* env = getEnv();
+
+	Player* player = env->getPlayerByUID((uint32_t)popNumber(L));
+	if(!player)
+	{
+		errorEx(getError(LUA_ERROR_PLAYER_NOT_FOUND));
+		lua_pushboolean(L, false);
+		return 1;
+	}
+
+	lua_pushboolean(L, player->removeAura(auraId));
+	return 1;
+}
+
+int32_t LuaInterface::luaCanPlayerWearAura(lua_State *L)
+{
+	//canPlayerWearAura(cid, auraId)
+	uint32_t auraId = popNumber(L);
+	ScriptEnviroment* env = getEnv();
+
+	Player* player = env->getPlayerByUID(popNumber(L));
+	if(!player)
+	{
+		errorEx(getError(LUA_ERROR_PLAYER_NOT_FOUND));
+		lua_pushboolean(L, false);
+		return 1;
+	}
+
+	Aura* aura = Auras::getInstance()->getAura(auraId);
+	if(aura)
+	{
+		lua_pushboolean(L, player->canWearAura(auraId));
+		return 1;
+	}
+
+	lua_pushboolean(L, false);
+	return 1;
+}
+
+int32_t LuaInterface::luaCanPlayerWearAuraType(lua_State *L)
+{
+	//canPlayerWearAuraType(cid, auraType)
+	uint32_t auraType = popNumber(L);
+	ScriptEnviroment* env = getEnv();
+
+	Player* player = env->getPlayerByUID(popNumber(L));
+	if(!player)
+	{
+		errorEx(getError(LUA_ERROR_PLAYER_NOT_FOUND));
+		lua_pushboolean(L, false);
+		return 1;
+	}
+
+	Aura* aura = Auras::getInstance()->getAuraByType(auraType);
+	if(aura)
+	{
+		lua_pushboolean(L, player->canWearAura(aura->id));
+		return 1;
+	}
+
+	lua_pushboolean(L, false);
+	return 1;
+}
+
+
+int32_t LuaInterface::luaDoSetWingOutfit(lua_State* L)
+{
+	//doSetWingOutfit(cid, wing)
+	ScriptEnviroment* env = getEnv();
+	uint16_t wing = popNumber(L);
+	const Creature* creature = env->getCreatureByUID(popNumber(L));
+	if (!creature) {
+		errorEx(getError(LUA_ERROR_CREATURE_NOT_FOUND));
+		lua_pushboolean(L, false);
+		return 1;
+	}
+	Outfit_t outfit = creature->getCurrentOutfit();
+	outfit.lookWing = wing;
+	g_game.internalCreatureChangeOutfit(const_cast<Creature*>(creature), outfit, true);
+	lua_pushboolean(L, true);
+	return 1;
+}
+
+int32_t LuaInterface::luaDoPlayerAddWing(lua_State *L)
+{
+	//doPlayerAddWing(cid, wingid)
+	uint32_t wingId = popNumber(L);
+	ScriptEnviroment* env = getEnv();
+
+	Player* player = env->getPlayerByUID((uint32_t)popNumber(L));
+	if(!player)
+	{
+		errorEx(getError(LUA_ERROR_PLAYER_NOT_FOUND));
+		lua_pushboolean(L, false);
+		return 1;
+	}
+
+	lua_pushboolean(L, player->addWing(wingId));
+	return 1;
+}
+
+int32_t LuaInterface::luaDoPlayerRemoveWing(lua_State *L)
+{
+	//doPlayerRemoveWing(cid, wingId
+	uint32_t wingId = popNumber(L);
+	ScriptEnviroment* env = getEnv();
+
+	Player* player = env->getPlayerByUID((uint32_t)popNumber(L));
+	if(!player)
+	{
+		errorEx(getError(LUA_ERROR_PLAYER_NOT_FOUND));
+		lua_pushboolean(L, false);
+		return 1;
+	}
+
+	lua_pushboolean(L, player->removeWing(wingId));
+	return 1;
+}
+
+int32_t LuaInterface::luaCanPlayerWearWing(lua_State *L)
+{
+	//canPlayerWearWing(cid, wingId)
+	uint32_t wingId = popNumber(L);
+	ScriptEnviroment* env = getEnv();
+
+	Player* player = env->getPlayerByUID(popNumber(L));
+	if(!player)
+	{
+		errorEx(getError(LUA_ERROR_PLAYER_NOT_FOUND));
+		lua_pushboolean(L, false);
+		return 1;
+	}
+
+	Wing* wing = Wings::getInstance()->getWing(wingId);
+	if(wing)
+	{
+		lua_pushboolean(L, player->canWearWing(wingId));
+		return 1;
+	}
+
+	lua_pushboolean(L, false);
+	return 1;
+}
+
+int32_t LuaInterface::luaCanPlayerWearWingType(lua_State *L)
+{
+	//canPlayerWearWingType(cid, wingType)
+	uint32_t wingType = popNumber(L);
+	ScriptEnviroment* env = getEnv();
+
+	Player* player = env->getPlayerByUID(popNumber(L));
+	if(!player)
+	{
+		errorEx(getError(LUA_ERROR_PLAYER_NOT_FOUND));
+		lua_pushboolean(L, false);
+		return 1;
+	}
+
+	Wing* wing = Wings::getInstance()->getWingByType(wingType);
+	if(wing)
+	{
+		lua_pushboolean(L, player->canWearWing(wing->id));
+		return 1;
+	}
+
+	lua_pushboolean(L, false);
+	return 1;
+}
+
+
+int32_t LuaInterface::luaDoSetHealthBackgroundOutfit(lua_State* L)
+{
+	//doSetHealthBackgroundOutfit(cid, healthBackground)
+	ScriptEnviroment* env = getEnv();
+	uint16_t healthBg = popNumber(L);
+	const Creature* creature = env->getCreatureByUID(popNumber(L));
+	if (!creature) {
+		errorEx(getError(LUA_ERROR_CREATURE_NOT_FOUND));
+		lua_pushboolean(L, false);
+		return 1;
+	}
+	Outfit_t outfit = creature->getCurrentOutfit();
+	outfit.healthBackground = healthBg;
+	g_game.internalCreatureChangeOutfit(const_cast<Creature*>(creature), outfit, true);
+	lua_pushboolean(L, true);
+	return 1;
+}
+
+int32_t LuaInterface::luaDoPlayerAddHealthBackground(lua_State *L)
+{
+	//doPlayerAddHealthBackground(cid, healthBackgroundId)
+	uint32_t healthBgId = popNumber(L);
+	ScriptEnviroment* env = getEnv();
+
+	Player* player = env->getPlayerByUID((uint32_t)popNumber(L));
+	if(!player)
+	{
+		errorEx(getError(LUA_ERROR_PLAYER_NOT_FOUND));
+		lua_pushboolean(L, false);
+		return 1;
+	}
+
+	lua_pushboolean(L, player->addHealthBackground(healthBgId));
+	return 1;
+}
+
+int32_t LuaInterface::luaDoPlayerRemoveHealthBackground(lua_State *L)
+{
+	//doPlayerRemoveHealthBackground(cid, healthBackgroundId)
+	uint32_t healthBgId = popNumber(L);
+	ScriptEnviroment* env = getEnv();
+
+	Player* player = env->getPlayerByUID((uint32_t)popNumber(L));
+	if(!player)
+	{
+		errorEx(getError(LUA_ERROR_PLAYER_NOT_FOUND));
+		lua_pushboolean(L, false);
+		return 1;
+	}
+
+	lua_pushboolean(L, player->removeHealthBackground(healthBgId));
+	return 1;
+}
+
+int32_t LuaInterface::luaCanPlayerWearHealthBackground(lua_State *L)
+{
+	//canPlayerWearHealthBackground(cid, healthBackgroundId)
+	uint32_t healthBgId = popNumber(L);
+	ScriptEnviroment* env = getEnv();
+
+	Player* player = env->getPlayerByUID(popNumber(L));
+	if(!player)
+	{
+		errorEx(getError(LUA_ERROR_PLAYER_NOT_FOUND));
+		lua_pushboolean(L, false);
+		return 1;
+	}
+
+	lua_pushboolean(L, player->canWearHealthBackground(healthBgId));
+	return 1;
+}
+
+int32_t LuaInterface::luaDoSetManaBackgroundOutfit(lua_State* L)
+{
+	//doSetManaBackgroundOutfit(cid, manaBackground)
+	ScriptEnviroment* env = getEnv();
+	uint16_t manaBg = popNumber(L);
+	const Creature* creature = env->getCreatureByUID(popNumber(L));
+	if (!creature) {
+		errorEx(getError(LUA_ERROR_CREATURE_NOT_FOUND));
+		lua_pushboolean(L, false);
+		return 1;
+	}
+	Outfit_t outfit = creature->getCurrentOutfit();
+	outfit.manaBackground = manaBg;
+	g_game.internalCreatureChangeOutfit(const_cast<Creature*>(creature), outfit, true);
+	lua_pushboolean(L, true);
+	return 1;
+}
+
+int32_t LuaInterface::luaDoPlayerAddManaBackground(lua_State *L)
+{
+	//doPlayerAddManaBackground(cid, manaBackgroundId)
+	uint32_t manaBgId = popNumber(L);
+	ScriptEnviroment* env = getEnv();
+
+	Player* player = env->getPlayerByUID((uint32_t)popNumber(L));
+	if(!player)
+	{
+		errorEx(getError(LUA_ERROR_PLAYER_NOT_FOUND));
+		lua_pushboolean(L, false);
+		return 1;
+	}
+
+	lua_pushboolean(L, player->addManaBackground(manaBgId));
+	return 1;
+}
+
+int32_t LuaInterface::luaDoPlayerRemoveManaBackground(lua_State *L)
+{
+	//doPlayerRemoveManaBackground(cid, manaBackgroundId)
+	uint32_t manaBgId = popNumber(L);
+	ScriptEnviroment* env = getEnv();
+
+	Player* player = env->getPlayerByUID((uint32_t)popNumber(L));
+	if(!player)
+	{
+		errorEx(getError(LUA_ERROR_PLAYER_NOT_FOUND));
+		lua_pushboolean(L, false);
+		return 1;
+	}
+
+	lua_pushboolean(L, player->removeManaBackground(manaBgId));
+	return 1;
+}
+
+int32_t LuaInterface::luaCanPlayerWearManaBackground(lua_State *L)
+{
+	//canPlayerWearManaBackground(cid, manaBackgroundId)
+	uint32_t manaBgId = popNumber(L);
+	ScriptEnviroment* env = getEnv();
+
+	Player* player = env->getPlayerByUID(popNumber(L));
+	if(!player)
+	{
+		errorEx(getError(LUA_ERROR_PLAYER_NOT_FOUND));
+		lua_pushboolean(L, false);
+		return 1;
+	}
+
+	lua_pushboolean(L, player->canWearManaBackground(manaBgId));
+	return 1;
+}
+
+int32_t LuaInterface::luaDoSetShaderOutfit(lua_State* L)
+{
+	//doSetShaderOutfit(cid, shader)
+	ScriptEnviroment* env = getEnv();
+	uint16_t shader = popNumber(L);
+	const Creature* creature = env->getCreatureByUID(popNumber(L));
+	if (!creature) {
+		errorEx(getError(LUA_ERROR_CREATURE_NOT_FOUND));
+		lua_pushboolean(L, false);
+		return 1;
+	}
+	Outfit_t outfit = creature->getCurrentOutfit();
+	outfit.lookShader = shader;
+	g_game.internalCreatureChangeOutfit(const_cast<Creature*>(creature), outfit, true);
+	lua_pushboolean(L, true);
+	return 1;
+}
+
+int32_t LuaInterface::luaDoPlayerAddShader(lua_State *L)
+{
+	//doPlayerAddShader(cid, shaderid)
+	uint32_t shaderId = popNumber(L);
+	ScriptEnviroment* env = getEnv();
+
+	Player* player = env->getPlayerByUID((uint32_t)popNumber(L));
+	if(!player)
+	{
+		errorEx(getError(LUA_ERROR_PLAYER_NOT_FOUND));
+		lua_pushboolean(L, false);
+		return 1;
+	}
+
+	lua_pushboolean(L, player->addShader(shaderId));
+	return 1;
+}
+
+int32_t LuaInterface::luaDoPlayerRemoveShader(lua_State *L)
+{
+	//doPlayerRemoveShader(cid, shaderId
+	uint32_t shaderId = popNumber(L);
+	ScriptEnviroment* env = getEnv();
+
+	Player* player = env->getPlayerByUID((uint32_t)popNumber(L));
+	if(!player)
+	{
+		errorEx(getError(LUA_ERROR_PLAYER_NOT_FOUND));
+		lua_pushboolean(L, false);
+		return 1;
+	}
+
+	lua_pushboolean(L, player->removeShader(shaderId));
+	return 1;
+}
+
+int32_t LuaInterface::luaCanPlayerWearShader(lua_State *L)
+{
+	//canPlayerWearShader(cid, shaderId)
+	uint32_t shaderId = popNumber(L);
+	ScriptEnviroment* env = getEnv();
+
+	Player* player = env->getPlayerByUID(popNumber(L));
+	if(!player)
+	{
+		errorEx(getError(LUA_ERROR_PLAYER_NOT_FOUND));
+		lua_pushboolean(L, false);
+		return 1;
+	}
+
+	Shader* shader = Shaders::getInstance()->getShader(shaderId);
+	if(shader)
+	{
+		lua_pushboolean(L, player->canWearShader(shaderId));
 		return 1;
 	}
 
