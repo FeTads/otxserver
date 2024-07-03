@@ -102,7 +102,7 @@ end
 
 function ResetSystem:execute(pid)
 	local playerLevel = getPlayerLevel(pid)
-	if (playerLevel > self.back_to_level and use_back_level) then
+	if (playerLevel > self.back_to_level and self.use_back_level) then
 		doPlayerAddExperience(pid, getExperienceForLevel(self.back_to_level) - getPlayerExperience(pid))
 		playerLevel = self.back_to_level
 	end
