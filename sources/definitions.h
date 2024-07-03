@@ -28,8 +28,9 @@
 #define SOFTWARE_NAME "OTX Server Custom"
 #define SOFTWARE_VERSION "0.2"
 #define MINOR_VERSION "15"
-#define SOFTWARE_CODENAME "SNAPSHOT"
-#define SOFTWARE_DEVELOPERS "https://github.com/matheusjp2/OTXServer-CUSTOM-"
+#define SOFTWARE_CODENAME "CUSTOM"
+#define SOFTWARE_DEVELOPERS "Matt Gomez, Matheus Matias, FeTads, Matheus Henrique and The Forgotten Server Developers"
+#define GIT_REPO "https://github.com/FeTads/otxserver/tree/custom"
 
 //#define CLIENT_VERSION_DATA
 #define CLIENT_VERSION_DAT 0
