@@ -14,6 +14,7 @@
     <ClInclude Include="..\account.h" />
     <ClInclude Include="..\actions.h" />
     <ClInclude Include="..\admin.h" />
+    <ClInclude Include="..\auras.h" />
     <ClInclude Include="..\allocator.h" />
     <ClInclude Include="..\baseevents.h" />
     <ClInclude Include="..\beds.h" />
@@ -100,6 +101,8 @@
     <ClInclude Include="..\waitlist.h" />
     <ClInclude Include="..\waypoints.h" />
     <ClInclude Include="..\weapons.h" />
+    <ClInclude Include="..\wings.h" />
+    <ClInclude Include="..\shaders.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="TheOTXServer.rc" />
@@ -107,6 +110,7 @@
   <ItemGroup>
     <ClCompile Include="..\actions.cpp" />
     <ClCompile Include="..\admin.cpp" />
+    <ClCompile Include="..\auras.cpp" />
     <ClCompile Include="..\allocator.cpp" />
     <ClCompile Include="..\baseevents.cpp" />
     <ClCompile Include="..\beds.cpp" />
@@ -189,6 +193,8 @@
     <ClCompile Include="..\vocation.cpp" />
     <ClCompile Include="..\waitlist.cpp" />
     <ClCompile Include="..\weapons.cpp" />
+    <ClCompile Include="..\wings.cpp" />
+    <ClCompile Include="..\shaders.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <Keyword>Win32Proj</Keyword>
