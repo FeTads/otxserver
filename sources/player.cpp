@@ -5100,15 +5100,15 @@ uint64_t Player::getLostExperience() const
 	}
 	if (level <= 23)
 	{
-	return (int64_t)((((double)experience * 0.10) * ((double)deathLossPercent / 100)) * ((double)deathLosePercentCFG / 100));
+		return (int64_t)((((double)experience * 0.10) * ((double)deathLossPercent / 100)) * ((double)deathLosePercentCFG / 100));
 	}
 	else if(level >= 500) // alteração 500+ --> altere aqui as percas de % 
 	{ 
-	return (int64_t)((0.45 * lossTotalExp * ((double)deathLossPercent / 100)) * ((double)deathLosePercentCFG / 100));
+		return (int64_t)((0.45 * lossTotalExp * ((double)deathLossPercent / 100)) * ((double)deathLosePercentCFG / 100));
 	}
    	else 
    	{
-    return (int64_t)((lossTotalExp * ((double)deathLossPercent / 100)) * ((double)deathLosePercentCFG / 100));
+   		return (int64_t)((lossTotalExp * ((double)deathLossPercent / 100)) * ((double)deathLosePercentCFG / 100));
    	}
 }
 
