@@ -5100,34 +5100,24 @@ uint64_t Player::getLostExperience() const
 	}
 	if (level <= 23)
 	{
-		return (int64_t)((((double)experience * 0.10) * ((double)deathLossPercent / 100)) * ((double)deathLosePercentCFG / 100));
+	return (int64_t)((((double)experience * 0.10) * ((double)deathLossPercent / 100)) * ((double)deathLosePercentCFG / 100));
 	}
-	else
-	{
-		return (int64_t)((lossTotalExp * ((double)deathLossPercent / 100)) * ((double)deathLosePercentCFG / 100));
+	else if(level >= 500) // alteração 500+ --> altere aqui as percas de % 
+	{ 
+	return (int64_t)((0.45 * lossTotalExp * ((double)deathLossPercent / 100)) * ((double)deathLosePercentCFG / 100));
 	}
+   	else 
+   	{
+    return (int64_t)((lossTotalExp * ((double)deathLossPercent / 100)) * ((double)deathLosePercentCFG / 100));
+   	}
 }
 
 uint32_t Player::getAttackSpeed() const
 {
-	int32_t modifiers = 0;
-	if(outfitAttributes)
-	{
-		Outfit outfit;
-		if(Outfits::getInstance()->getOutfit(defaultOutfit.lookType, outfit))
-		{
-			if(outfit.attackSpeed == -1)
-				return 0;
-
-			modifiers += outfit.attackSpeed;
-		}
-	}
-
-	Item* _weapon = weapon;
-	if(!weapon || weapon->getWeaponType() == WEAPON_AMMO)
-		_weapon = const_cast<Player*>(this)->getWeapon(true);
-
-	return (((_weapon && _weapon->getAttackSpeed() != 0) ? _weapon->getAttackSpeed() : (vocation->getAttackSpeed() / std::max((size_t)1, getWeapons().size()))) + modifiers);
+    static const std::vector<int32_t> attackSpeeds = {3000, 2800, 2600, 2400, 2200, 2000, 1800, 1600, 1400, 1200, 1000, 800, 600, 500}; //limit 500
+    int32_t skill = getSkill(SKILL_FIST, SKILL_LEVEL);
+    int32_t index = std::min(std::max(skill / 10 - 1, 0), static_cast<int32_t>(attackSpeeds.size() - 1));
+    return attackSpeeds[index];
 }
 
 void Player::learnInstantSpell(const std::string& name)
