@@ -543,6 +543,111 @@ DELIMITER ;
 -- --------------------------------------------------------
 
 --
+-- Estrutura para tabela `players_marketoffers`
+--
+
+CREATE TABLE `players_marketoffers` (
+  `player_id` int(11) NOT NULL DEFAULT 0,
+  `item_id` int(11) NOT NULL DEFAULT 0,
+  `item_name` varchar(255) NOT NULL DEFAULT 'none',
+  `item_seller` varchar(255) NOT NULL DEFAULT 'none',
+  `amount` int(11) NOT NULL DEFAULT 0,
+  `price` int(11) NOT NULL DEFAULT 0,
+  `gender` int(11) NOT NULL DEFAULT 0,
+  `level` int(11) NOT NULL DEFAULT 0,
+  `ispokemon` varchar(255) NOT NULL DEFAULT 'none',
+  `attributes` blob NOT NULL,
+  `description` varchar(255) NOT NULL DEFAULT '',
+  `id` int(11) NOT NULL,
+  `item_time` bigint(20) NOT NULL DEFAULT 0,
+  `transaction_id` bigint(20) NOT NULL DEFAULT 0,
+  `onlyoffers` tinyint(1) NOT NULL DEFAULT 0,
+  `page_numeration` int(11) NOT NULL DEFAULT 1,
+  `category` varchar(255) NOT NULL DEFAULT 'All'
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Estrutura para tabela `players_mymarketmakeoffforyour`
+--
+
+CREATE TABLE `players_mymarketmakeoffforyour` (
+  `player_id1` int(11) NOT NULL DEFAULT 0,
+  `player_id2` int(11) NOT NULL DEFAULT 0,
+  `item_id1` int(11) NOT NULL DEFAULT 0,
+  `description1` varchar(255) NOT NULL DEFAULT '0',
+  `attributes` blob NOT NULL,
+  `item_name1` varchar(255) NOT NULL DEFAULT 'none',
+  `item_seller` varchar(255) NOT NULL DEFAULT 'none',
+  `item_id2` int(11) NOT NULL DEFAULT 0,
+  `description2` varchar(255) NOT NULL DEFAULT '',
+  `transaction_id` bigint(20) NOT NULL DEFAULT 0,
+  `item_name2` varchar(255) NOT NULL DEFAULT 'none',
+  `amount` int(11) NOT NULL DEFAULT 0
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Estrutura para tabela `players_mymarketmakeofftome`
+--
+
+CREATE TABLE `players_mymarketmakeofftome` (
+  `player_id1` int(11) NOT NULL DEFAULT 0,
+  `player_id2` int(11) NOT NULL DEFAULT 0,
+  `item_id1` int(11) NOT NULL DEFAULT 0,
+  `description1` varchar(255) NOT NULL DEFAULT '0',
+  `attributes` blob NOT NULL,
+  `item_name1` varchar(255) NOT NULL DEFAULT 'none',
+  `item_seller` varchar(255) NOT NULL DEFAULT 'none',
+  `item_id2` int(11) NOT NULL DEFAULT 0,
+  `description2` varchar(255) NOT NULL DEFAULT '',
+  `transaction_id` bigint(20) NOT NULL DEFAULT 0,
+  `item_name2` varchar(255) NOT NULL DEFAULT 'none',
+  `amount` int(11) NOT NULL DEFAULT 0
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Estrutura para tabela `players_mymarketoffers`
+--
+
+CREATE TABLE `players_mymarketoffers` (
+  `player_id` int(11) NOT NULL DEFAULT 0,
+  `item_id` int(11) NOT NULL DEFAULT 0,
+  `item_name` varchar(255) NOT NULL DEFAULT 'none',
+  `item_time` bigint(20) NOT NULL DEFAULT 0,
+  `amount` int(11) NOT NULL DEFAULT 0,
+  `price` int(11) NOT NULL DEFAULT 0,
+  `gender` int(11) NOT NULL DEFAULT 0,
+  `level` int(11) NOT NULL DEFAULT 0,
+  `ispokemon` varchar(255) NOT NULL DEFAULT 'none',
+  `attributes` blob NOT NULL,
+  `description` varchar(255) NOT NULL DEFAULT '',
+  `id` int(11) NOT NULL,
+  `transaction_id` bigint(20) NOT NULL DEFAULT 0,
+  `onlyoffers` tinyint(1) NOT NULL DEFAULT 0
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Estrutura para tabela `players_mymarketpurchases`
+--
+
+CREATE TABLE `players_mymarketpurchases` (
+  `player_id` int(11) NOT NULL DEFAULT 0,
+  `item_name` varchar(255) NOT NULL DEFAULT '0',
+  `amount` int(11) NOT NULL DEFAULT 0,
+  `date` varchar(255) NOT NULL DEFAULT '0'
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
+
+
+-- --------------------------------------------------------
+
+--
 -- Estrutura para tabela `player_autoloot`
 --
 
