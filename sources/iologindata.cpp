@@ -145,13 +145,13 @@ bool IOLoginData::getPoints(Player* player, uint32_t account_id, uint16_t price)
     Database* db = Database::getInstance();
     
     std::ostringstream query;  
-    query << "SELECT `points` FROM `znote_accounts` WHERE `account_id` = " << account_id << ";";
+    query << "SELECT `premium_points` FROM `accounts` WHERE `account_id` = " << account_id << ";";
 
     DBResult* result;
     if(!(result = db->storeQuery(query.str())))
         return false;
     
-    uint16_t pointsNow = result->getDataInt("points");
+    uint16_t pointsNow = result->getDataInt("premium_points");
     if (pointsNow < price) {
         player->sendFYIBox("You do not have enough premium points to purchase this item.");
         return false;
@@ -164,7 +164,7 @@ bool IOLoginData::removerPoints(Player* player, uint32_t account_id, uint16_t pr
 {
 	Database* db = Database::getInstance();
 	std::ostringstream query;
-	query << "UPDATE `znote_accounts` SET `points` = `points` -" << price << " WHERE `account_id` = " << account_id <<";";
+	query << "UPDATE `accounts` SET `premium_points` = `premium_points` -" << price << " WHERE `account_id` = " << account_id <<";";
 	return db->query(query.str());
 }
 
@@ -172,7 +172,7 @@ bool IOLoginData::addPoints(Player* player, uint32_t account_id, uint16_t price)
 {
 	Database* db = Database::getInstance();
 	std::ostringstream query;
-	query << "UPDATE `znote_accounts` SET `points` = `points` +" << price << " WHERE `account_id` = " << account_id <<";";
+	query << "UPDATE `accounts` SET `premium_points` = `premium_points` +" << price << " WHERE `account_id` = " << account_id <<";";
 	return db->query(query.str());
 }
 
