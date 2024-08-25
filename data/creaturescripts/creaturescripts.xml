@@ -37,4 +37,34 @@
 	<event type="login" name="obs_login" event="script" value="obsidianknife.lua"/>
 	<event type="extendedopcode" name="ExtendedOpcode" event="script" value="extendedopcode.lua"/>
 	<event type="tradeaccept" name="PlayerTrade" event="script" value="playerTrade.lua"/>
+	
+	<!-- Market System  -->
+	<event type="extendedopcode" name="MarketRCItem" event="script" value="market/market_receiveitem.lua" />
+	<event type="marketinsert" name="MarketSDItem" event="script" value="market/market_insert.lua" />
+	<event type="extendedopcode" name="MarketISItem" event="script" value="market/market_insertDB.lua" />
+	<event type="extendedopcode" name="MarketSCItem" event="script" value="market/market_sendmyoffers.lua" />
+	<event type="marketinsertmyoffers" name="MarketIMItem" event="script" value="market/market_insertmyoffers.lua" />
+	<event type="extendedopcode" name="MarketCLItem" event="script" value="market/market_canceloffer.lua" />
+	<event type="extendedopcode" name="MarketCPItem" event="script" value="market/market_changepage.lua" />
+	<event type="marketinsertalloffers" name="MarketIBItem" event="script" value="market/market_insertalloffers.lua" />
+	<event type="extendedopcode" name="MarketSBItem" event="script" value="market/market_sendbuyoffer.lua" />
+	<event type="marketbuyitemupdatewindow" name="MarketRBItem" event="script" value="market/market_receivebuyoffer.lua" />
+	<event type="extendedopcode" name="MarketIHItem" event="script" value="market/market_receivehistoric.lua" />
+	<event type="markethistoric" name="MarketSHItem" event="script" value="market/market_sendhistoric.lua" />
+	<event type="extendedopcode" name="MarketSMItem" event="script" value="market/market_sendmakeoffer.lua" />
+	<event type="marketmakeofferitemremove" name="MarketRMItem" event="script" value="market/market_receivemarketoffer.lua" />
+	<event type="extendedopcode" name="MarketSMCI" event="script" value="market/market_sendmarketofferconfirm.lua" />
+	<event type="marketupdatemakeoffers" name="MarketRUMO" event="script" value="market/market_receivemarketofferconfirm.lua"/>
+	<event type="extendedopcode" name="MarketSMYO" event="script" value="market/market_sendmarketyouroffers.lua" />
+	<event type="extendedopcode" name="MarketRMOS" event="script" value="market/market_receivemarketoffers.lua" />
+	<event type="extendedopcode" name="MarketSOC" event="script" value="market/market_sendmarketoffercancel.lua" />
+	<event type="extendedopcode" name="MarketSOCBUYER" event="script" value="market/market_sendmarketoffercancelbuyer.lua" />
+	<event type="extendedopcode" name="MarketSOTY" event="script" value="market/market_sendmarketofferstoyou.lua"/>
+	<event type="marketofferstome" name="MarketROTY" event="script" value="market/market_receivemarketofferstoyou.lua"/>
+	<event type="extendedopcode" name="MarketSMVOTY" event="script" value="market/market_sendmarketviewofferstoyou.lua"/>
+	<event type="extendedopcode" name="MarketCMOTME" event="script" value="market/market_sendmarketofferconfirmtome.lua"/>
+	<event type="extendedopcode" name="MarketRALLMO" event="script" value="market/market_receiveallmarketoffers.lua"/>
+	<event type="extendedopcode" name="MarketRCO" event="script" value="market/market_receivechangeoption.lua"/>
+	<event type="extendedopcode" name="MarketRRITP" event="script" value="market/market_reedemofferstoplayeragain.lua"/>
+	<event type="extendedopcode" name="MarketSearch" event="script" value="market/market_search.lua"/>
 </creaturescripts>

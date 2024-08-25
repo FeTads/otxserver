@@ -1,0 +1,835 @@
+MakeOfferWindow < Window
+  anchors.centerIn: parent
+  text: Fazer Oferta
+  size: 400 206
+
+MakeOfferItem < Item
+  &position: {x=65535, y=0, z=0}
+
+MakeOfferItemName < Label
+  text-offset: 43 5
+  text-auto-resize: true
+
+MakeOfferPanel < Panel
+  size: 354 75
+  margin-top: 53
+  layout:
+    type: horizontalBox
+    cell-spacing: -2
+    cell-size: 32 32
+    flow: false
+
+HistoricLabel < Label
+  text-auto-resize: true
+
+MarketTextEdit < UITextEdit
+  font: verdana-11px-antialised
+  color: #3E3838
+  size: 86 20
+  text-offset: 0 3
+  padding: 3
+  image-source: /images/ui/textedit
+  image-border: 1
+  selection-color: #111416
+  selection-background-color: #999999
+  $disabled:
+    color: #aaaaaa88
+
+HeadlessWindow
+  id: market_window
+  size: 549 450
+  image-source: images/market.png
+  anchors.centerIn: parent
+
+  UIButton
+    id: market_text
+    color: white
+    text: Mercado
+    size: 468 21
+    anchors.top: parent.top
+    anchors.left: parent.left
+    margin-top: -8
+    margin-left: 40
+
+  Button
+    id: comprar_btn
+    color: white
+    size: 94 23
+    text: Comprar
+    anchors.top: parent.top
+    anchors.left: parent.left
+    margin-top: 15
+    margin-left: 20
+    @onClick: buyproductCategory()
+
+  Button
+    id: vender_btn
+    color: white
+    size: 94 23
+    text: Vender
+    anchors.top: comprar_btn.top
+    anchors.left: comprar_btn.left
+    margin-top: 0
+    margin-left: 98
+    @onClick: sellproductCategory()
+
+  Button
+    id: ofertas_btn
+    color: white
+    size: 94 23
+    text: Ofertas
+    anchors.top: vender_btn.top
+    anchors.left: vender_btn.left
+    margin-top: 0
+    margin-left: 98
+    @onClick: offersCategory()
+    visible: false
+
+  Button
+    id: historico_btn
+    color: white
+    size: 94 23
+    text: Historico
+    anchors.top: vender_btn.top
+    anchors.left: vender_btn.left
+    margin-top: 0
+    margin-left: 98
+    @onClick: historicCategory()
+
+  Label
+    id: category_label
+    color: white
+    size: 94 23
+    text: Categoria:
+    anchors.top: comprar_btn.top
+    anchors.left: comprar_btn.left
+    margin-top: 40
+    margin-left: 2
+
+  ComboBox
+    id: category
+    color: white
+    size: 151 22
+    anchors.top: category_label.top
+    anchors.left: category_label.left
+    margin-top: -8
+    margin-left: 68
+
+  MarketTextEdit
+    id: search_product
+    size: 123 22
+    anchors.top: category.top
+    anchors.left: category.left
+    margin-left: 212
+
+  Button
+    id: search_btn
+    color: white
+    size: 83 22
+    text: Procurar
+    anchors.top: search_product.top
+    anchors.left: search_product.left
+    margin-top: 0
+    margin-left: 126
+
+  Button
+    id: sharp_btn
+    color: white
+    size: 40 20
+    text: #
+    anchors.top: category_label.top
+    anchors.left: category_label.left
+    margin-top: 30
+    margin-left: 0
+
+  Button
+    id: item_btn
+    color: white
+    size: 40 20
+    text: Item
+    anchors.top: sharp_btn.top
+    anchors.left: sharp_btn.left
+    margin-top: 0
+    margin-left: 40
+
+  Button
+    id: itemname_btn
+    color: white
+    size: 110 20
+    text: Nome
+    anchors.top: item_btn.top
+    anchors.left: item_btn.left
+    margin-top: 0
+    margin-left: 40
+
+  Button
+    id: vendedor_btn
+    color: white
+    size: 120 20
+    text: Vendedor
+    anchors.top: itemname_btn.top
+    anchors.left: itemname_btn.left
+    margin-top: 0
+    margin-left: 110
+
+  Button
+    id: quantidade_btn
+    color: white
+    size: 81 20
+    text: Quantidade
+    anchors.top: vendedor_btn.top
+    anchors.left: vendedor_btn.left
+    margin-top: 0
+    margin-left: 121
+
+  Button
+    id: preco_btn
+    color: white
+    size: 98 20
+    text: Preco/Unidade
+    anchors.top: quantidade_btn.top
+    anchors.left: quantidade_btn.left
+    margin-top: 0
+    margin-left: 81
+
+  ScrollableFlatPanel
+    id: products_list
+    size: 490 266
+    anchors.top: category_label.top
+    anchors.left: category_label.left
+    margin-top: 53
+    layout:
+      type: grid
+      cell-spacing: -2
+      cell-size: 35 35
+      flow: false
+    vertical-scrollbar: products_scrollbar
+
+  VerticalScrollBar
+    id: products_scrollbar
+    anchors.top: products_list.top
+    anchors.bottom: prev.bottom
+    anchors.right: parent.right
+    margin-top: -23
+    margin-bottom: -1
+    margin-right: 4
+    step: 78
+    pixels-scroll: true
+      $!on:
+        width: 0
+
+  Button
+    id: comprarAgora_btn
+    color: white
+    size: 113 20
+    text: Comprar agora
+    anchors.top: parent.top
+    anchors.left: parent.left
+    margin-top: 415
+    margin-left: 180
+
+  Button
+    id: fazerOferta_btn
+    color: white
+    size: 113 20
+    text: Fazer Oferta
+    anchors.top: comprarAgora_btn.top
+    anchors.left: comprarAgora_btn.left
+    margin-top: 0
+    margin-left: 120
+    visible: false
+
+  Button
+    id: atualizar_btn
+    color: white
+    size: 113 20
+    text: Atualizar
+    anchors.top: comprarAgora_btn.top
+    anchors.left: comprarAgora_btn.left
+    margin-top: 0
+    margin-left: 120
+
+  Button
+    id: fechar_btn
+    color: white
+    size: 113 20
+    text: Fechar
+    anchors.top: atualizar_btn.top
+    anchors.left: atualizar_btn.left
+    margin-top: 0
+    margin-left: 120
+
+  HorizontalList
+    id: seller_panel
+    border-color: black
+    background-color: alpha
+    size: 490 60
+    anchors.top: comprar_btn.top
+    anchors.left: comprar_btn.left
+    margin-top: 28
+    visible: false
+
+  Item
+    id: item_seller
+    font: terminus-10px
+    text-offset: 0 -21
+    size: 32 32
+    anchors.top: seller_panel.top
+    anchors.left: seller_panel.left
+    margin-top: 10
+    margin-left: 10
+    visible: false
+
+  Label
+    id: item_name
+    text-auto-resize: true
+    anchors.top: item_seller.top
+    anchors.left: item_seller.left
+    margin-top: 0
+    margin-left: 36
+    visible: false
+
+  UIButton
+    id: pokemon_gender
+    size: 11 11
+    anchors.top: item_seller.top
+    anchors.left: item_seller.left
+    margin-top: 20
+    margin-left: 0
+    visible: false
+
+  Label
+    id: preco
+    text: Preco: 0
+    anchors.top: item_seller.top
+    anchors.left: item_seller.left
+    margin-top: -5
+    margin-left: 130
+    visible: false
+
+  Label
+    id: taxa
+    text: Taxa: 100
+    anchors.top: preco.top
+    anchors.left: preco.left
+    margin-top: 14
+    visible: false
+
+  Label
+    id: total
+    text: Total: 100
+    anchors.top: taxa.top
+    anchors.left: taxa.left
+    margin-top: 14
+    visible: false
+
+  Label
+    id: amount_text
+    text: Quantidade:
+    anchors.top: item_seller.top
+    anchors.left: parent.left
+    margin-top: 1
+    margin-left: 230
+    visible: false
+
+  Label
+    id: onlyoffers_text
+    text: Apenas ofert:
+    anchors.top: amount_text.top
+    anchors.left: amount_text.left
+    margin-top: 25
+    margin-left: 3
+    visible: false
+
+  CheckBox
+    id: onlyoffers_checkbox
+    size: 21 21
+    anchors.top: onlyoffers_text.top
+    anchors.left: onlyoffers_text.left
+    margin-left: 81
+    visible: false
+
+  Label
+    id: priceperunit_text
+    text: Preco por unit:
+    anchors.top: onlyoffers_checkbox.top
+    anchors.left: onlyoffers_checkbox.left
+    margin-left: 17
+    visible: false
+
+  MarketTextEdit
+    id: priceperunit_textedit
+    size: 89 20
+    anchors.top: priceperunit_text.top
+    anchors.left: priceperunit_text.left
+    margin-top: -5
+    margin-left: 89
+    visible: false
+
+  Button
+    id: select_objectbtn
+    color: white
+    size: 133 20
+    text: Selecionar Objeto
+    anchors.top: onlyoffers_text.top
+    anchors.left: onlyoffers_text.left
+    margin-top: 28
+    margin-left: 45
+    @onClick: selectObject()
+    visible: false
+
+  Button
+    id: seller_btn
+    color: white
+    size: 83 20
+    text: Vender
+    anchors.top: select_objectbtn.top
+    anchors.left: select_objectbtn.left
+    margin-top: 0
+    margin-left: 148
+    visible: false
+
+  Button
+    id: sharp2_btn
+    color: white
+    size: 40 20
+    text: #
+    anchors.top: seller_panel.top
+    anchors.left: seller_panel.left
+    margin-top: 89
+    margin-left: 0
+    visible: false
+
+  Button
+    id: item2_btn
+    color: white
+    size: 40 20
+    text: Item
+    anchors.top: sharp2_btn.top
+    anchors.left: sharp2_btn.left
+    margin-top: 0
+    margin-left: 40
+    visible: false
+
+  Button
+    id: itemname2_btn
+    color: white
+    size: 110 20
+    text: Nome
+    anchors.top: item2_btn.top
+    anchors.left: item2_btn.left
+    margin-top: 0
+    margin-left: 40
+    visible: false
+
+  Button
+    id: tempo_btn
+    color: white
+    size: 120 20
+    text: Tempo
+    anchors.top: itemname2_btn.top
+    anchors.left: itemname2_btn.left
+    margin-top: 0
+    margin-left: 110
+    visible: false
+
+  Button
+    id: quantidade2_btn
+    color: white
+    size: 81 20
+    text: Quantidade
+    anchors.top: tempo_btn.top
+    anchors.left: tempo_btn.left
+    margin-top: 0
+    margin-left: 121
+    visible: false
+
+  Button
+    id: preco2_btn
+    color: white
+    size: 98 20
+    text: Preco/Unidade
+    anchors.top: quantidade2_btn.top
+    anchors.left: quantidade2_btn.left
+    margin-top: 0
+    margin-left: 81
+    visible: false
+
+  ScrollableFlatPanel
+    id: products_list2
+    size: 490 220
+    anchors.top: sharp2_btn.top
+    anchors.left: sharp2_btn.left
+    margin-top: 20
+    visible: false
+    layout:
+      type: grid
+      cell-spacing: -2
+      cell-size: 34 34
+      flow: false
+    vertical-scrollbar: products_scrollbar2
+
+  VerticalScrollBar
+    id: products_scrollbar2
+    anchors.top: products_list2.top
+    anchors.bottom: prev.bottom
+    anchors.right: parent.right
+    margin-top: -21
+    margin-bottom: -1
+    margin-right: 6
+    step: 78
+    visible: false
+    pixels-scroll: true
+      $!on:
+        width: 0
+
+  Button
+    id: atualizar2_btn
+    color: white
+    size: 113 20
+    text: Atualizar
+    anchors.top: products_list2.top
+    anchors.left: products_list2.left
+    margin-top: 227
+    margin-left: 259
+    visible: false
+
+  Button
+    id: fechar2_btn
+    color: white
+    size: 113 20
+    text: Fechar
+    anchors.top: atualizar2_btn.top
+    anchors.left: atualizar2_btn.left
+    margin-top: 0
+    margin-left: 120
+    visible: false
+
+  HorizontalScrollBar
+    id: amount_scrollbar
+    size: 200 12
+    anchors.top: item_seller.top
+    anchors.left: parent.left
+    margin-top: 2
+    margin-left: 310
+    step: 1
+    visible: false
+    pixels-scroll: false
+      $!on:
+        width: 1
+
+  Label
+    id: page_label
+    color: white
+    text: Page: 1 / 1
+    anchors.top: atualizar_btn.top
+    anchors.left: atualizar_btn.left
+    margin-top: -25
+    margin-left: 57
+
+  Button
+    id: backallpages_btn
+    color: white
+    size: 26 22
+    text: <<
+    anchors.top: page_label.top
+    anchors.left: page_label.left
+    margin-top: -5
+    margin-left: 74
+
+  Button
+    id: backpage_btn
+    color: white
+    size: 17 22
+    text: <
+    anchors.top: backallpages_btn.top
+    anchors.left: backallpages_btn.left
+    margin-top: 0
+    margin-left: 30
+
+  Button
+    id: nextpage_btn
+    color: white
+    size: 17 22
+    text: >
+    anchors.top: backpage_btn.top
+    anchors.left: backpage_btn.left
+    margin-top: 0
+    margin-left: 21
+
+  Button
+    id: nextallpages_btn
+    color: white
+    size: 26 22
+    text: >>
+    anchors.top: nextpage_btn.top
+    anchors.left: nextpage_btn.left
+    margin-top: 0
+    margin-left: 21
+
+  Label
+    id: offers_tome
+    text: Ofertas para voce
+    anchors.top: parent.top
+    anchors.left: parent.left
+    margin-top: 40
+    margin-left: 218
+    visible: false
+
+  Button
+    id: sharp3_btn
+    color: white
+    size: 40 20
+    text: #
+    anchors.top: comprar_btn.top
+    anchors.left: comprar_btn.left
+    margin-top: 45
+    margin-left: -5
+    visible: false
+
+  Button
+    id: item3_btn
+    color: white
+    size: 40 20
+    text: Item
+    anchors.top: sharp3_btn.top
+    anchors.left: sharp3_btn.left
+    margin-top: 0
+    margin-left: 40
+    visible: false
+
+  Button
+    id: itemname3_btn
+    color: white
+    size: 140 20
+    text: Nome
+    anchors.top: item3_btn.top
+    anchors.left: item3_btn.left
+    margin-top: 0
+    margin-left: 40
+    visible: false
+
+  Button
+    id: offers3_btn
+    color: white
+    size: 110 20
+    text: Ofertas
+    anchors.top: itemname3_btn.top
+    anchors.left: itemname3_btn.left
+    margin-top: 0
+    margin-left: 139
+    visible: false
+
+  Button
+    id: tempo3_btn
+    color: white
+    size: 81 20
+    text: Tempo
+    anchors.top: offers3_btn.top
+    anchors.left: offers3_btn.left
+    margin-top: 0
+    margin-left: 109
+    visible: false
+
+  Button
+    id: action_btn
+    color: white
+    size: 83 20
+    text: Acao
+    anchors.top: tempo3_btn.top
+    anchors.left: tempo3_btn.left
+    margin-top: 0
+    margin-left: 80
+    visible: false
+
+  ScrollableFlatPanel
+    id: products_list3
+    size: 490 128
+    anchors.top: sharp3_btn.top
+    anchors.left: sharp3_btn.left
+    margin-top: 20
+    visible: false
+    layout:
+      type: grid
+      cell-spacing: -2
+      cell-size: 34 34
+      flow: false
+    vertical-scrollbar: products_scrollbar3
+
+  VerticalScrollBar
+    id: products_scrollbar3
+    anchors.top: products_list3.top
+    anchors.bottom: prev.bottom
+    anchors.right: parent.right
+    margin-top: -20
+    margin-bottom: -1
+    margin-right: 6
+    step: 78
+    visible: false
+    pixels-scroll: true
+      $!on:
+        width: 0
+
+  Label
+    id: offer_myoffers
+    text: Suas Ofertas
+    anchors.top: products_list3.top
+    anchors.left: products_list3.left
+    margin-top: 130
+    margin-left: 218
+    visible: false
+
+  Button
+    id: sharp4_btn
+    color: white
+    size: 40 20
+    text: #
+    anchors.top: comprar_btn.top
+    anchors.left: comprar_btn.left
+    margin-top: 212
+    margin-left: -5
+    visible: false
+
+  Button
+    id: item4_btn
+    color: white
+    size: 40 20
+    text: Item
+    anchors.top: sharp4_btn.top
+    anchors.left: sharp4_btn.left
+    margin-top: 0
+    margin-left: 40
+    visible: false
+
+  Button
+    id: itemname4_btn
+    color: white
+    size: 140 20
+    text: Nome
+    anchors.top: item4_btn.top
+    anchors.left: item4_btn.left
+    margin-top: 0
+    margin-left: 40
+    visible: false
+
+  Button
+    id: seller3_btn
+    color: white
+    size: 110 20
+    text: Vendedor
+    anchors.top: itemname4_btn.top
+    anchors.left: itemname4_btn.left
+    margin-top: 0
+    margin-left: 139
+    visible: false
+
+  Button
+    id: offers4_btn
+    color: white
+    size: 81 20
+    text: Ofertas
+    anchors.top: seller3_btn.top
+    anchors.left: seller3_btn.left
+    margin-top: 0
+    margin-left: 109
+    visible: false
+
+  Button
+    id: action2_btn
+    color: white
+    size: 83 20
+    text: Acao
+    anchors.top: offers4_btn.top
+    anchors.left: offers4_btn.left
+    margin-top: 0
+    margin-left: 80
+    visible: false
+
+  ScrollableFlatPanel
+    id: products_list4
+    size: 490 128
+    anchors.top: sharp3_btn.top
+    anchors.left: sharp3_btn.left
+    margin-top: 187
+    visible: false
+    layout:
+      type: grid
+      cell-spacing: -2
+      cell-size: 34 34
+      flow: false
+    vertical-scrollbar: products_scrollbar4
+
+  VerticalScrollBar
+    id: products_scrollbar4
+    anchors.top: products_list4.top
+    anchors.bottom: prev.bottom
+    anchors.right: parent.right
+    margin-top: -19
+    margin-bottom: -1
+    margin-right: 6
+    step: 78
+    visible: false
+    pixels-scroll: true
+      $!on:
+        width: 0
+
+  Button
+    id: atualizar3_btn
+    color: white
+    size: 113 20
+    text: Atualizar
+    anchors.top: offers4_btn.top
+    anchors.left: offers4_btn.left
+    margin-top: 152
+    margin-left: -70
+    visible: false
+
+  Button
+    id: fechar3_btn
+    color: white
+    size: 113 20
+    text: Fechar
+    anchors.top: atualizar3_btn.top
+    anchors.left: atualizar3_btn.left
+    margin-top: 0
+    margin-left: 120
+    visible: false
+
+  ScrollableFlatPanel
+    id: products_list5
+    size: 490 315
+    anchors.top: comprar_btn.top
+    anchors.left: comprar_btn.left
+    margin-top: 40
+    visible: false
+    layout:
+      type: grid
+      cell-spacing: 2
+      cell-width: 1000
+      flow: false
+    vertical-scrollbar: products_scrollbar5
+
+  VerticalScrollBar
+    id: products_scrollbar5
+    anchors.top: products_list5.top
+    anchors.bottom: prev.bottom
+    anchors.right: parent.right
+    margin-top: -1
+    margin-bottom: -1
+    margin-right: 6
+    step: 78
+    visible: false
+    pixels-scroll: true
+      $!on:
+        width: 0
+
+  Button
+    id: fechar4_btn
+    color: white
+    size: 113 20
+    text: Fechar
+    anchors.top: products_list5.top
+    anchors.left: products_list5.left
+    margin-top: 320
+    margin-left: 378
+    visible: false

@@ -788,6 +788,28 @@ class Player : public Creature, public Cylinder
         }
 
 		void sendCritical() const;
+		// Market System
+		void receiveMarketItem(uint16_t index);
+		bool removeMarketItem(uint16_t integgerAttribute, uint16_t amount, uint64_t price, uint16_t gender, uint16_t level, std::string ispokemon, std::string name, bool onlyoffers);
+		bool cancelMarketOffer(uint64_t numeration);
+		bool openMarketSellerInsertMyOffers(std::string type);
+		bool openMarketBuyInsertAllOffers();
+		bool buyMarketItemOffer(uint64_t price, uint64_t transaction_id, uint64_t countSelectedScrollBar);
+		bool openMarketInsertAllHistoric();
+		bool makeMarketOfferRemoveItem(uint16_t index, uint64_t transaction_id);
+		bool confirmMarketOfferToPlayer(uint64_t transaction_id, std::string item_seller, uint16_t index);
+		bool openMarketOfferYourOffers();
+		bool openMarketInsertMyOffersInAllSlots(uint64_t transaction_id);
+		bool openMarketInsertOffersToMeInAllSlots(uint64_t transaction_id);
+		bool sendMarketCancelYourOffer(uint64_t transaction_id);
+		bool sendMarketCancelYourOfferBackBuyer(uint64_t transaction_id);
+		bool openMarketViewOffersToYou();
+		bool confirmMarketOfferToMe(uint64_t transaction_id);
+		bool reedemMyItemsOfferInList();
+		bool sendMarketChangeOption(std::string option);
+		bool sendMarketChangePage(std::string type, std::string category, uint64_t page);
+		bool sendMarketSearch(std::string type, std::string category);
+	    //
 		void sendPlayerIcons(Player* player);
 		void sendStats();
 
@@ -1087,6 +1109,8 @@ class Player : public Creature, public Cylinder
 		LearnedInstantSpellList learnedInstantSpellList;
 		WarMap warMap;
 
+		// Market System
+		std::vector<Item*> waiting_list;
 		friend class Game;
 		friend class LuaInterface;
 		friend class Npc;

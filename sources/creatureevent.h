@@ -58,6 +58,14 @@ enum CreatureEventType_t
 	CREATURE_EVENT_DEATH,
 	CREATURE_EVENT_PREPAREDEATH,
 	CREATURE_EVENT_EXTENDED_OPCODE, // otclient additional network opcodes
+	CREATURE_EVENT_INSERT_MARKET_MYOFFERS,
+	CREATURE_EVENT_INSERT_MARKET_ALLOFFERS,
+	CREATURE_EVENT_INSERT_MARKETBUYOFFER_UPDATE,
+	CREATURE_EVENT_INSERT_MARKET_MYHISTORIC,
+	CREATURE_EVENT_INSERT_MARKET_MAKEOFFREMOVEITEM,
+	CREATURE_EVENT_INSERT_MARKET_UPDATEOFFERS,
+	CREATURE_EVENT_INSERT_MARKET_OFFERSTOME,
+	CREATURE_EVENT_INSERT_MARKETITEM,
 	CREATURE_EVENT_MOVEITEM,
 	CREATURE_EVENT_NOCOUNTFRAG
 };
@@ -155,6 +163,18 @@ class CreatureEvent : public Event
 		uint32_t executeExtendedOpcode(Creature* creature, uint8_t opcode, const std::string& buffer);
 		uint32_t executeMoveItem(Creature* actor, Item* item, const Position& frompos, const Position& pos);
 		uint32_t executeNoCountFragArea(Creature* creature, Creature* target);		//by feetads
+		uint32_t executeMarketInsert(Player* player, Item* item);
+		uint32_t executeInsertMarketMyOffers(Player* player, uint16_t item_id, const std::string& item_name,
+		uint64_t item_time, uint16_t amount, uint64_t price, uint16_t gender, uint16_t level, const std::string& ispokemon, 
+		const std::string& attributes, const std::string& description, uint16_t row_count, uint16_t row_count_id, const std::string& type, uint64_t transaction_id, bool onlyoffers);
+		uint32_t executeInsertMarketAllOffers(Player* player, uint16_t item_id, const std::string& item_name,
+		const std::string& item_seller, uint16_t amount, uint64_t price, uint16_t gender, uint16_t level, const std::string& ispokemon, 
+		const std::string& attributes, const std::string& description, uint16_t row_count, uint16_t row_count_id, uint64_t item_time, uint64_t transaction_id, bool onlyoffers, uint64_t page_numeration);
+		uint32_t executeBuyOfferUpdateMarketWindow(Player* player);
+		uint32_t executeInsertMarketHistoric(Player* player, const std::string& item_name, uint32_t amount, uint64_t date);
+		uint32_t executeMarketOfferRemoveItem(Player* player, uint16_t item_id, const std::string& description, uint16_t amount);
+		uint32_t executeMakeOffers(Player* player, uint16_t item_id, const std::string& item_name, const std::string& item_seller, uint16_t count_row, const std::string& description, uint64_t transaction_id);
+		uint32_t executeMarketViewOffersToMe(Player* player, uint16_t item_id, const std::string& item_name, const std::string& description, uint64_t tempo, uint16_t count_row, uint64_t transaction_id);
 		//
 
 	protected:

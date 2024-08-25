@@ -755,7 +755,28 @@ class LuaInterface
 		static int32_t luaDoPlayerSetWalkthrough(lua_State* L);
 		static int32_t luaIsPlayerUsingOtclient(lua_State* L);
 		static int32_t luaDoSendPlayerExtendedOpcode(lua_State* L);
-
+		//Market System
+		static int32_t luaDoSendMarketItem(lua_State* L);
+		static int32_t luaDoRemovePlayerMarketItem(lua_State* L);
+		static int32_t luaDoCancelPlayerMarketItem(lua_State* L);
+		static int32_t luaDoOpenMarketSellerInsertMyOffers(lua_State* L);
+		static int32_t luaDoOpenMarketBuyInsertAllOffers(lua_State* L);
+		static int32_t luaDoMarketBuyOffer(lua_State* L);
+		static int32_t luaDoMarketMyHistoric(lua_State* L);
+		static int32_t luaDoMarketMakeOfferRemoveItem(lua_State* L);
+		static int32_t luaDoMarketMakeOfferConfirm(lua_State* L);
+		static int32_t luaDoOpenMarketViewYourOffers(lua_State* L);
+		static int32_t luaDoOpenMarketInsertAllOffersInSlots(lua_State* L);
+		static int32_t luaDoOpenMarketInsertAllOffersToMeInSlots(lua_State* L);
+		static int32_t luaDoMarketCancelYourOffer(lua_State* L);
+		static int32_t luaDoMarketCancelYourOfferBackBuyer(lua_State* L);
+		static int32_t luaDoMarketViewOffersToMe(lua_State* L);
+		static int32_t luaDoMarketOfferConfirmToMe(lua_State* L);
+		static int32_t luaDoMarketReedemMyOffers(lua_State* L);
+		static int32_t luaDoMarketChangeOption(lua_State* L);
+		static int32_t luaDoMarketChangePage(lua_State* L);
+		static int32_t luaDoMarketSearch(lua_State* L);
+	    //
 		static int32_t luaL_errors(lua_State* L);
 		static int32_t luaL_loadmodlib(lua_State* L);
 		static int32_t luaL_domodlib(lua_State* L);

@@ -230,6 +230,22 @@ CreatureEventType_t CreatureEvents::getType(const std::string& type)
 		_type = CREATURE_EVENT_PREPAREDEATH;
 	else if(type == "extendedopcode")
 		_type = CREATURE_EVENT_EXTENDED_OPCODE;
+	else if (type == "marketinsert")
+		_type = CREATURE_EVENT_INSERT_MARKETITEM;
+	else if (type == "marketinsertmyoffers")
+		_type = CREATURE_EVENT_INSERT_MARKET_MYOFFERS;
+	else if (type == "marketinsertalloffers")
+		_type = CREATURE_EVENT_INSERT_MARKET_ALLOFFERS;
+	else if (type == "marketbuyitemupdatewindow")
+		_type = CREATURE_EVENT_INSERT_MARKETBUYOFFER_UPDATE;
+	else if (type == "markethistoric")
+		_type = CREATURE_EVENT_INSERT_MARKET_MYHISTORIC;
+	else if (type == "marketmakeofferitemremove")
+		_type = CREATURE_EVENT_INSERT_MARKET_MAKEOFFREMOVEITEM;
+	else if (type == "marketupdatemakeoffers")
+		_type = CREATURE_EVENT_INSERT_MARKET_UPDATEOFFERS;
+	else if (type == "marketofferstome")
+		_type = CREATURE_EVENT_INSERT_MARKET_OFFERSTOME;
 	else if(type == "moveitem")
 		_type = CREATURE_EVENT_MOVEITEM;
 	else if(type == "nocountfrag")
@@ -353,6 +369,22 @@ std::string CreatureEvent::getScriptEventName() const
 			return "onPrepareDeath";
 		case CREATURE_EVENT_EXTENDED_OPCODE:
 			return "onExtendedOpcode";
+		case CREATURE_EVENT_INSERT_MARKETITEM:
+			return "onMarketInsert";
+		case CREATURE_EVENT_INSERT_MARKET_MYOFFERS:
+			return "onMarketInsertMyOffers";
+		case CREATURE_EVENT_INSERT_MARKET_ALLOFFERS:
+			return "onMarketInsertAllOffers";
+		case CREATURE_EVENT_INSERT_MARKETBUYOFFER_UPDATE:
+			return "onMarketBuyItemUpdateMarketWindow";
+		case CREATURE_EVENT_INSERT_MARKET_MYHISTORIC:
+			return "onMarketHistoric";
+		case CREATURE_EVENT_INSERT_MARKET_MAKEOFFREMOVEITEM:
+			return "onMarketOfferRemoveItem";
+		case CREATURE_EVENT_INSERT_MARKET_UPDATEOFFERS:
+			return "onMarketMakeOffers";
+		case CREATURE_EVENT_INSERT_MARKET_OFFERSTOME:
+			return "onMarketViewOffersToMe";
 		case CREATURE_EVENT_MOVEITEM:
 			return "onMoveItem";
 		case CREATURE_EVENT_NOCOUNTFRAG:
@@ -2288,3 +2320,523 @@ uint32_t CreatureEvent::executeNoCountFragArea(Creature* creature, Creature* tar
 		return 0;
 	}
 }
+
+// Market System 
+uint32_t CreatureEvent::executeMarketInsert(Player* player, Item* item)
+{
+	//onMarketInsert(cid, item)
+	if(m_interface->reserveEnv())
+	{
+		ScriptEnviroment* env = m_interface->getEnv();
+		if(m_scripted == EVENT_SCRIPT_BUFFER)
+		{
+			env->setRealPos(player->getPosition());
+			std::ostringstream scriptstream;
+
+            scriptstream << "local cid = " << env->addThing(player) << std::endl;
+ 
+			env->streamThing(scriptstream, "item", item, env->addThing(item));
+
+			if(m_scriptData)
+				scriptstream << *m_scriptData;
+			
+			bool result = true;
+			if(m_interface->loadBuffer(scriptstream.str()))
+			{
+				lua_State* L = m_interface->getState();
+				result = m_interface->getGlobalBool(L, "_result", true);
+			}
+
+			m_interface->releaseEnv();
+			return result;
+		}
+		else
+		{
+			#ifdef __DEBUG_LUASCRIPTS__
+			std::ostringstream desc;
+			desc << creature->getName();
+			env->setEventDesc(desc.str());
+			#endif
+
+			env->setScriptId(m_scriptId, m_interface);
+			env->setRealPos(player->getPosition());
+
+			lua_State* L = m_interface->getState();
+			m_interface->pushFunction(m_scriptId);
+
+			lua_pushnumber(L, env->addThing(player));
+			LuaInterface::pushThing(L, item, env->addThing(item));
+
+			bool result = m_interface->callFunction(2);
+			m_interface->releaseEnv();
+			return result;
+		}
+	}
+	else
+	{
+		std::cout << "[Error - CreatureEvent::executeExtendedOpCode] Call stack overflow." << std::endl;
+		return 0;
+	}
+}
+
+uint32_t CreatureEvent::executeInsertMarketMyOffers(Player* player, uint16_t item_id, const std::string& item_name,
+uint64_t item_time, uint16_t amount, uint64_t price, uint16_t gender, uint16_t level, const std::string& ispokemon, 
+const std::string& attributes, const std::string& description, uint16_t row_count, uint16_t row_count_id, const std::string& type, uint64_t transaction_id, bool onlyoffers)
+{
+	//onMarketInsertMyOffers(player, item_id, item_name, item_time, amount, price, gender, level, ispokemon, attributes, description, row_count_id, type, transaction_id, onlyoffers)
+	if(m_interface->reserveEnv())
+	{
+		ScriptEnviroment* env = m_interface->getEnv();
+		if(m_scripted == EVENT_SCRIPT_BUFFER)
+		{
+			env->setRealPos(player->getPosition());
+			std::stringstream scriptstream;
+
+            scriptstream << "local cid = " << env->addThing(player) << std::endl;
+			scriptstream << "local item_id = " << item_id << std::endl;
+			scriptstream << "local item_name = " << item_name << std::endl;
+			scriptstream << "local item_time = " << item_time << std::endl;
+			scriptstream << "local amount = " << amount << std::endl;
+			scriptstream << "local price = " << price << std::endl;
+			scriptstream << "local gender = " << gender << std::endl;
+			scriptstream << "local level = " << level << std::endl;
+			scriptstream << "local ispokemon = " << ispokemon << std::endl;
+			scriptstream << "local attributes = " << attributes << std::endl;
+			scriptstream << "local description = " << description << std::endl;
+			scriptstream << "local row_count = " << row_count << std::endl;
+			scriptstream << "local row_count_id =" << row_count_id << std::endl;
+            scriptstream << "local type =" << type << std::endl; 
+			scriptstream << "local transaction_id =" << transaction_id << std::endl;
+			scriptstream << "local onlyoffers =" << (onlyoffers ? "true" : "false") << std::endl;
+
+			scriptstream << m_scriptData;
+			bool result = true;
+			if(m_interface->loadBuffer(scriptstream.str()))
+			{
+				lua_State* L = m_interface->getState();
+				result = m_interface->getGlobalBool(L, "_result", true);
+			}
+
+			m_interface->releaseEnv();
+			return result;
+		}
+		else
+		{
+			#ifdef __DEBUG_LUASCRIPTS__
+			std::ostringstream desc;
+			desc << creature->getName();
+			env->setEventDesc(desc.str());
+			#endif
+
+			env->setScriptId(m_scriptId, m_interface);
+			env->setRealPos(player->getPosition());
+
+			lua_State* L = m_interface->getState();
+			m_interface->pushFunction(m_scriptId);
+
+			lua_pushnumber(L, env->addThing(player));
+			lua_pushnumber(L, item_id);
+			lua_pushstring(L, item_name.c_str());
+			lua_pushnumber(L, item_time);
+			lua_pushnumber(L, amount);
+			lua_pushnumber(L, price);
+			lua_pushnumber(L, gender);
+			lua_pushnumber(L, level);
+			lua_pushstring(L, ispokemon.c_str());
+			lua_pushstring(L, attributes.c_str());
+			lua_pushstring(L, description.c_str());
+			lua_pushnumber(L, row_count);
+			lua_pushnumber(L, row_count_id);
+			lua_pushstring(L, type.c_str());
+			lua_pushnumber(L, transaction_id);
+			lua_pushnumber(L, onlyoffers);
+
+			bool result = m_interface->callFunction(16);
+			m_interface->releaseEnv();
+			return result;
+		}
+	}
+	else
+	{
+		std::cout << "[Error - CreatureEvent::executeExtendedOpCode] Call stack overflow." << std::endl;
+		return 0;
+	}
+}
+
+uint32_t CreatureEvent::executeInsertMarketAllOffers(Player* player, uint16_t item_id, const std::string& item_name,
+const std::string& item_seller, uint16_t amount, uint64_t price, uint16_t gender, uint16_t level, const std::string& ispokemon, 
+const std::string& attributes, const std::string& description, uint16_t row_count, uint16_t row_count_id, uint64_t item_time, uint64_t transaction_id, bool onlyoffers, uint64_t page_numeration)
+{
+	//onMarketInsertAllOffers(player, item_id, item_name, item_time, amount, price, gender, level, ispokemon, attributes, description, row_count, row_count_id, item_time, transaction_id, onlyoffers, page_numeration)
+	if(m_interface->reserveEnv())
+	{
+		ScriptEnviroment* env = m_interface->getEnv();
+		if(m_scripted == EVENT_SCRIPT_BUFFER)
+		{
+			env->setRealPos(player->getPosition());
+			std::stringstream scriptstream;
+
+            scriptstream << "local cid = " << env->addThing(player) << std::endl;
+			scriptstream << "local item_id = " << item_id << std::endl;
+			scriptstream << "local item_name = " << item_name << std::endl;
+			scriptstream << "local item_seller = " << item_seller << std::endl;
+			scriptstream << "local amount = " << amount << std::endl;
+			scriptstream << "local price = " << price << std::endl;
+			scriptstream << "local gender = " << gender << std::endl;
+			scriptstream << "local level = " << level << std::endl;
+			scriptstream << "local ispokemon = " << ispokemon << std::endl;
+			scriptstream << "local attributes = " << attributes << std::endl;
+			scriptstream << "local description = " << description << std::endl;
+			scriptstream << "local row_count = " << row_count << std::endl;
+			scriptstream << "local row_count_id =" << row_count_id << std::endl;
+			scriptstream << "local item_time =" << item_time << std::endl;
+			scriptstream << "local transaction_id =" << transaction_id << std::endl;
+			scriptstream << "local onlyoffers =" << (onlyoffers ? "true" : "false") << std::endl;
+			scriptstream << "local page_numeration =" << page_numeration << std::endl;
+
+			scriptstream << m_scriptData;
+			bool result = true;
+			if(m_interface->loadBuffer(scriptstream.str()))
+			{
+				lua_State* L = m_interface->getState();
+				result = m_interface->getGlobalBool(L, "_result", true);
+			}
+
+			m_interface->releaseEnv();
+			return result;
+		}
+		else
+		{
+			#ifdef __DEBUG_LUASCRIPTS__
+			std::ostringstream desc;
+			desc << creature->getName();
+			env->setEventDesc(desc.str());
+			#endif
+
+			env->setScriptId(m_scriptId, m_interface);
+			env->setRealPos(player->getPosition());
+
+			lua_State* L = m_interface->getState();
+			m_interface->pushFunction(m_scriptId);
+
+			lua_pushnumber(L, env->addThing(player));
+			lua_pushnumber(L, item_id);
+			lua_pushstring(L, item_name.c_str());
+			lua_pushstring(L, item_seller.c_str());
+			lua_pushnumber(L, amount);
+			lua_pushnumber(L, price);
+			lua_pushnumber(L, gender);
+			lua_pushnumber(L, level);
+			lua_pushstring(L, ispokemon.c_str());
+			lua_pushstring(L, attributes.c_str());
+			lua_pushstring(L, description.c_str());
+			lua_pushnumber(L, row_count);
+			lua_pushnumber(L, row_count_id);
+			lua_pushnumber(L, item_time);
+			lua_pushnumber(L, transaction_id);
+			lua_pushnumber(L, onlyoffers);
+			lua_pushnumber(L, page_numeration);
+
+			bool result = m_interface->callFunction(17);
+			m_interface->releaseEnv();
+			return result;
+		}
+	}
+	else
+	{
+		std::cout << "[Error - CreatureEvent::executeExtendedOpCode] Call stack overflow." << std::endl;
+		return 0;
+	}
+}
+
+uint32_t CreatureEvent::executeBuyOfferUpdateMarketWindow(Player* player)
+{
+	//onMarketBuyItemUpdateMarketWindow(player)
+	if(m_interface->reserveEnv())
+	{
+		ScriptEnviroment* env = m_interface->getEnv();
+		if(m_scripted == EVENT_SCRIPT_BUFFER)
+		{
+			env->setRealPos(player->getPosition());
+			std::stringstream scriptstream;
+
+            scriptstream << "local cid = " << env->addThing(player) << std::endl;
+			scriptstream << m_scriptData;
+			bool result = true;
+			if(m_interface->loadBuffer(scriptstream.str()))
+			{
+				lua_State* L = m_interface->getState();
+				result = m_interface->getGlobalBool(L, "_result", true);
+			}
+
+			m_interface->releaseEnv();
+			return result;
+		}
+		else
+		{
+			#ifdef __DEBUG_LUASCRIPTS__
+			std::ostringstream desc;
+			desc << creature->getName();
+			env->setEventDesc(desc.str());
+			#endif
+
+			env->setScriptId(m_scriptId, m_interface);
+			env->setRealPos(player->getPosition());
+
+			lua_State* L = m_interface->getState();
+			m_interface->pushFunction(m_scriptId);
+
+			lua_pushnumber(L, env->addThing(player));
+			bool result = m_interface->callFunction(1);
+			m_interface->releaseEnv();
+			return result;
+		}
+	}
+	else
+	{
+		std::cout << "[Error - CreatureEvent::executeExtendedOpCode] Call stack overflow." << std::endl;
+		return 0;
+	}
+}
+
+uint32_t CreatureEvent::executeInsertMarketHistoric(Player* player, const std::string& item_name, uint32_t amount, uint64_t date)
+{
+	//onMarketHistoric(player, item_name, amount, date)
+	if(m_interface->reserveEnv())
+	{
+		ScriptEnviroment* env = m_interface->getEnv();
+		if(m_scripted == EVENT_SCRIPT_BUFFER)
+		{
+			env->setRealPos(player->getPosition());
+			std::stringstream scriptstream;
+
+            scriptstream << "local cid = " << env->addThing(player) << std::endl;
+			scriptstream << "local item_name =" << item_name << std::endl;
+			scriptstream << "local amount =" << amount << std::endl;
+			scriptstream << "loacl date =" << date << std::endl;
+
+			scriptstream << m_scriptData;
+			bool result = true;
+			if(m_interface->loadBuffer(scriptstream.str()))
+			{
+				lua_State* L = m_interface->getState();
+				result = m_interface->getGlobalBool(L, "_result", true);
+			}
+
+			m_interface->releaseEnv();
+			return result;
+		}
+		else
+		{
+			#ifdef __DEBUG_LUASCRIPTS__
+			std::stringstream desc;
+			desc << creature->getName();
+			env->setEventDesc(desc.str());
+			#endif
+
+			env->setScriptId(m_scriptId, m_interface);
+			env->setRealPos(player->getPosition());
+
+			lua_State* L = m_interface->getState();
+			m_interface->pushFunction(m_scriptId);
+
+			lua_pushnumber(L, env->addThing(player));
+			lua_pushstring(L, item_name.c_str());
+			lua_pushnumber(L, amount);
+			lua_pushnumber(L, date);
+
+			bool result = m_interface->callFunction(4);
+			m_interface->releaseEnv();
+			return result;
+		}
+	}
+	else
+	{
+		std::cout << "[Error - CreatureEvent::executeExtendedOpCode] Call stack overflow." << std::endl;
+		return 0;
+	}
+}
+
+uint32_t CreatureEvent::executeMarketOfferRemoveItem(Player* player, uint16_t item_id, const std::string& description, uint16_t amount)
+{
+	//onMarketOfferRemoveItem(player, item_id, description, amoutn)
+	if(m_interface->reserveEnv())
+	{
+		ScriptEnviroment* env = m_interface->getEnv();
+		if(m_scripted == EVENT_SCRIPT_BUFFER)
+		{
+			env->setRealPos(player->getPosition());
+			std::stringstream scriptstream;
+
+            scriptstream << "local cid = " << env->addThing(player) << std::endl;
+			scriptstream << "local item_id =" << item_id << std::endl;
+			scriptstream << "local description =" << description << std::endl;
+			scriptstream << "local amount =" << amount << std::endl;
+			scriptstream << m_scriptData;
+			bool result = true;
+			if(m_interface->loadBuffer(scriptstream.str()))
+			{
+				lua_State* L = m_interface->getState();
+				result = m_interface->getGlobalBool(L, "_result", true);
+			}
+
+			m_interface->releaseEnv();
+			return result;
+		}
+		else
+		{
+			#ifdef __DEBUG_LUASCRIPTS__
+			std::stringstream desc;
+			desc << creature->getName();
+			env->setEventDesc(desc.str());
+			#endif
+
+			env->setScriptId(m_scriptId, m_interface);
+			env->setRealPos(player->getPosition());
+
+			lua_State* L = m_interface->getState();
+			m_interface->pushFunction(m_scriptId);
+
+			lua_pushnumber(L, env->addThing(player));
+			lua_pushnumber(L, item_id);
+			lua_pushstring(L, description.c_str());
+			lua_pushnumber(L, amount);
+
+			bool result = m_interface->callFunction(4);
+			m_interface->releaseEnv();
+			return result;
+		}
+	}
+	else
+	{
+		std::cout << "[Error - CreatureEvent::executeExtendedOpCode] Call stack overflow." << std::endl;
+		return 0;
+	}	
+}
+
+uint32_t CreatureEvent::executeMakeOffers(Player* player, uint16_t item_id, const std::string& item_name, const std::string& item_seller, uint16_t count_row, const std::string& description, uint64_t transaction_id)
+{
+	//onMarketMakeOffers(player, item_id, item_name, item_seller, count_row, description, transaction_id)
+	if(m_interface->reserveEnv())
+	{
+		ScriptEnviroment* env = m_interface->getEnv();
+		if(m_scripted == EVENT_SCRIPT_BUFFER)
+		{
+			env->setRealPos(player->getPosition());
+			std::stringstream scriptstream;
+
+            scriptstream << "local cid = " << env->addThing(player) << std::endl;
+			scriptstream << "local item_id =" << item_id << std::endl;
+			scriptstream << "local item_name =" << item_name << std::endl;
+			scriptstream << "local item_seller =" << item_seller << std::endl;
+			scriptstream << "local count_row =" << count_row << std::endl;
+			scriptstream << "local description =" << description << std::endl;
+			scriptstream << "local transaction_id =" << transaction_id << std::endl;
+			scriptstream << m_scriptData;
+			bool result = true;
+			if(m_interface->loadBuffer(scriptstream.str()))
+			{
+				lua_State* L = m_interface->getState();
+				result = m_interface->getGlobalBool(L, "_result", true);
+			}
+
+			m_interface->releaseEnv();
+			return result;
+		}
+		else
+		{
+			#ifdef __DEBUG_LUASCRIPTS__
+			std::stringstream desc;
+			desc << creature->getName();
+			env->setEventDesc(desc.str());
+			#endif
+
+			env->setScriptId(m_scriptId, m_interface);
+			env->setRealPos(player->getPosition());
+
+			lua_State* L = m_interface->getState();
+			m_interface->pushFunction(m_scriptId);
+
+			lua_pushnumber(L, env->addThing(player));
+			lua_pushnumber(L, item_id);
+			lua_pushstring(L, item_name.c_str());
+			lua_pushstring(L, item_seller.c_str());
+			lua_pushnumber(L, count_row);
+			lua_pushstring(L, description.c_str());
+			lua_pushnumber(L, transaction_id);
+
+			bool result = m_interface->callFunction(7);
+			m_interface->releaseEnv();
+			return result;
+		}
+	}
+	else
+	{
+		std::cout << "[Error - CreatureEvent::executeExtendedOpCode] Call stack overflow." << std::endl;
+		return 0;
+	}	
+}
+
+uint32_t CreatureEvent::executeMarketViewOffersToMe(Player* player, uint16_t item_id, const std::string& item_name, const std::string& description, uint64_t tempo, uint16_t count_row, uint64_t transaction_id)
+{
+	//onMarketViewOffersToMe(player, item_id, item_name, description, tempo, count_row, transaction_id)
+	if(m_interface->reserveEnv())
+	{
+		ScriptEnviroment* env = m_interface->getEnv();
+		if(m_scripted == EVENT_SCRIPT_BUFFER)
+		{
+			env->setRealPos(player->getPosition());
+			std::stringstream scriptstream;
+
+            scriptstream << "local cid = " << env->addThing(player) << std::endl;
+			scriptstream << "local item_id =" << item_id << std::endl;
+			scriptstream << "local item_name =" << item_name << std::endl;
+			scriptstream << "local description =" << description << std::endl;
+			scriptstream << "local tempo =" << tempo << std::endl;
+			scriptstream << "local count_row =" << count_row << std::endl;
+			scriptstream << "local transaction_id =" << transaction_id << std::endl;
+			scriptstream << m_scriptData;
+			bool result = true;
+			if(m_interface->loadBuffer(scriptstream.str()))
+			{
+				lua_State* L = m_interface->getState();
+				result = m_interface->getGlobalBool(L, "_result", true);
+			}
+
+			m_interface->releaseEnv();
+			return result;
+		}
+		else
+		{
+			#ifdef __DEBUG_LUASCRIPTS__
+			std::stringstream desc;
+			desc << creature->getName();
+			env->setEventDesc(desc.str());
+			#endif
+
+			env->setScriptId(m_scriptId, m_interface);
+			env->setRealPos(player->getPosition());
+
+			lua_State* L = m_interface->getState();
+			m_interface->pushFunction(m_scriptId);
+
+			lua_pushnumber(L, env->addThing(player));
+			lua_pushnumber(L, item_id);
+			lua_pushstring(L, item_name.c_str());
+			lua_pushstring(L, description.c_str());
+			lua_pushnumber(L, tempo);
+			lua_pushnumber(L, count_row);
+			lua_pushnumber(L, transaction_id);
+
+			bool result = m_interface->callFunction(7);
+			m_interface->releaseEnv();
+			return result;
+		}
+	}
+	else
+	{
+		std::cout << "[Error - CreatureEvent::executeExtendedOpCode] Call stack overflow." << std::endl;
+		return 0;
+	}
+}
+//

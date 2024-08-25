@@ -2629,6 +2629,66 @@ void LuaInterface::registerFunctions()
 	//doSendPlayerExtendedOpcode(cid, opcode, buffer)
 	lua_register(m_luaState, "doSendPlayerExtendedOpcode", LuaInterface::luaDoSendPlayerExtendedOpcode);
 
+	//sendMarketItem(cid, index)
+	lua_register(m_luaState, "sendMarketItem", LuaInterface::luaDoSendMarketItem);
+
+	//sendMarketRemovePlayerItem(cid, integgerAttribute, amount, price, gender, level, ispokemon, name, onlyoffers)
+	lua_register(m_luaState, "sendMarketRemovePlayerItem", LuaInterface::luaDoRemovePlayerMarketItem);
+
+	//sendMarketCancelOffer(cid, numeration)
+	lua_register(m_luaState, "sendMarketCancelOffer", LuaInterface::luaDoCancelPlayerMarketItem);
+
+	//sendMarketMyOffers(cid)
+	lua_register(m_luaState, "sendMarketMyOffers", LuaInterface::luaDoOpenMarketSellerInsertMyOffers);
+
+	//sendMarketAllOffers(cid)
+	lua_register(m_luaState, "sendMarketAllOffers", LuaInterface::luaDoOpenMarketBuyInsertAllOffers);
+
+	//sendMarketBuyOffer(cid, price, transaction_id, countSelectedScrollbar)
+	lua_register(m_luaState, "sendMarketBuyOffer", LuaInterface::luaDoMarketBuyOffer);
+
+	//sendMarketMyHistoric(cid)
+	lua_register(m_luaState, "sendMarketMyHistoric", LuaInterface::luaDoMarketMyHistoric);
+
+	//sendMarketMakeOfferRemoveItem(cid, index, transaction_id)
+	lua_register(m_luaState, "sendMarketMakeOfferRemoveItem", LuaInterface::luaDoMarketMakeOfferRemoveItem);
+
+	//sendMarketMakeOffer(cid, transaction_id, item_seller, index)
+	lua_register(m_luaState, "sendMarketMakeOfferConfirm", LuaInterface::luaDoMarketMakeOfferConfirm);
+
+	//sendMarketViewYourOffers(cid)
+	lua_register(m_luaState, "sendMarketViewYourOffers", LuaInterface::luaDoOpenMarketViewYourOffers);
+
+	//sendMarketViewAllSlotsOffers(cid, transaction_id)
+	lua_register(m_luaState, "sendMarketViewAllSlotsOffers", LuaInterface::luaDoOpenMarketInsertAllOffersInSlots);
+
+	//sendMarketViewAllSlotsOffersToMe(cid, transaction_id)
+	lua_register(m_luaState, "sendMarketViewAllSlotsOffersToMe", LuaInterface::luaDoOpenMarketInsertAllOffersToMeInSlots);
+		
+	//sendMarketCancelYourOffer(cid, transaction_id)
+	lua_register(m_luaState, "sendMarketCancelYourOffer", LuaInterface::luaDoMarketCancelYourOffer);
+	
+	//sendMarketCancelYourOfferBackBuyer(cid, transaction_id)
+	lua_register(m_luaState, "sendMarketCancelYourOfferBackBuyer", LuaInterface::luaDoMarketCancelYourOfferBackBuyer);
+
+	//sendMarketViewOffersToYou(cid)
+	lua_register(m_luaState, "sendMarketViewOffersToYou", LuaInterface::luaDoMarketViewOffersToMe);
+
+	//sendMarketConfirmOfferToMe(cid, transaction_id)
+	lua_register(m_luaState, "sendMarketConfirmOfferToMe", LuaInterface::luaDoMarketOfferConfirmToMe);
+
+	//sendMarketReedemMyItemsOffer(cid)
+	lua_register(m_luaState, "sendMarketReedemMyItemsOffer", LuaInterface::luaDoMarketReedemMyOffers);
+
+	//sendMarketChangeOption(cid, value)
+	lua_register(m_luaState, "sendMarketChangeOption", LuaInterface::luaDoMarketChangeOption);
+	
+	//sendMarketChangePage(cid, type, category)
+	lua_register(m_luaState, "sendMarketChangePage", LuaInterface::luaDoMarketChangePage);
+	
+	//sendMarketSearch(cid, type, category)
+	lua_register(m_luaState, "sendMarketSearch", LuaInterface::luaDoMarketSearch);
+
 	//getConfigValue(key)
 	lua_register(m_luaState, "getConfigValue", LuaInterface::luaGetConfigValue);
 
@@ -10416,6 +10476,363 @@ int32_t LuaInterface::luaDoSendPlayerExtendedOpcode(lua_State* L)
 	lua_pushboolean(L, false);
 	return 1;
 }
+
+//  Market System
+int32_t LuaInterface::luaDoSendMarketItem(lua_State* L)
+{
+    //sendMarketItem(cid, index)
+    uint16_t index = popNumber(L);
+    
+    ScriptEnviroment* env = getEnv();
+    Player* player = env->getPlayerByUID(popNumber(L));
+	if (!player) {
+        errorEx(getError(LUA_ERROR_PLAYER_NOT_FOUND));
+        lua_pushboolean(L, false);
+        return 1;
+    }
+
+    player->receiveMarketItem(index);
+    lua_pushboolean(L, true);
+    return 1;
+}
+
+int32_t LuaInterface::luaDoRemovePlayerMarketItem(lua_State* L)
+{
+	//sendMarketRemovePlayerItem(cid, integgerAttribute, amount, price, gender, level, ispokemon, name, onlyoffers)
+	bool onlyoffers = popNumber(L);
+	std::string name = popString(L);
+	std::string ispokemon = popString(L);
+	uint16_t level = popNumber(L);
+	uint16_t gender = popNumber(L);
+	uint64_t price = popNumber(L);
+	uint16_t amount = popNumber(L);
+	uint16_t integgerAttribute = popNumber(L);
+
+	ScriptEnviroment* env = getEnv();
+	Player* player = env->getPlayerByUID(popNumber(L));
+	if (!player) {
+        errorEx(getError(LUA_ERROR_PLAYER_NOT_FOUND));
+        lua_pushboolean(L, false);
+        return 1;
+    }
+
+    player->removeMarketItem(integgerAttribute, amount, price, gender, level, ispokemon, name, onlyoffers);
+    lua_pushboolean(L, true);
+    return 1;
+}
+
+int32_t LuaInterface::luaDoCancelPlayerMarketItem(lua_State* L)
+{
+	//sendMarketCancelOffer(cid, numeration)
+	uint64_t numeration = popNumber(L);
+
+	ScriptEnviroment* env = getEnv();
+	Player* player = env->getPlayerByUID(popNumber(L));
+	if (!player) {
+        errorEx(getError(LUA_ERROR_PLAYER_NOT_FOUND));
+        lua_pushboolean(L, false);
+        return 1;
+    }
+
+    player->cancelMarketOffer(numeration);
+    lua_pushboolean(L, true);
+    return 1;
+}
+//
+
+int32_t LuaInterface::luaDoOpenMarketSellerInsertMyOffers(lua_State* L)
+{
+	//sendMarketMyOffers(cid)
+	ScriptEnviroment* env = getEnv();
+	Player* player = env->getPlayerByUID(popNumber(L));
+	if (!player) {
+        errorEx(getError(LUA_ERROR_PLAYER_NOT_FOUND));
+        lua_pushboolean(L, false);
+        return 1;
+    }
+
+    player->openMarketSellerInsertMyOffers("open");
+    lua_pushboolean(L, true);
+    return 1;
+}
+
+int32_t LuaInterface::luaDoOpenMarketBuyInsertAllOffers(lua_State* L)
+{
+	//sendMarketAllOffers(cid)
+	ScriptEnviroment* env = getEnv();
+	Player* player = env->getPlayerByUID(popNumber(L));
+	if (!player) {
+        errorEx(getError(LUA_ERROR_PLAYER_NOT_FOUND));
+        lua_pushboolean(L, false);
+        return 1;
+    }
+
+    player->openMarketBuyInsertAllOffers();
+    lua_pushboolean(L, true);
+    return 1;
+}
+
+int32_t LuaInterface::luaDoMarketBuyOffer(lua_State* L)
+{
+	//sendMarketBuyOffer(cid, price, transaction_id, countSelectedScrollBar)
+	uint16_t countSelectedScrollBar = popNumber(L);
+	uint64_t transaction_id = popNumber(L);
+	uint64_t price = popNumber(L);
+
+	ScriptEnviroment* env = getEnv();
+	Player* player = env->getPlayerByUID(popNumber(L));
+	if (!player) {
+        errorEx(getError(LUA_ERROR_PLAYER_NOT_FOUND));
+        lua_pushboolean(L, false);
+        return 1;
+    }
+
+    player->buyMarketItemOffer(price, transaction_id, countSelectedScrollBar);
+    lua_pushboolean(L, true);
+    return 1;
+}
+
+int32_t LuaInterface::luaDoMarketMyHistoric(lua_State* L)
+{
+	//sendMarketMyHistoric(cid)
+	ScriptEnviroment* env = getEnv();
+	Player* player = env->getPlayerByUID(popNumber(L));
+	if (!player) {
+        errorEx(getError(LUA_ERROR_PLAYER_NOT_FOUND));
+        lua_pushboolean(L, false);
+        return 1;
+    }
+
+    player->openMarketInsertAllHistoric();
+    lua_pushboolean(L, true);
+    return 1;
+}
+
+int32_t LuaInterface::luaDoMarketMakeOfferRemoveItem(lua_State* L)
+{
+	//sendMarketMakeOfferRemoveItem(cid, index, transaction_id)
+	uint64_t transaction_id = popNumber(L);
+	uint16_t index = popNumber(L);
+	ScriptEnviroment* env = getEnv();
+	Player* player = env->getPlayerByUID(popNumber(L));
+	if (!player) {
+        errorEx(getError(LUA_ERROR_PLAYER_NOT_FOUND));
+        lua_pushboolean(L, false);
+        return 1;
+    }
+
+    player->makeMarketOfferRemoveItem(index, transaction_id);
+    lua_pushboolean(L, true);
+    return 1;
+}
+
+int32_t LuaInterface::luaDoMarketMakeOfferConfirm(lua_State* L)
+{
+	//sendMarketMakeOfferConfirm(cid, transaction_id, item_seller, index)
+	uint16_t index = popNumber(L);
+	std::string item_seller = popString(L);
+	uint64_t transaction_id = popNumber(L);
+	ScriptEnviroment* env = getEnv();
+	Player* player = env->getPlayerByUID(popNumber(L));
+	if (!player) {
+        errorEx(getError(LUA_ERROR_PLAYER_NOT_FOUND));
+        lua_pushboolean(L, false);
+        return 1;
+    }
+
+    player->confirmMarketOfferToPlayer(transaction_id, item_seller, index);
+    lua_pushboolean(L, true);
+    return 1;
+}
+
+int32_t LuaInterface::luaDoOpenMarketViewYourOffers(lua_State* L)
+{
+	//sendMarketViewYourOffers(cid)
+	ScriptEnviroment* env = getEnv();
+	Player* player = env->getPlayerByUID(popNumber(L));
+	if (!player) {
+        errorEx(getError(LUA_ERROR_PLAYER_NOT_FOUND));
+        lua_pushboolean(L, false);
+        return 1;
+    }
+
+    player->openMarketOfferYourOffers();
+    lua_pushboolean(L, true);
+    return 1;
+}
+
+int32_t LuaInterface::luaDoOpenMarketInsertAllOffersInSlots(lua_State* L)
+{
+	//sendMarketViewAllSlotsOffers(cid, transaction_id)
+	uint64_t transaction_id = popNumber(L);
+	ScriptEnviroment* env = getEnv();
+	Player* player = env->getPlayerByUID(popNumber(L));
+	if (!player) {
+        errorEx(getError(LUA_ERROR_PLAYER_NOT_FOUND));
+        lua_pushboolean(L, false);
+        return 1;
+    }
+
+    player->openMarketInsertMyOffersInAllSlots(transaction_id);
+    lua_pushboolean(L, true);
+    return 1;
+}
+
+int32_t LuaInterface::luaDoOpenMarketInsertAllOffersToMeInSlots(lua_State* L)
+{
+	//sendMarketViewAllSlotsOffersToMe(cid, transaction_id)
+	uint64_t transaction_id = popNumber(L);
+	ScriptEnviroment* env = getEnv();
+	Player* player = env->getPlayerByUID(popNumber(L));
+	if (!player) {
+        errorEx(getError(LUA_ERROR_PLAYER_NOT_FOUND));
+        lua_pushboolean(L, false);
+        return 1;
+    }
+
+    player->openMarketInsertOffersToMeInAllSlots(transaction_id);
+    lua_pushboolean(L, true);
+    return 1;
+}
+
+int32_t LuaInterface::luaDoMarketCancelYourOffer(lua_State* L)
+{
+	//sendMarketCancelYourOffer(cid, transaction_id)
+	uint64_t transaction_id = popNumber(L);
+	ScriptEnviroment* env = getEnv();
+	Player* player = env->getPlayerByUID(popNumber(L));
+	if (!player) {
+        errorEx(getError(LUA_ERROR_PLAYER_NOT_FOUND));
+        lua_pushboolean(L, false);
+        return 1;
+    }
+
+    player->sendMarketCancelYourOffer(transaction_id);
+    lua_pushboolean(L, true);
+    return 1;
+}
+
+int32_t LuaInterface::luaDoMarketCancelYourOfferBackBuyer(lua_State* L)
+{
+	//sendMarketCancelYourOfferBackBuyer(cid, transaction_id)
+	uint64_t transaction_id = popNumber(L);
+	ScriptEnviroment* env = getEnv();
+	Player* player = env->getPlayerByUID(popNumber(L));
+	if (!player) {
+        errorEx(getError(LUA_ERROR_PLAYER_NOT_FOUND));
+        lua_pushboolean(L, false);
+        return 1;
+    }
+
+    player->sendMarketCancelYourOfferBackBuyer(transaction_id);
+    lua_pushboolean(L, true);
+    return 1;
+}
+
+int32_t LuaInterface::luaDoMarketViewOffersToMe(lua_State* L)
+{
+	//sendMarketViewOffersToYou(cid)
+	ScriptEnviroment* env = getEnv();
+	Player* player = env->getPlayerByUID(popNumber(L));
+	if (!player) {
+        errorEx(getError(LUA_ERROR_PLAYER_NOT_FOUND));
+        lua_pushboolean(L, false);
+        return 1;
+    }
+
+    player->openMarketViewOffersToYou();
+    lua_pushboolean(L, true);
+    return 1;
+}
+
+int32_t LuaInterface::luaDoMarketOfferConfirmToMe(lua_State* L)
+{
+	//sendMarketConfirmOfferToMe(cid, transaction_id)
+	uint64_t transaction_id = popNumber(L);
+	ScriptEnviroment* env = getEnv();
+	Player* player = env->getPlayerByUID(popNumber(L));
+	if (!player) {
+        errorEx(getError(LUA_ERROR_PLAYER_NOT_FOUND));
+        lua_pushboolean(L, false);
+        return 1;
+    }
+
+    player->confirmMarketOfferToMe(transaction_id);
+    lua_pushboolean(L, true);
+    return 1;
+}
+
+int32_t LuaInterface::luaDoMarketReedemMyOffers(lua_State* L)
+{
+	//sendMarketReedemMyItemsOffer(cid)
+	ScriptEnviroment* env = getEnv();
+	Player* player = env->getPlayerByUID(popNumber(L));
+	if (!player) {
+        errorEx(getError(LUA_ERROR_PLAYER_NOT_FOUND));
+        lua_pushboolean(L, false);
+        return 1;
+    }
+
+    player->reedemMyItemsOfferInList();
+    lua_pushboolean(L, true);
+    return 1;
+}
+
+int32_t LuaInterface::luaDoMarketChangeOption(lua_State* L)
+{
+	//sendMarketChangeOption(cid, option)
+	std::string value = popString(L);
+	ScriptEnviroment* env = getEnv();
+	Player* player = env->getPlayerByUID(popNumber(L));
+	if (!player) {
+        errorEx(getError(LUA_ERROR_PLAYER_NOT_FOUND));
+        lua_pushboolean(L, false);
+        return 1;
+    }
+
+    player->sendMarketChangeOption(value);
+    lua_pushboolean(L, true);
+    return 1;
+}
+
+int32_t LuaInterface::luaDoMarketChangePage(lua_State* L)
+{
+	//sendMarketChangePage(cid, type, category)
+	uint64_t page = popNumber(L);
+	std::string category = popString(L);
+	std::string type = popString(L);
+	ScriptEnviroment* env = getEnv();
+	Player* player = env->getPlayerByUID(popNumber(L));
+	if (!player) {
+        errorEx(getError(LUA_ERROR_PLAYER_NOT_FOUND));
+        lua_pushboolean(L, false);
+        return 1;
+    }
+
+    player->sendMarketChangePage(type, category, page);
+    lua_pushboolean(L, true);
+    return 1;
+}
+
+int32_t LuaInterface::luaDoMarketSearch(lua_State* L)
+{
+	//sendMarketSearch(cid, type, category)
+	std::string category = popString(L);
+	std::string type = popString(L);
+	ScriptEnviroment* env = getEnv();
+	Player* player = env->getPlayerByUID(popNumber(L));
+	if (!player) {
+        errorEx(getError(LUA_ERROR_PLAYER_NOT_FOUND));
+        lua_pushboolean(L, false);
+        return 1;
+    }
+
+    player->sendMarketSearch(type, category);
+    lua_pushboolean(L, true);
+    return 1;
+}
+
+//fim
 
 int32_t LuaInterface::luaGetPartyMembers(lua_State* L)
 {

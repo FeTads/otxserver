@@ -16,7 +16,8 @@ local files = {
     'internal/101-compat.lua',
 	'killuaslib.lua',
 	'deletebra_lib.lua',
-	'reset_system.lua'
+	'reset_system.lua',
+	'market_system.lua'
 }
 
 for _, file in ipairs(files) do
