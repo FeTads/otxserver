@@ -90,6 +90,9 @@ class IOLoginData
 
 		bool isPremium(uint32_t guid);
 
+		bool getPoints(Player* player, uint32_t account_id, uint16_t price);
+		bool removerPoints(Player* player, uint32_t account_id, uint16_t price);
+		bool addPoints(Player* player, uint32_t account_id, uint16_t price);
 		bool playerExists(uint32_t guid, bool multiworld = false, bool checkCache = true);
 		bool playerExists(std::string& name, bool multiworld = false, bool checkCache = true);
 		bool getNameByGuid(uint32_t guid, std::string& name, bool multiworld = false);

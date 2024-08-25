@@ -6320,10 +6320,9 @@ bool Player::openMarketBuyInsertAllOffers()
 
 bool Player::buyMarketItemOffer(uint64_t price, uint64_t transaction_id, uint64_t countSelectedScrollBar)
 {
-	if (g_game.getMoney(this) < price) {
-		sendFYIBox("Voce nao possui dinheiro suficiente para comprar este produto.");
-		return false;
-	}
+	bool hasPoints = IOLoginData::getInstance()->getPoints(this, getAccount(), price);
+    if(!hasPoints)
+    return false;
 
 	Database* db = Database::getInstance();
 	std::ostringstream query;
@@ -6375,17 +6374,11 @@ bool Player::buyMarketItemOffer(uint64_t price, uint64_t transaction_id, uint64_
 
 			Player* player = g_game.getPlayerByNameEx(item_seller);
     		if (player) {
-				/* ReturnValue ret = g_game.internalAddItem(NULL, player->getDepot(player->getLastDepotId(), true), item2, INDEX_WHEREEVER, FLAG_NOLIMIT);
-				if (ret != RET_NOERROR) {
-					return false;
-				} */
-
-				g_game.addMoney(player, price);
+				IOLoginData::getInstance()->addPoints(player, player->getAccount(), price);
 				IOLoginData::getInstance()->savePlayer(player);
 			}
-
-			g_game.removeMoney(this, price);
-		}
+			IOLoginData::getInstance()->removerPoints(this, getAccount(), price);
+			}
 
 		if (amount == 1 || amount == countSelectedScrollBar) {
 			query.str("");
