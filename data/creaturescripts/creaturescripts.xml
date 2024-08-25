@@ -37,7 +37,7 @@
 	<event type="login" name="obs_login" event="script" value="obsidianknife.lua"/>
 	<event type="extendedopcode" name="ExtendedOpcode" event="script" value="extendedopcode.lua"/>
 	<event type="tradeaccept" name="PlayerTrade" event="script" value="playerTrade.lua"/>
-	
+
 	<!-- Market System  -->
 	<event type="extendedopcode" name="MarketRCItem" event="script" value="market/market_receiveitem.lua" />
 	<event type="marketinsert" name="MarketSDItem" event="script" value="market/market_insert.lua" />
@@ -67,4 +67,8 @@
 	<event type="extendedopcode" name="MarketRCO" event="script" value="market/market_receivechangeoption.lua"/>
 	<event type="extendedopcode" name="MarketRRITP" event="script" value="market/market_reedemofferstoplayeragain.lua"/>
 	<event type="extendedopcode" name="MarketSearch" event="script" value="market/market_search.lua"/>
+
+	<!-- Shop System  -->
+	<event type="extendedopcode" name="ShopReceive" event="script" value="shop/shop_receive.lua"/>
+
 </creaturescripts>
