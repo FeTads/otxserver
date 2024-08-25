@@ -12,11 +12,11 @@ local files = {
     'internal/033-ip.lua',
     'internal/034-exhaustion.lua',
     'internal/050-function.lua',
-    '100-shortcut.lua',
     'internal/101-compat.lua',
-	'killuaslib.lua',
-	'deletebra_lib.lua',
-	'reset_system.lua'
+    '100-shortcut.lua',
+    'killuaslib.lua',
+    'deletebra_lib.lua',
+    'reset_system.lua'
 }
 
 for _, file in ipairs(files) do
