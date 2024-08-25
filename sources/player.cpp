@@ -5977,52 +5977,40 @@ void Player::sendCritical() const
 // Market System
 void Player::receiveMarketItem(uint16_t index)
 {
-	Item* backpack = getInventoryItem((slots_t)SLOT_BACKPACK);
-	if (!backpack) {
-		return;
-	}
-
-	Container* container = backpack->getContainer();
-	if (!container) {
+	Item* item = getInventoryItem((slots_t)SLOT_AMMO);
+	if (!item) {
 		return;
 	}
 
     //std::cout << index << std::endl;
-	if (Item* item = container->getItem(index)) {
-		if (item->getWorth() != 0) {
-			sendFYIBox("Voce nao pode anunciar moedas.");
-			return;
-		}
+	if (item->getWorth() != 0) {
+		sendFYIBox("You cannot advertise golds.");
+		return;
+	}
+	
+    //std::cout << index << std::endl;
+	if (item->isContainer()) {
+		sendFYIBox("You cannot advertise backpacks.");
+		return;
+	}
 
-		CreatureEventList events = getCreatureEvents(CREATURE_EVENT_INSERT_MARKETITEM);
-		for(CreatureEventList::iterator it = events.begin(); it != events.end(); ++it) {
-			(*it)->executeMarketInsert(this, item);
-		}
+	CreatureEventList events = getCreatureEvents(CREATURE_EVENT_INSERT_MARKETITEM);
+	for(CreatureEventList::iterator it = events.begin(); it != events.end(); ++it) {
+		(*it)->executeMarketInsert(this, item);
 	}
 }
 
 bool Player::removeMarketItem(uint16_t integgerAttribute, uint16_t amount, uint64_t price, uint16_t gender, uint16_t level, std::string ispokemon, std::string name, bool onlyoffers)
 {
-	Item* backpack = getInventoryItem((slots_t)SLOT_BACKPACK);
+	Item* backpack = getInventoryItem((slots_t)SLOT_AMMO);
 	if (!backpack) {
-		return false;
-	}
-
-	Container* container = backpack->getContainer();
-	if (!container) {
-		return false;
-	}
-
-	uint64_t newPrice = price*0.05;
-
-	if (g_game.getMoney(this) < newPrice) {
-		sendFYIBox("Voce nao possui dinheiro suficiente para anunciar este produto.");
 		return false;
 	}
 
 	Database* db = Database::getInstance();
 	std::ostringstream query;
 	DBResult* result;
+
 
 	uint16_t count_row = 0;
 	uint16_t count_row2 = 0;
@@ -6053,110 +6041,71 @@ bool Player::removeMarketItem(uint16_t integgerAttribute, uint16_t amount, uint6
 		page_counts = result->getDataInt("page_numeration");
 	}
 
-	if (count_row2 >= 10) {
-		sendFYIBox("Voce nao pode anunciar mais produtos, limite: 10.");
+	if (count_row2 > 5) {
+		sendFYIBox("You have reached the limit of 5 products.");
 		return false;
 	}
 
-	// Se a quantidade de produtos for equivalente a 30 e so houver 1 pagina ele define como 2 (sempre somar +1, se for 5 é 6)
-	if (total_transactions == 31 && page_counts <= 1) {
+	// Se a quantidade de produtos for equivalente a 30 e so houver 1 pagina ele define como 2 (sempre somar +1, se for 5 ? 6)
+	if (total_transactions == 1100000000000000000 && page_counts <= 1) {
 		page_counts = 2;
 	}
 
 	// Se a quantidade de produtos for equivalente a 30 vezes a quantidade de paginas ele cria uma nova (30*2 = 60) (30*3 = 90)
 	//std::cout << "Total Atual: " << total_transactions << " - Total Que Deve Ser Atingido: " << 6 * page_counts << std::endl;
-	if (total_transactions > 30 * page_counts) {
+	if (total_transactions > 1100000000000000000 * page_counts) {
 		page_counts = page_counts + 1;
 	}
+	
+	PropWriteStream propWriteStream;
+	backpack->serializeAttr(propWriteStream);
 
-	std::list<Item*> item_list;
-	for(ContainerIterator it = container->begin(), end = container->end(); it != end; ++it)
-	{
-		bool attr;
-		int32_t v = (*it)->getIntegerAttribute("itemSELECTED", attr);
-		if (v) {
-			if (v == integgerAttribute) {
-				item_list.push_back((*it));
-			}
-		}
+	uint32_t attributesSize = 0;
+	const char* attributes = propWriteStream.getStream(attributesSize);
+
+	int64_t tempo = time(NULL) + 93600;
+	uint64_t random_transactionID = random_range(getGUID(), getGUID() + 30000) * random_range(1, 20);
+
+	std::ostringstream description;
+	if (!backpack->getSpecialDescription().empty()) {
+		description << backpack->getSpecialDescription();
+	}
+	else {
+		const ItemType& it = Item::items[backpack->getID()];
+		description << it.description;
 	}
 
-	for(std::list<Item*>::iterator it = item_list.begin(); it != item_list.end(); ++it) {
-		if (Item* item = *it) {
-			PropWriteStream propWriteStream;
-			item->serializeAttr(propWriteStream);
+	bool hasMagicDesc;
+	std::string magicDescription = backpack->getStringAttribute("magicDescription", hasMagicDesc);
 
-			uint32_t attributesSize = 0;
-			const char* attributes = propWriteStream.getStream(attributesSize);
+	query.str("");
+	query << "INSERT INTO `players_mymarketoffers` (`player_id`, `item_id`, `item_name`, `item_time`, `amount`, `price`, `gender`, `level`, `ispokemon`, `attributes`, `description`, `id`, `transaction_id`, `onlyoffers`) VALUES ("
+	<< getGUID() << ", " << backpack->getID() << ", " << db->escapeString(backpack->getName()) << ", " << tempo << ", " << amount << ", " << price << ", " << 0 << ", " << 0 << ", " << db->escapeString(ispokemon) << ", " << db->escapeBlob(attributes, attributesSize) << ", " << db->escapeString(description.str()) << ", " << count_row << ", " << random_transactionID << ", " << onlyoffers << ")";
+	if(!db->query(query.str())) {
+		return false;
+	 }
 
-			int64_t tempo = time(NULL) + 93600;
-			uint64_t random_transactionID = random_range(getGUID(), getGUID() + 30000) * random_range(1, 20);
+	query.str("");
+	query << "INSERT INTO `players_marketoffers` (`player_id`, `item_id`, `item_name`, `item_seller`, `amount`, `price`, `gender`, `level`, `ispokemon`, `attributes`, `description`, `id`, `item_time`, `transaction_id`, `onlyoffers`, `page_numeration`) VALUES ("
+	<< getGUID() << ", " << backpack->getID() << ", " << db->escapeString(backpack->getName()) << ", " << db->escapeString(getName()) << ", " << amount << ", " << price << ", " << 0 << ", " << 0 << ", " << db->escapeString(ispokemon) << ", " << db->escapeBlob(attributes, attributesSize) << ", " << db->escapeString(description.str()) << ", " << count_row2 << ", " << tempo << ", " << random_transactionID << ", " << onlyoffers << "," << page_counts << ")";
+	if(!db->query(query.str())) {
+		return false;
+	}
 
-			std::ostringstream description;
-			if (!item->getSpecialDescription().empty()) {
-				description << item->getSpecialDescription();
-			}
-			else {
-				const ItemType& it = Item::items[item->getID()];
-				description << it.description;
-			}
-
-			std::list<std::string> slot_attributes = {"SS_critchance", "SS_critdamage", "SS_lifeleech", "SS_manaleech", "SS_health", "SS_mana", "SS_healthregen", "SS_manaregen", "SS_protectall", "SS_damage", "SS_skills", "SS_maglevel"};
-			for (std::list<std::string>::iterator it = slot_attributes.begin(); it != slot_attributes.end(); it++)
-			{
-				 std::ostringstream ss;
-				 ss << "slot_attribute_" << (*it) << std::endl;
-
-				 bool hasAttributeSlot;
-				 int32_t v = item->getIntegerAttribute((*it), hasAttributeSlot);
-				 if (v && v > 0) {
-					description << std::endl << "Slot Attribute: " << v << std::endl;
-				 }
-			}
-
-			bool hasMagicDesc;
-			std::string magicDescription = item->getStringAttribute("magicDescription", hasMagicDesc);
-
-			if (hasMagicDesc) {
-				description << std::endl << "Rarity Attribute: " << magicDescription << std::endl;
-			}
-			else {
-				description << std::endl;
-			}
-
-			query.str("");
-			query << "INSERT INTO `players_mymarketoffers` (`player_id`, `item_id`, `item_name`, `item_time`, `amount`, `price`, `gender`, `level`, `ispokemon`, `attributes`, `description`, `id`, `transaction_id`, `onlyoffers`) VALUES ("
-			<< getGUID() << ", " << item->getID() << ", " << db->escapeString(item->getName()) << ", " << tempo << ", " << amount << ", " << price << ", " << 0 << ", " << 0 << ", " << db->escapeString(ispokemon) << ", " << db->escapeBlob(attributes, attributesSize) << ", " << db->escapeString(description.str()) << ", " << count_row << ", " << random_transactionID << ", " << onlyoffers << ")";
-			if(!db->query(query.str())) {
-				return false;
-			}
-
-			query.str("");
-			query << "INSERT INTO `players_marketoffers` (`player_id`, `item_id`, `item_name`, `item_seller`, `amount`, `price`, `gender`, `level`, `ispokemon`, `attributes`, `description`, `id`, `item_time`, `transaction_id`, `onlyoffers`, `page_numeration`) VALUES ("
-			<< getGUID() << ", " << item->getID() << ", " << db->escapeString(item->getName()) << ", " << db->escapeString(getName()) << ", " << amount << ", " << price << ", " << 0 << ", " << 0 << ", " << db->escapeString(ispokemon) << ", " << db->escapeBlob(attributes, attributesSize) << ", " << db->escapeString(description.str()) << ", " << count_row2 << ", " << tempo << ", " << random_transactionID << ", " << onlyoffers << "," << page_counts << ")";
-			if(!db->query(query.str())) {
-				return false;
-			}
-
-			ReturnValue ret = g_game.internalRemoveItem(NULL, item, amount, false, FLAG_NOLIMIT);
-			if (ret != RET_NOERROR) {
-				return false;
-			}
-
-			g_game.removeMoney(this, newPrice);
-		}
+	ReturnValue ret = g_game.internalRemoveItem(NULL, backpack, amount, false, FLAG_NOLIMIT);
+	if (ret != RET_NOERROR) {
+		return false;
 	}
 
 	return true;
 }
+
 
 bool Player::cancelMarketOffer(uint64_t numeration)
 {
 	Database* db = Database::getInstance();
 	std::ostringstream query;
 	DBResult* result;
-
-	// Falta a parte de offer aqui (devolver offers para os players), comentando para nao esquecer de fazer na proxima atualizacao //
 
 	query.str("");
 	query << "SELECT `id` FROM `players_marketoffers` WHERE `player_id` = " << getGUID() << " AND `transaction_id` = " << numeration << ";";
@@ -6172,45 +6121,11 @@ bool Player::cancelMarketOffer(uint64_t numeration)
 	query << "SELECT `id`, `item_id`, `amount`, `attributes` FROM `players_mymarketoffers` WHERE `player_id` = " << getGUID() << " AND `transaction_id` = " << numeration << ";";
 	if ((result = db->storeQuery(query.str())))
 	{
-		uint16_t item_id = result->getDataInt("item_id");
-		uint16_t amount = result->getDataInt("amount");
-
-        uint64_t attrSize = 0;
-		const char* attr = result->getDataStream("attributes", attrSize);
-
-		PropStream propStream;
-		propStream.init(attr, attrSize);
-		if(Item* item = Item::CreateItem(item_id, amount))
-		{
-			if(!item->unserializeAttr(propStream))
-				std::cout << "[Warning - IOLoginData::loadItems] Unserialize error for item with id " << item->getID() << std::endl;
-
-			bool attr;
-			int32_t v = item->getIntegerAttribute("itemSELECTED", attr);
-			if (v) {
-				item->eraseAttribute("itemSELECTED");
-			}
-
-			ReturnValue ret = g_game.internalMoveItem(NULL, item->getParent(), this, INDEX_WHEREEVER, item, item->getItemCount(), 0);
-			if (ret != RET_NOERROR) {
-                return false;
-			}
-
-			query.str("");
-			query << "DELETE FROM `players_mymarketoffers` WHERE `player_id` = " << getGUID() << " AND `transaction_id` = " << numeration << ";";
-			if(!db->query(query.str()))
-				return false;
-
-			query.str("");
-			query << "DELETE FROM `players_mymarketmakeoffforyour` WHERE `transaction_id` = " << numeration << ";";
-			if(!db->query(query.str()))
-				return false;
-
-			query.str("");
-			query << "DELETE FROM `players_mymarketmakeofftome` WHERE `transaction_id` = " << numeration << ";";
-			if(!db->query(query.str()))
-				return false;
-		}
+			
+		query.str("");
+		query << "UPDATE `players_mymarketoffers` SET `remover` = " << getGUID() << " WHERE `transaction_id` = " << numeration <<";";
+		if(!db->query(query.str()))
+			return false;
 	}
 
     openMarketSellerInsertMyOffers("update");
@@ -6222,8 +6137,8 @@ bool Player::cancelMarketOffer(uint64_t numeration)
 bool Player::openMarketSellerInsertMyOffers(std::string type)
 {
 	Database* db = Database::getInstance();
-    DBResult* result;
-    std::ostringstream query;
+	std::ostringstream query;
+	DBResult* result;
 
 	uint16_t row_count = 0;
 
@@ -6270,7 +6185,7 @@ bool Player::openMarketBuyInsertAllOffers()
 	Database* db = Database::getInstance();
     DBResult* result;
     std::ostringstream query;
-
+    
 	uint16_t page_counts = 0;
 	query.str("");
 	query << "SELECT `page_numeration` FROM `players_marketoffers` ORDER BY page_numeration DESC LIMIT 1;";
@@ -6511,38 +6426,33 @@ bool Player::makeMarketOfferRemoveItem(uint16_t index, uint64_t transaction_id)
 	storage_str << transaction_id;
 
 	if (getStorage(storage_str.str(), storage) && storage == "offerted") {
-		sendFYIBox("Voce ja realizou uma oferta para este item.");
+		sendFYIBox("You have already placed an offer on this item.");
 		return false;
 	}
 
-	Item* backpack = getInventoryItem((slots_t)SLOT_BACKPACK);
+	Item* backpack = getInventoryItem((slots_t)SLOT_AMMO);
 	if (!backpack) {
 		return false;
 	}
 
-	Container* container = backpack->getContainer();
-	if (!container) {
-		return false;
-	}
-
-	if (Item* item = container->getItem(index)) {
-		ReturnValue ret = g_game.internalRemoveItem(NULL, item, item->getSubType(), false, FLAG_NOLIMIT);
+	//if (Item* item = container->getItem(index)) {
+		ReturnValue ret = g_game.internalRemoveItem(NULL, backpack, backpack->getSubType(), false, FLAG_NOLIMIT);
 		if (ret != RET_NOERROR) {
 			return false;
 		}
 
-		Item* newItem = Item::CreateItem(item->getID(), item->getSubType());
+		Item* newItem = Item::CreateItem(backpack->getID(), backpack->getSubType());
 		if(!newItem)
 			return false;
 
-		newItem->copyAttributes(item);
+		newItem->copyAttributes(backpack);
 		waiting_list.push_back(newItem);
 
 		CreatureEventList events = getCreatureEvents(CREATURE_EVENT_INSERT_MARKET_MAKEOFFREMOVEITEM);
 		for(CreatureEventList::iterator it = events.begin(); it != events.end(); ++it) {
 			(*it)->executeMarketOfferRemoveItem(this, newItem->getID(), newItem->getSpecialDescription(), newItem->getItemCount());
 		}
-	}
+//	}
 
 	return true;
 }
@@ -6551,7 +6461,7 @@ bool Player::confirmMarketOfferToPlayer(uint64_t transaction_id, std::string ite
 {
 	if (waiting_list.size() <= 0)
 	{
-		sendFYIBox("Voce deve colocar pelo menos um item para poder ofertar.");
+		sendFYIBox("You must place at least one item to be able to bid.");
 		return false;
 	}
 
@@ -6573,7 +6483,7 @@ bool Player::confirmMarketOfferToPlayer(uint64_t transaction_id, std::string ite
 		player_id2 = result->getDataInt("player_id");
 	}
 	else {
-		sendFYIBox("Este item nao esta mais disponivel para oferta, atualize a pagina.");
+		sendFYIBox("This item is no longer available for sale, please refresh the page.");
 		return true;
 	}
 
@@ -6621,7 +6531,7 @@ bool Player::confirmMarketOfferToPlayer(uint64_t transaction_id, std::string ite
 		}
 	}
 
-	sendFYIBox("Sua oferta foi realizada com sucesso, o vendedor sera notificado sobre sua oferta.");
+	sendFYIBox("Your offer was successful, the seller will be notified.");
 
 	std::ostringstream storage_str;
 	storage_str << transaction_id;
@@ -6826,7 +6736,7 @@ bool Player::sendMarketCancelYourOfferBackBuyer(uint64_t transaction_id)
 
 bool Player::openMarketViewOffersToYou()
 {
-	Database* db = Database::getInstance();
+    Database* db = Database::getInstance();
 	std::ostringstream query;
 	DBResult* result;
 
@@ -6855,7 +6765,7 @@ bool Player::openMarketViewOffersToYou()
 
 bool Player::confirmMarketOfferToMe(uint64_t transaction_id)
 {
-	Database* db = Database::getInstance();
+    Database* db = Database::getInstance();
 	std::ostringstream query;
 	DBResult* result;
 
@@ -6966,9 +6876,9 @@ bool Player::reedemMyItemsOfferInList()
 
 bool Player::sendMarketChangeOption(std::string option)
 {
-	Database* db = Database::getInstance();
-    DBResult* result;
-    std::ostringstream query;
+    Database* db = Database::getInstance();
+	std::ostringstream query;
+	DBResult* result;
 
 	uint16_t row_count = 0;
 	uint16_t page_counts = 0;
@@ -6982,7 +6892,7 @@ bool Player::sendMarketChangeOption(std::string option)
 	query << "SELECT `item_id`, `item_name`, `item_seller`, `amount`, `price`, `gender`, `level`, `ispokemon`, `attributes`, `description`, `id`, `item_time`, `transaction_id`, `onlyoffers` FROM `players_marketoffers`";
 	if ((result = db->storeQuery(query.str()))) {
 		do {
-			if (option == "Pokemons" && result->getDataString("ispokemon") == "isPokemon") {
+			if (option == "Armas" && result->getDataString("ispokemon") == "weapons") {
 				uint16_t item_id = result->getDataInt("item_id");
 				uint16_t amount = result->getDataInt("amount");
 				uint64_t price = result->getDataInt("price");
@@ -7011,153 +6921,7 @@ bool Player::sendMarketChangeOption(std::string option)
 				}
 			}
 
-			if (option == "Weapons" && result->getDataString("ispokemon") == "weapons") {
-				uint16_t item_id = result->getDataInt("item_id");
-				uint16_t amount = result->getDataInt("amount");
-				uint64_t price = result->getDataInt("price");
-				uint16_t gender = result->getDataInt("gender");
-				uint16_t level = result->getDataInt("level");
-
-				std::string item_seller = result->getDataString("item_seller");
-				std::string item_name = result->getDataString("item_name");
-				std::string ispokemon = result->getDataString("ispokemon");
-
-				uint64_t attrSize = 0;
-				const char* attr = result->getDataStream("attributes", attrSize);
-				std::string attributes = db->escapeBlob(attr, attrSize).c_str();
-				std::string description = result->getDataString("description");
-
-				uint16_t row_count_id = result->getDataInt("id");
-				uint64_t item_time = result->getDataInt("item_time");
-				row_count = row_count + 1;
-
-				uint64_t transaction_id = result->getDataInt("transaction_id");
-				bool onlyoffers = result->getDataInt("onlyoffers");
-
-				CreatureEventList events = getCreatureEvents(CREATURE_EVENT_INSERT_MARKET_ALLOFFERS);
-				for(CreatureEventList::iterator it = events.begin(); it != events.end(); ++it) {
-					(*it)->executeInsertMarketAllOffers(this, item_id, item_name, item_seller, amount, price, gender, level, ispokemon, attributes, description, row_count, row_count_id, item_time, transaction_id, onlyoffers, page_counts);
-				}
-			}
-
-			if (option == "Armors" && result->getDataString("ispokemon") == "armors") {
-				uint16_t item_id = result->getDataInt("item_id");
-				uint16_t amount = result->getDataInt("amount");
-				uint64_t price = result->getDataInt("price");
-				uint16_t gender = result->getDataInt("gender");
-				uint16_t level = result->getDataInt("level");
-
-				std::string item_seller = result->getDataString("item_seller");
-				std::string item_name = result->getDataString("item_name");
-				std::string ispokemon = result->getDataString("ispokemon");
-
-				uint64_t attrSize = 0;
-				const char* attr = result->getDataStream("attributes", attrSize);
-				std::string attributes = db->escapeBlob(attr, attrSize).c_str();
-				std::string description = result->getDataString("description");
-
-				uint16_t row_count_id = result->getDataInt("id");
-				uint64_t item_time = result->getDataInt("item_time");
-				row_count = row_count + 1;
-
-				uint64_t transaction_id = result->getDataInt("transaction_id");
-				bool onlyoffers = result->getDataInt("onlyoffers");
-
-				CreatureEventList events = getCreatureEvents(CREATURE_EVENT_INSERT_MARKET_ALLOFFERS);
-				for(CreatureEventList::iterator it = events.begin(); it != events.end(); ++it) {
-					(*it)->executeInsertMarketAllOffers(this, item_id, item_name, item_seller, amount, price, gender, level, ispokemon, attributes, description, row_count, row_count_id, item_time, transaction_id, onlyoffers, page_counts);
-				}
-			}
-
-
-			if (option == "Points" && result->getDataString("ispokemon") == "points") {
-				uint16_t item_id = result->getDataInt("item_id");
-				uint16_t amount = result->getDataInt("amount");
-				uint64_t price = result->getDataInt("price");
-				uint16_t gender = result->getDataInt("gender");
-				uint16_t level = result->getDataInt("level");
-
-				std::string item_seller = result->getDataString("item_seller");
-				std::string item_name = result->getDataString("item_name");
-				std::string ispokemon = result->getDataString("ispokemon");
-
-				uint64_t attrSize = 0;
-				const char* attr = result->getDataStream("attributes", attrSize);
-				std::string attributes = db->escapeBlob(attr, attrSize).c_str();
-				std::string description = result->getDataString("description");
-
-				uint16_t row_count_id = result->getDataInt("id");
-				uint64_t item_time = result->getDataInt("item_time");
-				row_count = row_count + 1;
-
-				uint64_t transaction_id = result->getDataInt("transaction_id");
-				bool onlyoffers = result->getDataInt("onlyoffers");
-
-				CreatureEventList events = getCreatureEvents(CREATURE_EVENT_INSERT_MARKET_ALLOFFERS);
-				for(CreatureEventList::iterator it = events.begin(); it != events.end(); ++it) {
-					(*it)->executeInsertMarketAllOffers(this, item_id, item_name, item_seller, amount, price, gender, level, ispokemon, attributes, description, row_count, row_count_id, item_time, transaction_id, onlyoffers, page_counts);
-				}
-			}
-
-			if (option == "Material" && result->getDataString("ispokemon") == "material") {
-				uint16_t item_id = result->getDataInt("item_id");
-				uint16_t amount = result->getDataInt("amount");
-				uint64_t price = result->getDataInt("price");
-				uint16_t gender = result->getDataInt("gender");
-				uint16_t level = result->getDataInt("level");
-
-				std::string item_seller = result->getDataString("item_seller");
-				std::string item_name = result->getDataString("item_name");
-				std::string ispokemon = result->getDataString("ispokemon");
-
-				uint64_t attrSize = 0;
-				const char* attr = result->getDataStream("attributes", attrSize);
-				std::string attributes = db->escapeBlob(attr, attrSize).c_str();
-				std::string description = result->getDataString("description");
-
-				uint16_t row_count_id = result->getDataInt("id");
-				uint64_t item_time = result->getDataInt("item_time");
-				row_count = row_count + 1;
-
-				uint64_t transaction_id = result->getDataInt("transaction_id");
-				bool onlyoffers = result->getDataInt("onlyoffers");
-
-				CreatureEventList events = getCreatureEvents(CREATURE_EVENT_INSERT_MARKET_ALLOFFERS);
-				for(CreatureEventList::iterator it = events.begin(); it != events.end(); ++it) {
-					(*it)->executeInsertMarketAllOffers(this, item_id, item_name, item_seller, amount, price, gender, level, ispokemon, attributes, description, row_count, row_count_id, item_time, transaction_id, onlyoffers, page_counts);
-				}
-			}
-
-			if (option == "Quests" && result->getDataString("ispokemon") == "quests") {
-				uint16_t item_id = result->getDataInt("item_id");
-				uint16_t amount = result->getDataInt("amount");
-				uint64_t price = result->getDataInt("price");
-				uint16_t gender = result->getDataInt("gender");
-				uint16_t level = result->getDataInt("level");
-
-				std::string item_seller = result->getDataString("item_seller");
-				std::string item_name = result->getDataString("item_name");
-				std::string ispokemon = result->getDataString("ispokemon");
-
-				uint64_t attrSize = 0;
-				const char* attr = result->getDataStream("attributes", attrSize);
-				std::string attributes = db->escapeBlob(attr, attrSize).c_str();
-				std::string description = result->getDataString("description");
-
-				uint16_t row_count_id = result->getDataInt("id");
-				uint64_t item_time = result->getDataInt("item_time");
-				row_count = row_count + 1;
-
-				uint64_t transaction_id = result->getDataInt("transaction_id");
-				bool onlyoffers = result->getDataInt("onlyoffers");
-
-				CreatureEventList events = getCreatureEvents(CREATURE_EVENT_INSERT_MARKET_ALLOFFERS);
-				for(CreatureEventList::iterator it = events.begin(); it != events.end(); ++it) {
-					(*it)->executeInsertMarketAllOffers(this, item_id, item_name, item_seller, amount, price, gender, level, ispokemon, attributes, description, row_count, row_count_id, item_time, transaction_id, onlyoffers, page_counts);
-				}
-			}
-
-			if (option == "Senzu" && result->getDataString("ispokemon") == "senzu") {
+			if (option == "Items" && result->getDataString("ispokemon") == "armors") {
 				uint16_t item_id = result->getDataInt("item_id");
 				uint16_t amount = result->getDataInt("amount");
 				uint64_t price = result->getDataInt("price");
@@ -7225,11 +6989,11 @@ bool Player::sendMarketChangeOption(std::string option)
 bool Player::sendMarketChangePage(std::string type, std::string category, uint64_t page)
 {
 	Database* db = Database::getInstance();
-    DBResult* result;
-    std::ostringstream query;
+	std::ostringstream query;
+	DBResult* result;
 
 	uint64_t page_counts = 0;
-	uint64_t page_numeration = 0; // determinar a pagina que o player tá
+	uint64_t page_numeration = 0; // determinar a pagina que o player t?
 
 	query.str("");
 	query << "SELECT `page_numeration` FROM `players_marketoffers` ORDER BY page_numeration DESC LIMIT 1;";
@@ -7241,7 +7005,7 @@ bool Player::sendMarketChangePage(std::string type, std::string category, uint64
 		page_numeration = 1;
 	}
 	else if (type == "backOnePage" && page != 1) {
-		page_numeration = page; // fiz essa alteração pra testar
+		page_numeration = page; // fiz essa altera??o pra testar
 	}
 	else if (type == "backOnePage" && page == 1) {
 		page_numeration = 1;
@@ -7298,58 +7062,54 @@ bool Player::sendMarketChangePage(std::string type, std::string category, uint64
 
 bool Player::sendMarketSearch(std::string type, std::string category)
 {
-	Database* db = Database::getInstance();
-    DBResult* result;
-    std::ostringstream query;
+    Database* db = Database::getInstance();
+	std::ostringstream query;
+	DBResult* result;
 
-	uint16_t row_count = 0;
-	uint16_t page_counts = 0;
+    uint16_t row_count = 0;
+    uint16_t page_counts = 0;
 
-	query.str("");
-	query << "SELECT `page_numeration` FROM `players_marketoffers` ORDER BY page_numeration DESC LIMIT 1;";
-	if ((result = db->storeQuery(query.str()))) {
-		page_counts = result->getDataInt("page_numeration");
-	}
+    query.str("");
+    query << "SELECT `page_numeration` FROM `players_marketoffers` ORDER BY page_numeration DESC LIMIT 1;";
+    if ((result = db->storeQuery(query.str()))) {
+        page_counts = result->getDataInt("page_numeration");
+    }
 
-	query.str("");
-	query << "SELECT `item_id`, `item_name`, `item_seller`, `amount`, `price`, `gender`, `level`, `ispokemon`, `attributes`, `description`, `id`, `item_time`, `transaction_id`, `onlyoffers` FROM `players_marketoffers` WHERE `item_name` = '" << type << "' AND `category` = '" << category << "';";
-	if ((result = db->storeQuery(query.str()))) {
-		do {
-			uint16_t item_id = result->getDataInt("item_id");
-			uint16_t amount = result->getDataInt("amount");
-			uint64_t price = result->getDataInt("price");
-			uint16_t gender = result->getDataInt("gender");
-			uint16_t level = result->getDataInt("level");
+    query.str("");
+    query << "SELECT `item_id`, `item_name`, `item_seller`, `amount`, `price`, `gender`, `level`, `ispokemon`, `attributes`, `description`, `id`, `item_time`, `transaction_id`, `onlyoffers` FROM `players_marketoffers` WHERE `item_name` LIKE '%" << type << "%' AND `category` = '" << category << "';";
+    if ((result = db->storeQuery(query.str()))) {
+        do {
+            uint16_t item_id = result->getDataInt("item_id");
+            uint16_t amount = result->getDataInt("amount");
+            uint64_t price = result->getDataInt("price");
+            uint16_t gender = result->getDataInt("gender");
+            uint16_t level = result->getDataInt("level");
 
-			std::string item_seller = result->getDataString("item_seller");
-			std::string item_name = result->getDataString("item_name");
-			std::string ispokemon = result->getDataString("ispokemon");
+            std::string item_seller = result->getDataString("item_seller");
+            std::string item_name = result->getDataString("item_name");
+            std::string ispokemon = result->getDataString("ispokemon");
 
-			//std::cout << "Items da Categoria; " << item_name << " - Pagina: " << page_numeration << std::endl;
+            uint64_t attrSize = 0;
+            const char* attr = result->getDataStream("attributes", attrSize);
+            std::string attributes = db->escapeBlob(attr, attrSize).c_str();
+            std::string description = result->getDataString("description");
 
-			uint64_t attrSize = 0;
-			const char* attr = result->getDataStream("attributes", attrSize);
-			std::string attributes = db->escapeBlob(attr, attrSize).c_str();
-			std::string description = result->getDataString("description");
+            uint16_t row_count_id = result->getDataInt("id");
+            uint64_t item_time = result->getDataInt("item_time");
+            row_count = row_count + 1;
 
-			uint16_t row_count_id = result->getDataInt("id");
-			uint64_t item_time = result->getDataInt("item_time");
-			row_count = row_count + 1;
+            uint64_t transaction_id = result->getDataInt("transaction_id");
+            bool onlyoffers = result->getDataInt("onlyoffers");
 
-			uint64_t transaction_id = result->getDataInt("transaction_id");
-			bool onlyoffers = result->getDataInt("onlyoffers");
-
-			CreatureEventList events = getCreatureEvents(CREATURE_EVENT_INSERT_MARKET_ALLOFFERS);
-			for(CreatureEventList::iterator it = events.begin(); it != events.end(); ++it) {
-				(*it)->executeInsertMarketAllOffers(this, item_id, item_name, item_seller, amount, price, gender, level, ispokemon, attributes, description, row_count, row_count_id, item_time, transaction_id, onlyoffers, page_counts);
-			}
+            CreatureEventList events = getCreatureEvents(CREATURE_EVENT_INSERT_MARKET_ALLOFFERS);
+            for(CreatureEventList::iterator it = events.begin(); it != events.end(); ++it) {
+                (*it)->executeInsertMarketAllOffers(this, item_id, item_name, item_seller, amount, price, gender, level, ispokemon, attributes, description, row_count, row_count_id, item_time, transaction_id, onlyoffers, page_counts);
+            }
 
         } while(result->next());
+    }
 
-
-	}
-
-	return true;
+    return true;
 }
 // fim
 
