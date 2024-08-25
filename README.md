@@ -49,10 +49,6 @@ Added new features<br>
 <br>
 Correção reset system<br>
 - <b>Update 0.1</b><br>
-newping otcv8<br>
-uint16 skills<br>
-uint32 health/mana<br>
-uint16 magic level<br>
 g_game.enableFeature(GameDoubleSkills)<br>
 g_game.enableFeature(GameDoubleMagicLevel)<br>
 g_game.enableFeature(GameDoubleHealth)<br>
@@ -61,8 +57,12 @@ g_game.enableFeature(GameWingsAndAura)<br>
 g_game.enableFeature(GameDrawAuraOnTop)<br>
 g_game.enableFeature(GameOutfitShaders)<br>
 g_game.enableFeature(GameHealthInfoBackground)<br>
-- <b>Update 0.2 </b><br>
-...<br>
+- <b>Update 0.2 Em Breve </b><br>
+g_game.enableFeature(GameChangeMapAwareRange)<br>
+g_game.enableFeature(GameItemTooltip)<br>
+Suporte shop otcv8<br>
+
+
 
 
 
