@@ -1337,7 +1337,8 @@ void ProtocolGame::parseSetOutfit(NetworkMessage& msg)
 		newOutfit.lookAddons = msg.get<char>();
 	else
 		msg.skipBytes(1);
-
+    if (player->isUsingOtclient())
+	{
 	newOutfit.lookWing = msg.get<uint16_t>();
 	newOutfit.lookAura = msg.get<uint16_t>();
 
@@ -1347,7 +1348,7 @@ void ProtocolGame::parseSetOutfit(NetworkMessage& msg)
 
 	newOutfit.healthBackground = msg.get<uint16_t>();
 	newOutfit.manaBackground = msg.get<uint16_t>();
-	
+	}
 
 	addGameTask(&Game::playerChangeOutfit, player->getID(), newOutfit);
 }
@@ -2825,8 +2826,8 @@ void ProtocolGame::sendOutfitWindow()
 			msg->addString("Your outfit");
 			msg->addByte(player->getDefaultOutfit().lookAddons);
 		}
-            
-		std::vector<Wing*> wingList;
+         if (player->isUsingOtclient()) {     
+				std::vector<Wing*> wingList;
 		for (std::map<uint32_t, Wing*>::iterator it = player->wings.begin(); it != player->wings.end(); ++it)
 		{
 			if (player->canWearWing(it->first))
@@ -2879,13 +2880,14 @@ void ProtocolGame::sendOutfitWindow()
 				msg->add<uint16_t>(shader->id);
 				msg->addString(shader->name);
 			}
+			
 		} else {
 			msg->addByte(0);
 		}
 
 		msg->addByte(0);
 		msg->addByte(0);
-
+}
 		player->hasRequestedOutfit(true);
 	}
 }
@@ -3168,6 +3170,8 @@ void ProtocolGame::AddPlayerStatsNew(OutputMessage_ptr msg)
 void ProtocolGame::AddPlayerStats(OutputMessage_ptr msg)
 {
 	msg->addByte(0xA0);
+	if (player->isUsingOtclient()) //Byte alterado para otcv8 
+	{
 	msg->add<uint32_t>(player->getHealth());
 	msg->add<uint32_t>(player->getPlayerInfo(PLAYERINFO_MAXHEALTH));
 	uint32_t capacity = uint32_t(player->getFreeCapacity() * 100);
@@ -3190,17 +3194,56 @@ void ProtocolGame::AddPlayerStats(OutputMessage_ptr msg)
 	msg->addByte(player->getPlayerInfo(PLAYERINFO_MAGICLEVELPERCENT));
 	msg->addByte(player->getPlayerInfo(PLAYERINFO_SOUL));
 	msg->add<uint16_t>(player->getStaminaMinutes());
+	}
+	else //Byte padrão para client normal 
+	{
+	msg->add<uint16_t>(player->getHealth());
+	msg->add<uint16_t>(player->getPlayerInfo(PLAYERINFO_MAXHEALTH));
+	uint32_t capacity = uint32_t(player->getFreeCapacity() * 100);
+	if (capacity >= INT32_MAX)
+		msg->add<uint32_t>(INT32_MAX);
+	else 
+		msg->add<uint32_t>(capacity);
+	
+	uint64_t experience = player->getExperience();
+	if(experience > 0x7FFFFFFF)
+		msg->add<uint32_t>(0x7FFFFFFF);
+	else
+		msg->add<uint32_t>(experience);
+
+	msg->add<uint16_t>(player->getPlayerInfo(PLAYERINFO_LEVEL));
+	msg->addByte(player->getPlayerInfo(PLAYERINFO_LEVELPERCENT));
+	msg->add<uint16_t>(player->getPlayerInfo(PLAYERINFO_MANA));
+	msg->add<uint16_t>(player->getPlayerInfo(PLAYERINFO_MAXMANA));
+	msg->addByte(player->getPlayerInfo(PLAYERINFO_MAGICLEVEL));
+	msg->addByte(player->getPlayerInfo(PLAYERINFO_MAGICLEVELPERCENT));
+	msg->addByte(player->getPlayerInfo(PLAYERINFO_SOUL));
+	msg->add<uint16_t>(player->getStaminaMinutes());
+	}
 	
 }
 
 void ProtocolGame::AddPlayerSkills(OutputMessage_ptr msg)
 {
-	msg->addByte(0xA1);
-	for(uint8_t i = 0; i <= SKILL_LAST; ++i)
-	{
-		msg->add<uint16_t>(player->getSkill((skills_t)i, SKILL_LEVEL));
-		msg->addByte(player->getSkill((skills_t)i, SKILL_PERCENT));
-	}
+    msg->addByte(0xA1);
+    if (player->isUsingOtclient())
+    {
+        // Byte uint16_t para otcv8
+        for(uint8_t i = 0; i <= SKILL_LAST; ++i)
+        {
+            msg->add<uint16_t>(player->getSkill((skills_t)i, SKILL_LEVEL));
+            msg->addByte(player->getSkill((skills_t)i, SKILL_PERCENT));
+        }
+    }
+    else
+    {
+        // Byte padrão para client normal 
+        for(uint8_t i = 0; i <= SKILL_LAST; ++i)
+        {
+            msg->addByte(player->getSkill((skills_t)i, SKILL_LEVEL));
+            msg->addByte(player->getSkill((skills_t)i, SKILL_PERCENT));
+        }
+    }
 }
 
 void ProtocolGame::AddCreatureSpeak(OutputMessage_ptr msg, const Creature* creature, MessageClasses type,
@@ -3319,16 +3362,22 @@ void ProtocolGame::AddCreatureOutfit(OutputMessage_ptr msg, const Creature* crea
 		}
 		else
 		{
-				msg->add<uint32_t>(0x00);
+			msg->add<uint32_t>(0x00);
 		}
-			 	msg->add<uint16_t>(outfit.lookTypeEx);
+
+		if (player->isUsingOtclient())
+	{
+
+			msg->add<uint16_t>(outfit.lookTypeEx);
 		    msg->add<uint16_t>(outfit.lookWing);
 		    msg->add<uint16_t>(outfit.lookAura);
+			
 		    Shader* shader = Shaders::getInstance()->getShader(outfit.lookShader);
 		    msg->addString(shader ? shader->name : "");
 		    msg->add<uint16_t>(outfit.healthBackground);
 		    msg->add<uint16_t>(outfit.manaBackground);
 	}
+}
 
 void ProtocolGame::AddWorldLight(OutputMessage_ptr msg, const LightInfo& lightInfo)
 {
@@ -3732,7 +3781,9 @@ bool ProtocolGame::canWatch(Player* foundPlayer) const
 
 void ProtocolGame::parseNewPing(NetworkMessage& msg)
 {
-
+	if (!player->isUsingOtclient()) {
+        return; // Não envia o ping se não estiver usando otclientv8
+    }
 	uint32_t pingId = msg.get<uint32_t>();
 	uint16_t localPing = msg.get<uint16_t>();
 	uint16_t fps = msg.get<uint16_t>();
@@ -3743,6 +3794,10 @@ void ProtocolGame::parseNewPing(NetworkMessage& msg)
 
 void ProtocolGame::sendNewPing(uint32_t pingId)
 {
+	if (!player->isUsingOtclient()) {
+        return; // Não envia o ping se não estiver usando otclientv8
+    }
+	
   OutputMessage_ptr msg = getOutputBuffer();
   if(!msg)
     return;
