@@ -1337,9 +1337,8 @@ void ProtocolGame::parseSetOutfit(NetworkMessage& msg)
 		newOutfit.lookAddons = msg.get<char>();
 	else
 		msg.skipBytes(1);
-    if (player->isUsingOtclient())
-	{
-	newOutfit.lookWing = msg.get<uint16_t>();
+
+  newOutfit.lookWing = msg.get<uint16_t>();
 	newOutfit.lookAura = msg.get<uint16_t>();
 
 	std::string shaderName = msg.getString();
@@ -1348,7 +1347,6 @@ void ProtocolGame::parseSetOutfit(NetworkMessage& msg)
 
 	newOutfit.healthBackground = msg.get<uint16_t>();
 	newOutfit.manaBackground = msg.get<uint16_t>();
-	}
 
 	addGameTask(&Game::playerChangeOutfit, player->getID(), newOutfit);
 }
@@ -2826,8 +2824,7 @@ void ProtocolGame::sendOutfitWindow()
 			msg->addString("Your outfit");
 			msg->addByte(player->getDefaultOutfit().lookAddons);
 		}
-         if (player->isUsingOtclient()) {     
-				std::vector<Wing*> wingList;
+         std::vector<Wing*> wingList;
 		for (std::map<uint32_t, Wing*>::iterator it = player->wings.begin(); it != player->wings.end(); ++it)
 		{
 			if (player->canWearWing(it->first))
@@ -2880,14 +2877,13 @@ void ProtocolGame::sendOutfitWindow()
 				msg->add<uint16_t>(shader->id);
 				msg->addString(shader->name);
 			}
-			
 		} else {
 			msg->addByte(0);
 		}
 
 		msg->addByte(0);
 		msg->addByte(0);
-}
+
 		player->hasRequestedOutfit(true);
 	}
 }
@@ -3365,19 +3361,14 @@ void ProtocolGame::AddCreatureOutfit(OutputMessage_ptr msg, const Creature* crea
 			msg->add<uint32_t>(0x00);
 		}
 
-		if (player->isUsingOtclient())
-	{
-
-			msg->add<uint16_t>(outfit.lookTypeEx);
-		    msg->add<uint16_t>(outfit.lookWing);
-		    msg->add<uint16_t>(outfit.lookAura);
-			
-		    Shader* shader = Shaders::getInstance()->getShader(outfit.lookShader);
-		    msg->addString(shader ? shader->name : "");
-		    msg->add<uint16_t>(outfit.healthBackground);
-		    msg->add<uint16_t>(outfit.manaBackground);
+					msg->add<uint16_t>(outfit.lookTypeEx);
+		    	msg->add<uint16_t>(outfit.lookWing);
+		    	msg->add<uint16_t>(outfit.lookAura);
+		    	Shader* shader = Shaders::getInstance()->getShader(outfit.lookShader);
+		    	msg->addString(shader ? shader->name : "");
+		   	 	msg->add<uint16_t>(outfit.healthBackground);
+		    	msg->add<uint16_t>(outfit.manaBackground);
 	}
-}
 
 void ProtocolGame::AddWorldLight(OutputMessage_ptr msg, const LightInfo& lightInfo)
 {
@@ -3781,9 +3772,7 @@ bool ProtocolGame::canWatch(Player* foundPlayer) const
 
 void ProtocolGame::parseNewPing(NetworkMessage& msg)
 {
-	if (!player->isUsingOtclient()) {
-        return; // Não envia o ping se não estiver usando otclientv8
-    }
+
 	uint32_t pingId = msg.get<uint32_t>();
 	uint16_t localPing = msg.get<uint16_t>();
 	uint16_t fps = msg.get<uint16_t>();
@@ -3793,11 +3782,7 @@ void ProtocolGame::parseNewPing(NetworkMessage& msg)
 }
 
 void ProtocolGame::sendNewPing(uint32_t pingId)
-{
-	if (!player->isUsingOtclient()) {
-        return; // Não envia o ping se não estiver usando otclientv8
-    }
-	
+{	
   OutputMessage_ptr msg = getOutputBuffer();
   if(!msg)
     return;
