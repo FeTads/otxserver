@@ -3166,8 +3166,7 @@ void ProtocolGame::AddPlayerStatsNew(OutputMessage_ptr msg)
 void ProtocolGame::AddPlayerStats(OutputMessage_ptr msg)
 {
 	msg->addByte(0xA0);
-	if (player->isUsingOtclient()) //Byte alterado para otcv8 
-	{
+	
 	msg->add<uint32_t>(player->getHealth());
 	msg->add<uint32_t>(player->getPlayerInfo(PLAYERINFO_MAXHEALTH));
 	uint32_t capacity = uint32_t(player->getFreeCapacity() * 100);
@@ -3190,57 +3189,17 @@ void ProtocolGame::AddPlayerStats(OutputMessage_ptr msg)
 	msg->addByte(player->getPlayerInfo(PLAYERINFO_MAGICLEVELPERCENT));
 	msg->addByte(player->getPlayerInfo(PLAYERINFO_SOUL));
 	msg->add<uint16_t>(player->getStaminaMinutes());
-	}
-	else //Byte padrão para client normal 
-	{
-	msg->add<uint16_t>(player->getHealth());
-	msg->add<uint16_t>(player->getPlayerInfo(PLAYERINFO_MAXHEALTH));
-	uint32_t capacity = uint32_t(player->getFreeCapacity() * 100);
-	if (capacity >= INT32_MAX)
-		msg->add<uint32_t>(INT32_MAX);
-	else 
-		msg->add<uint32_t>(capacity);
-	
-	uint64_t experience = player->getExperience();
-	if(experience > 0x7FFFFFFF)
-		msg->add<uint32_t>(0x7FFFFFFF);
-	else
-		msg->add<uint32_t>(experience);
-
-	msg->add<uint16_t>(player->getPlayerInfo(PLAYERINFO_LEVEL));
-	msg->addByte(player->getPlayerInfo(PLAYERINFO_LEVELPERCENT));
-	msg->add<uint16_t>(player->getPlayerInfo(PLAYERINFO_MANA));
-	msg->add<uint16_t>(player->getPlayerInfo(PLAYERINFO_MAXMANA));
-	msg->addByte(player->getPlayerInfo(PLAYERINFO_MAGICLEVEL));
-	msg->addByte(player->getPlayerInfo(PLAYERINFO_MAGICLEVELPERCENT));
-	msg->addByte(player->getPlayerInfo(PLAYERINFO_SOUL));
-	msg->add<uint16_t>(player->getStaminaMinutes());
-	}
-	
 }
 
 void ProtocolGame::AddPlayerSkills(OutputMessage_ptr msg)
 {
     msg->addByte(0xA1);
-    if (player->isUsingOtclient())
-    {
-        // Byte uint16_t para otcv8
         for(uint8_t i = 0; i <= SKILL_LAST; ++i)
         {
             msg->add<uint16_t>(player->getSkill((skills_t)i, SKILL_LEVEL));
             msg->addByte(player->getSkill((skills_t)i, SKILL_PERCENT));
         }
     }
-    else
-    {
-        // Byte padrão para client normal 
-        for(uint8_t i = 0; i <= SKILL_LAST; ++i)
-        {
-            msg->addByte(player->getSkill((skills_t)i, SKILL_LEVEL));
-            msg->addByte(player->getSkill((skills_t)i, SKILL_PERCENT));
-        }
-    }
-}
 
 void ProtocolGame::AddCreatureSpeak(OutputMessage_ptr msg, const Creature* creature, MessageClasses type,
 	const std::string& text, const uint16_t& channelId, Position* pos, const uint32_t& statementId)
