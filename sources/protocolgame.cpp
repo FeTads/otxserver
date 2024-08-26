@@ -3166,7 +3166,6 @@ void ProtocolGame::AddPlayerStatsNew(OutputMessage_ptr msg)
 void ProtocolGame::AddPlayerStats(OutputMessage_ptr msg)
 {
 	msg->addByte(0xA0);
-	
 	msg->add<uint32_t>(player->getHealth());
 	msg->add<uint32_t>(player->getPlayerInfo(PLAYERINFO_MAXHEALTH));
 	uint32_t capacity = uint32_t(player->getFreeCapacity() * 100);
@@ -3297,37 +3296,32 @@ void ProtocolGame::AddCreatureOutfit(OutputMessage_ptr msg, const Creature* crea
 	if ((outfitWindow || (!creature->isInvisible() && (!creature->isGhost() || !g_config.getBool(ConfigManager::GHOST_INVISIBLE_EFFECT)))) ||
 		(!creature->isInvisible() && cp && cp->isGhost() && cp->getGroupId() < 3))		//if player is ghost and GHOST_INVISIBLE_EFFECT = true, send normal outfit
 	{
-        msg->add<uint16_t>(outfit.lookType);
-        if (outfit.lookType)
-        {
-            msg->addByte(outfit.lookHead);
-            msg->addByte(outfit.lookBody);
-            msg->addByte(outfit.lookLegs);
-            msg->addByte(outfit.lookFeet);
-            msg->addByte(outfit.lookAddons);
-        }
-        else if (outfit.lookTypeEx)
-        {
-            msg->addItemId(outfit.lookTypeEx, player);
-        }
-        else
-        {
-            msg->add<uint16_t>(outfit.lookTypeEx);
-        }
-		}
-		else
+		msg->add<uint16_t>(outfit.lookType);
+		if(outfit.lookType)
 		{
-			msg->add<uint32_t>(0x00);
+			msg->addByte(outfit.lookHead);
+			msg->addByte(outfit.lookBody);
+			msg->addByte(outfit.lookLegs);
+			msg->addByte(outfit.lookFeet);
+			msg->addByte(outfit.lookAddons);
 		}
+		else if(outfit.lookTypeEx)
+			msg->addItemId(outfit.lookTypeEx);
+		else
+			msg->add<uint16_t>(outfit.lookTypeEx);
 
-					msg->add<uint16_t>(outfit.lookTypeEx);
-		    	msg->add<uint16_t>(outfit.lookWing);
-		    	msg->add<uint16_t>(outfit.lookAura);
-		    	Shader* shader = Shaders::getInstance()->getShader(outfit.lookShader);
-		    	msg->addString(shader ? shader->name : "");
-		   	 	msg->add<uint16_t>(outfit.healthBackground);
-		    	msg->add<uint16_t>(outfit.manaBackground);
+		msg->add<uint16_t>(outfit.lookWing);
+		msg->add<uint16_t>(outfit.lookAura);
+		
+		Shader* shader = Shaders::getInstance()->getShader(outfit.lookShader);
+		msg->addString(shader ? shader->name : "");
+
+		msg->add<uint16_t>(outfit.healthBackground);
+		msg->add<uint16_t>(outfit.manaBackground);
 	}
+	else
+		msg->add<uint32_t>(0x00);
+}
 
 void ProtocolGame::AddWorldLight(OutputMessage_ptr msg, const LightInfo& lightInfo)
 {
