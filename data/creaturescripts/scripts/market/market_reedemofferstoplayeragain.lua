@@ -2,7 +2,7 @@
 -- Reedem itens offers to player again --
 
 function onExtendedOpcode(cid, opcode, buffer)
-	if opcode == 219 then
+	if opcode == 119 then
 		local param = buffer:explode("@")
 		local type = tostring(param[1])
 

@@ -2,7 +2,7 @@
 -- Market add item in database --
 
 function onExtendedOpcode(cid, opcode, buffer)
-	if opcode == 203 then
+	if opcode == 103 then
 		local param = buffer:explode("@")
 		local itemid = tonumber(param[1])
 		local name = tostring(param[2])
@@ -15,6 +15,7 @@ function onExtendedOpcode(cid, opcode, buffer)
 		local onlyoffers = tonumber(param[9])
 
 		sendMarketToDatabase(cid, itemid, name, gender, level, ispokemon, count, price, integgerAttribute, onlyoffers)
+		doPlayerSave(cid)
 	end
 	return true
 end

@@ -2,7 +2,7 @@
 -- Market send the offerted item --
 
 function onExtendedOpcode(cid, opcode, buffer)
-	if opcode == 210 then
+	if opcode == 110 then
 		local param = buffer:explode("@")
 		local type = tostring(param[1])
 		local index = tonumber(param[2])

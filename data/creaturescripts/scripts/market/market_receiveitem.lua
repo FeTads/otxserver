@@ -2,7 +2,7 @@
 -- Market receiving item from client --
 
 function onExtendedOpcode(cid, opcode, buffer)
-	if opcode == 202 then
+	if opcode == 102 then
 		local param = buffer:explode("@")
 		local index = tonumber(param[1])
 

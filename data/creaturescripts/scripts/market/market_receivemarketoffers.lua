@@ -2,7 +2,7 @@
 -- Market receive buyed items from the market --
 
 function onExtendedOpcode(cid, opcode, buffer)
-	if opcode == 212 then
+	if opcode == 112 then
 		local param = buffer:explode("@")
 		local type = tostring(param[1])
 		local transaction_id = tonumber(param[2])

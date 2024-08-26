@@ -23,7 +23,7 @@ HistoricLabel < Label
   text-auto-resize: true
 
 MarketTextEdit < UITextEdit
-  font: verdana-11px-antialised
+  font: verdana-11px-rounded
   color: #3E3838
   size: 86 20
   text-offset: 0 3
@@ -44,11 +44,11 @@ HeadlessWindow
   UIButton
     id: market_text
     color: white
-    text: Mercado
+    text: Market
     size: 468 21
     anchors.top: parent.top
     anchors.left: parent.left
-    margin-top: -8
+    margin-top: 0
     margin-left: 40
 
   Button
@@ -84,17 +84,6 @@ HeadlessWindow
     margin-left: 98
     @onClick: offersCategory()
     visible: false
-
-  Button
-    id: historico_btn
-    color: white
-    size: 94 23
-    text: Historico
-    anchors.top: vender_btn.top
-    anchors.left: vender_btn.left
-    margin-top: 0
-    margin-left: 98
-    @onClick: historicCategory()
 
   Label
     id: category_label
@@ -166,7 +155,7 @@ HeadlessWindow
     id: vendedor_btn
     color: white
     size: 120 20
-    text: Vendedor
+    text: Player
     anchors.top: itemname_btn.top
     anchors.left: itemname_btn.left
     margin-top: 0
@@ -186,7 +175,7 @@ HeadlessWindow
     id: preco_btn
     color: white
     size: 98 20
-    text: Preco/Unidade
+    text: Valor
     anchors.top: quantidade_btn.top
     anchors.left: quantidade_btn.left
     margin-top: 0
@@ -271,7 +260,7 @@ HeadlessWindow
 
   Item
     id: item_seller
-    font: terminus-10px
+    font: verdana-11px-rounded
     text-offset: 0 -21
     size: 32 32
     anchors.top: seller_panel.top
@@ -289,6 +278,16 @@ HeadlessWindow
     margin-left: 36
     visible: false
 
+  Label
+    id: pirateCoinLabel
+    font: verdana-11px-rounded
+    text: Points: 0
+    margin-top: -30
+    margin-left: 140
+    anchors.top: search_product.top
+    anchors.left: search_product.left
+    text-auto-resize: true
+
   UIButton
     id: pokemon_gender
     size: 11 11
@@ -296,31 +295,6 @@ HeadlessWindow
     anchors.left: item_seller.left
     margin-top: 20
     margin-left: 0
-    visible: false
-
-  Label
-    id: preco
-    text: Preco: 0
-    anchors.top: item_seller.top
-    anchors.left: item_seller.left
-    margin-top: -5
-    margin-left: 130
-    visible: false
-
-  Label
-    id: taxa
-    text: Taxa: 100
-    anchors.top: preco.top
-    anchors.left: preco.left
-    margin-top: 14
-    visible: false
-
-  Label
-    id: total
-    text: Total: 100
-    anchors.top: taxa.top
-    anchors.left: taxa.left
-    margin-top: 14
     visible: false
 
   Label
@@ -351,7 +325,7 @@ HeadlessWindow
 
   Label
     id: priceperunit_text
-    text: Preco por unit:
+    text: Valor do item:
     anchors.top: onlyoffers_checkbox.top
     anchors.left: onlyoffers_checkbox.left
     margin-left: 17
@@ -370,23 +344,23 @@ HeadlessWindow
     id: select_objectbtn
     color: white
     size: 133 20
-    text: Selecionar Objeto
+    text: Selecionar item
     anchors.top: onlyoffers_text.top
     anchors.left: onlyoffers_text.left
     margin-top: 28
-    margin-left: 45
+    margin-left: 8
     @onClick: selectObject()
     visible: false
 
   Button
     id: seller_btn
     color: white
-    size: 83 20
-    text: Vender
+    size: 133 20
+    text: Colocar a venda
     anchors.top: select_objectbtn.top
     anchors.left: select_objectbtn.left
     margin-top: 0
-    margin-left: 148
+    margin-left: 136
     visible: false
 
   Button
@@ -448,7 +422,7 @@ HeadlessWindow
     id: preco2_btn
     color: white
     size: 98 20
-    text: Preco/Unidade
+    text: Valor
     anchors.top: quantidade2_btn.top
     anchors.left: quantidade2_btn.left
     margin-top: 0
@@ -517,55 +491,6 @@ HeadlessWindow
     pixels-scroll: false
       $!on:
         width: 1
-
-  Label
-    id: page_label
-    color: white
-    text: Page: 1 / 1
-    anchors.top: atualizar_btn.top
-    anchors.left: atualizar_btn.left
-    margin-top: -25
-    margin-left: 57
-
-  Button
-    id: backallpages_btn
-    color: white
-    size: 26 22
-    text: <<
-    anchors.top: page_label.top
-    anchors.left: page_label.left
-    margin-top: -5
-    margin-left: 74
-
-  Button
-    id: backpage_btn
-    color: white
-    size: 17 22
-    text: <
-    anchors.top: backallpages_btn.top
-    anchors.left: backallpages_btn.left
-    margin-top: 0
-    margin-left: 30
-
-  Button
-    id: nextpage_btn
-    color: white
-    size: 17 22
-    text: >
-    anchors.top: backpage_btn.top
-    anchors.left: backpage_btn.left
-    margin-top: 0
-    margin-left: 21
-
-  Button
-    id: nextallpages_btn
-    color: white
-    size: 26 22
-    text: >>
-    anchors.top: nextpage_btn.top
-    anchors.left: nextpage_btn.left
-    margin-top: 0
-    margin-left: 21
 
   Label
     id: offers_tome
@@ -716,7 +641,7 @@ HeadlessWindow
     id: seller3_btn
     color: white
     size: 110 20
-    text: Vendedor
+    text: Player
     anchors.top: itemname4_btn.top
     anchors.left: itemname4_btn.left
     margin-top: 0

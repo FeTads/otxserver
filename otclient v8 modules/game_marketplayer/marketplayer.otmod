@@ -1,8 +1,8 @@
 Module
   name: game_marketplayer
-  description: Compre items de jogadores e anuncie seus proprios produtos
-  author: Thalles Vitor
-  website: tem nn lek xD
+  description: Market system
+  author: Pedro
+  website: ...
   sandboxed: true
   scripts: [ marketplayer ]
   @onLoad: init()

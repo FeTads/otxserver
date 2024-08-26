@@ -26,12 +26,7 @@ local seller_panel = market:getChildById("seller_panel")
 local item_seller = market:getChildById("item_seller")
 local item_name = market:getChildById("item_name")
 local pokemon_gender = market:getChildById("pokemon_gender")
-local preco = market:getChildById("preco")
-local taxa = market:getChildById("taxa")
-local total = market:getChildById("total")
 local amount_text = market:getChildById("amount_text")
-local onlyoffers_text = market:getChildById("onlyoffers_text")
-local onlyoffers_checkbox = market:getChildById("onlyoffers_checkbox")
 local priceperunit_text = market:getChildById("priceperunit_text")
 local priceperunit_textedit = market:getChildById("priceperunit_textedit")
 local select_objectbtn = market:getChildById("select_objectbtn")
@@ -74,13 +69,7 @@ local fechar3_btn = market:getChildById("fechar3_btn")
 local products_list5 = market:getChildById("products_list5")
 local products_scrollbar5 = market:getChildById("products_scrollbar5")
 local fechar4_btn = market:getChildById("fechar4_btn")
-
--- Label de Paginacao
-local page_label = market:getChildById("page_label")
-local backallpages_btn = market:getChildById("backallpages_btn")
-local backpage_btn = market:getChildById("backpage_btn")
-local nextpage_btn = market:getChildById("nextpage_btn")
-local nextallpages_btn = market:getChildById("nextallpages_btn")
+local pirateCoinsLabel = market:getChildById("pirateCoinLabel")
 
 registered = {} -- tabela de items da aba de venda
 registered2 = {} -- tabela de items da aba de compra
@@ -124,6 +113,8 @@ function init()
   mouseGrabberWidget:setFocusable(false)
   mouseGrabberWidget.onMouseRelease = onChooseItemMouseRelease
   market:hide()
+  
+  connect(g_game, 'onTextMessage', serverComunication)
 end
 
 function terminate()
@@ -136,8 +127,18 @@ function terminate()
     makeoffer:hide()
     makeoffer = nil
   end
-
   market:hide()
+  disconnect(g_game, 'onTextMessage', serverComunication)
+end
+
+function serverComunication(mode, text)
+  local player = g_game.getLocalPlayer()
+  if not player or not g_game.isOnline() then
+    return
+  end
+g_game.getProtocolGame():sendExtendedOpcode(192)
+g_game.getProtocolGame():sendExtendedOpcode(191)
+g_game.getProtocolGame():sendExtendedOpcode(193)
 end
 
 function exibir()
@@ -145,6 +146,10 @@ function exibir()
     market:hide()
   else
     market:show()
+	
+	g_game.getProtocolGame():sendExtendedOpcode(192)
+	g_game.getProtocolGame():sendExtendedOpcode(191)
+	g_game.getProtocolGame():sendExtendedOpcode(193)
   end
 end
 
@@ -156,6 +161,28 @@ function naoexibir()
 
   market:hide()
 end
+
+ProtocolGame.registerExtendedOpcode(191, function(protocol, opcode, buffer)
+    local param = buffer:split("@")
+    local player_name = tostring(param[1])
+	local player = g_game.getLocalPlayer()
+	
+	pirateCoinsLabel:setText("Points: "..player_name)
+	pirateCoinsLabel:setColor("#88745B")
+end)
+
+ProtocolGame.registerExtendedOpcode(192, function(protocol, opcode, buffer)
+local param = buffer:split("@")
+local player_name = tostring(param[1])
+local player = g_game.getLocalPlayer()
+
+market:hide()
+end)
+
+ProtocolGame.registerExtendedOpcode(193, function(protocol, opcode, buffer)
+    local param = buffer:split("@")
+    local player_name = tostring(param[1])
+end)
 
 ProtocolGame.registerExtendedOpcode(110, function(protocol, opcode, buffer) -- show market window
   local param = buffer:split("@")
@@ -169,18 +196,16 @@ ProtocolGame.registerExtendedOpcode(110, function(protocol, opcode, buffer) -- s
      amount_scrollbar:setMaximum(1)
      amount_scrollbar:setMinimum(1)
      amount_scrollbar:setValue(1)
-
-     onlyoffers_checkbox:setChecked(false)
-
      item_seller:setText("")
      item_seller:setItemId(0)
      item_name:setText("")
      pokemon_gender:setImageSource("")
      priceperunit_textedit:setText("")
+	 g_game.getProtocolGame():sendExtendedOpcode(191)
   end
 end)
 
-ProtocolGame.registerExtendedOpcode(111, function(protocol, opcode, buffer) -- insert item to sell in slot
+ProtocolGame.registerExtendedOpcode(188, function(protocol, opcode, buffer) -- insert item to sell in slot
   local param = buffer:split("@")
   local itemid = tonumber(param[1])
   local name = tostring(param[2])
@@ -207,21 +232,23 @@ ProtocolGame.registerExtendedOpcode(111, function(protocol, opcode, buffer) -- i
   amount_scrollbar:setMaximum(itemcount)
   amount_scrollbar:setMinimum(1)
   amount_scrollbar:setValue(1)
-
-  onlyoffers_checkbox:setChecked(false)
-
+  
   amount_scrollbar.onValueChange = function(self, value)
     amount_scrollbar:setText(value)
     amount_scrollbar:setValue(value)
   end
 
-  seller_btn.onClick = function() sellProduct(itemid, name, gender, level, ispokemon, amount_scrollbar:getValue(), integgerAttribute) end
+  seller_btn.onClick = function() 
+  sellProduct(itemid, name, gender, level, ispokemon, amount_scrollbar:getValue(), integgerAttribute)
+
+  end
 end)
 
 ProtocolGame.registerExtendedOpcode(112, function(protocol, opcode, buffer) -- insert my offers in panel seller
   local param = buffer:explode("@")
   local itemid = tonumber(param[1])
   local itemname = tostring(param[2])
+  local itemslotmsg = tostring(param[2])
   local itemtime = tonumber(param[3])
   local amount = tonumber(param[4])
   local price = tonumber(param[5])
@@ -237,9 +264,9 @@ ProtocolGame.registerExtendedOpcode(112, function(protocol, opcode, buffer) -- i
     local button = g_ui.createWidget("UIButton", products_list2)
     button:setId("button"..count_row)
     button:setSize("454 33")
-    button:setBackgroundColor("#363636")
+    button:setBackgroundColor("#1a1314")
     button:setBorderWidth(1)
-	button:setBorderColor("#F38CFF90")
+	button:setBorderColor("#362a2b")
     button:setMarginTop(2)
     button:setMarginBottom(1)
     button:setMarginLeft(2)
@@ -247,7 +274,7 @@ ProtocolGame.registerExtendedOpcode(112, function(protocol, opcode, buffer) -- i
     button.onClick = function()
       for i = 1, #registered do
         if products_list2:getChildById("button"..i) then
-          products_list2:getChildById("button"..i):setBackgroundColor("#363636")
+          products_list2:getChildById("button"..i):setBackgroundColor("#1a1314")
         end
       end
 
@@ -258,7 +285,7 @@ ProtocolGame.registerExtendedOpcode(112, function(protocol, opcode, buffer) -- i
        if mouseButton == 2 then
         for i = 1, #registered do
           if products_list2:getChildById("button"..i) then
-            products_list2:getChildById("button"..i):setBackgroundColor("#363636")
+            products_list2:getChildById("button"..i):setBackgroundColor("#1a1314")
           end
         end
   
@@ -269,9 +296,14 @@ ProtocolGame.registerExtendedOpcode(112, function(protocol, opcode, buffer) -- i
           if not g_game.isOnline() then
              return
           end
-
           g_game.getProtocolGame():sendExtendedOpcode(105, transaction_id.."@") 
+			if not g_game.isOnline() then
+				return
+			end
+			g_game.getProtocolGame():sendExtendedOpcode(104, "receiveMyItems")
         end)
+		
+		
         menu:display(mousePosition)
        end
     end
@@ -283,24 +315,39 @@ ProtocolGame.registerExtendedOpcode(112, function(protocol, opcode, buffer) -- i
     numeration:setMarginTop(7)
     numeration:setText(count_row)
 
-    local item = g_ui.createWidget("Item", button)
-    item:setSize("27 27")
-    item:addAnchor(AnchorTop, "parent", AnchorTop)
-    item:addAnchor(AnchorLeft, "parent", AnchorLeft)
-    item:setMarginLeft(40)
-    item:setMarginTop(2)
-    item:setVirtual(true)
-    item:setItemId(itemid)
-    item.onMouseRelease = function()
-      displayErrorBox(tr('Informacoes do Produto'), description)
-    end
+	local item = g_ui.createWidget("Item", button)
+	item:setSize("27 27")
+	item:addAnchor(AnchorTop, "parent", AnchorTop)
+	item:addAnchor(AnchorLeft, "parent", AnchorLeft)
+	item:setMarginLeft(40)
+	item:setMarginTop(2)
+	if itemname and string.find(itemname, "%[L%]") then
+		item:setImageSource("/images/game/slots/rarity-purple")
+	elseif itemname and string.find(itemname, "%[R%]") then
+		item:setImageSource("/images/game/slots/rarity-orange")
+	elseif itemname and string.find(itemname, "%[N%]") then
+		item:setImageSource("/images/game/slots/rarity-green")
+	end
+	item:setVirtual(true)
+	item:setItemId(itemid)
+
+	item.onMouseRelease = function(widget, mousePos, mouseButton)
+		if mouseButton == MouseLeftButton then
+			displayErrorBox(tr, itemslotmsg)
+		end
+	end
 
     local name = g_ui.createWidget("Label", button)
     name:addAnchor(AnchorTop, "parent", AnchorTop)
     name:addAnchor(AnchorLeft, "parent", AnchorLeft)
-    name:setMarginLeft(82)
-    name:setMarginTop(7)
-    name:setText(itemname)
+	local maxCharacters = 15
+	if string.len(itemname) > maxCharacters then
+		itemname = string.sub(itemname, 1, maxCharacters) .. "..."
+	end
+	name:setFont('verdana-11px-rounded')
+	name:setMarginLeft(82)
+	name:setMarginTop(7)
+	name:setText(""..itemname.."   ")
 
     local time = g_ui.createWidget("Label", button)
     time:setId("time"..count_row)
@@ -308,11 +355,12 @@ ProtocolGame.registerExtendedOpcode(112, function(protocol, opcode, buffer) -- i
     time:addAnchor(AnchorLeft, "parent", AnchorLeft)
     time:setMarginLeft(225)
     time:setMarginTop(7)
+	time:setFont('verdana-11px-rounded')
 
     if itemtime - os.time() > 0 then
        time:setText(os.date("%X", itemtime - os.time()))
     else
-      time:setText("Expired")
+      time:setText("Expired   ")
     end
 
     local count = g_ui.createWidget("Label", button)
@@ -320,14 +368,16 @@ ProtocolGame.registerExtendedOpcode(112, function(protocol, opcode, buffer) -- i
     count:addAnchor(AnchorLeft, "parent", AnchorLeft)
     count:setMarginLeft(345)
     count:setMarginTop(7)
-    count:setText(amount)
+    count:setText(""..amount.."   ")
+	count:setFont('verdana-11px-rounded')
 
     local pricee = g_ui.createWidget("Label", button)
     pricee:addAnchor(AnchorTop, "parent", AnchorTop)
     pricee:addAnchor(AnchorLeft, "parent", AnchorLeft)
     pricee:setMarginLeft(430)
     pricee:setMarginTop(7)
-    pricee:setText(abreviateNumber(price))
+    pricee:setText(""..abreviateNumber(price).."   ")
+	pricee:setFont('verdana-11px-rounded')
     registered[count_row] = itemname
     time_list[count_row] = itemtime
     transaction_id_list[count_row] = transaction_id
@@ -356,7 +406,7 @@ ProtocolGame.registerExtendedOpcode(113, function(protocol, opcode, buffer) -- i
     local button = g_ui.createWidget("UIButton", products_list2)
     button:setId("button"..count_row)
     button:setSize("454 33")
-    button:setBackgroundColor("#363636")
+    button:setBackgroundColor("#1a1314")
     button:setMarginTop(-3)
     button:setMarginBottom(5)
     button:setMarginLeft(0)
@@ -364,23 +414,24 @@ ProtocolGame.registerExtendedOpcode(113, function(protocol, opcode, buffer) -- i
     button.onClick = function()
       for i = 1, #registered do
         if products_list2:getChildById("button"..i) then
-          products_list2:getChildById("button"..i):setBackgroundColor("#363636")
+          products_list2:getChildById("button"..i):setBackgroundColor("#1a1314")
         end
       end
 
-      button:setBackgroundColor("#836FFF")
+      button:setBackgroundColor("#EFCDF350")
     end
 
     button.onMouseRelease = function(self, mousePosition, mouseButton) 
        if mouseButton == 2 then
         for i = 1, #registered do
           if products_list2:getChildById("button"..i) then
-            products_list2:getChildById("button"..i):setBackgroundColor("#363636")
+            products_list2:getChildById("button"..i):setBackgroundColor("#1a1314")
           end
         end
   
-        button:setBackgroundColor("#836FFF")
-
+        --button:setBackgroundColor("#EFCDF350")
+		button:setBackgroundColor("#EFCDF350")
+		
         local menu = g_ui.createWidget("PopupMenu")
         menu:addOption(tr("Cancelar"), function() 
           if not g_game.isOnline() then
@@ -398,53 +449,65 @@ ProtocolGame.registerExtendedOpcode(113, function(protocol, opcode, buffer) -- i
     numeration:addAnchor(AnchorLeft, "parent", AnchorLeft)
     numeration:setMarginLeft(8)
     numeration:setMarginTop(13)
-    numeration:setText(count_row)
+    numeration:setText(""..count_row.."   ")
 
     local item = g_ui.createWidget("Item", button)
-    item:setSize("34 34")
+    item:setSize("27 27")
     item:addAnchor(AnchorTop, "parent", AnchorTop)
     item:addAnchor(AnchorLeft, "parent", AnchorLeft)
     item:setMarginLeft(42)
     item:setMarginTop(5)
+	if itemname and string.find(itemname, "%[L%]") then
+		item:setImageSource("/images/game/slots/rarity-purple")
+	elseif itemname and string.find(itemname, "%[R%]") then
+		item:setImageSource("/images/game/slots/rarity-orange")
+	elseif itemname and string.find(itemname, "%[N%]") then
+		item:setImageSource("/images/game/slots/rarity-green")
+	end
     item:setVirtual(true)
     item:setItemId(itemid)
-    item.onMouseRelease = function()
-      displayErrorBox(tr('Informacoes do Produto'), description)
-    end
 
     local name = g_ui.createWidget("Label", button)
     name:addAnchor(AnchorTop, "parent", AnchorTop)
     name:addAnchor(AnchorLeft, "parent", AnchorLeft)
-    name:setMarginLeft(160)
-    name:setMarginTop(15)
-    name:setText(itemname)
+	local maxCharacters = 15
+	if string.len(itemname) > maxCharacters then
+		itemname = string.sub(itemname, 1, maxCharacters) .. "..."
+	end
+	name:setMarginLeft(82)
+	name:setMarginTop(7)
+	name:setText(""..itemname.."   ")
+	name:setFont('verdana-11px-rounded')
 
     local time = g_ui.createWidget("Label", button)
     time:setId("time"..count_row)
     time:addAnchor(AnchorTop, "parent", AnchorTop)
     time:addAnchor(AnchorLeft, "parent", AnchorLeft)
-    time:setMarginLeft(360)
-    time:setMarginTop(15)
+    time:setMarginLeft(225)
+    time:setMarginTop(7)
+	time:setFont('verdana-11px-rounded')
 
     if itemtime - os.time() > 0 then
-       time:setText(os.date("%X", itemtime))
+       time:setText(os.date("%X", ""..itemtime.."   "))
     else
-      time:setText("Expired")
+      time:setText("Expired   ")
     end
 
     local count = g_ui.createWidget("Label", button)
     count:addAnchor(AnchorTop, "parent", AnchorTop)
     count:addAnchor(AnchorLeft, "parent", AnchorLeft)
-    count:setMarginLeft(454)
-    count:setMarginTop(15)
-    count:setText(amount)
+    count:setMarginLeft(345)
+    count:setMarginTop(7)
+    count:setText(""..amount.."   ")
+	count:setFont('verdana-11px-rounded')
 
     local pricee = g_ui.createWidget("Label", button)
     pricee:addAnchor(AnchorTop, "parent", AnchorTop)
     pricee:addAnchor(AnchorLeft, "parent", AnchorLeft)
-    pricee:setMarginLeft(454)
-    pricee:setMarginTop(15)
-    pricee:setText(price)
+    pricee:setMarginLeft(430)
+    pricee:setMarginTop(7)
+    pricee:setText(""..price.."   ")
+	pricee:setFont('verdana-11px-rounded')
 
     registered[count_row] = itemname
     time_list[count_row] = itemtime
@@ -510,6 +573,7 @@ ProtocolGame.registerExtendedOpcode(115, function(protocol, opcode, buffer) -- i
   local param = buffer:explode("@")
   local itemid = tonumber(param[1])
   local itemname = tostring(param[2])
+  local itemslotmsg = tostring(param[2])
   local item_seller = tostring(param[3])
   local amount = tonumber(param[4])
   local price = tonumber(param[5])
@@ -522,15 +586,15 @@ ProtocolGame.registerExtendedOpcode(115, function(protocol, opcode, buffer) -- i
   local transaction_id = tonumber(param[12])
   local onlyoffers = tonumber(param[13])
   local page_numeration = tonumber(param[14])
+  local item_time = tonumber(param[15])
   globalCount_numerationsPage = page_numeration
-
   if not registered2[count_row] then
     local button = g_ui.createWidget("UIButton", products_list)
     button:setId("button"..count_row)
     button:setSize("454 33")
-    button:setBackgroundColor("#363636")
+    button:setBackgroundColor("#1a1314")
     button:setBorderWidth(1)
-	  button:setBorderColor("#F38CFF90")
+	  button:setBorderColor("#362a2b")
     button:setMarginTop(2)
     button:setMarginBottom(1)
     button:setMarginLeft(2)
@@ -538,7 +602,7 @@ ProtocolGame.registerExtendedOpcode(115, function(protocol, opcode, buffer) -- i
     button.onClick = function()
       for i = 1, #registered2 do
         if products_list:getChildById("button"..i) then
-          products_list:getChildById("button"..i):setBackgroundColor("#363636")
+          products_list:getChildById("button"..i):setBackgroundColor("#1a1314")
         end
       end
 
@@ -552,126 +616,13 @@ ProtocolGame.registerExtendedOpcode(115, function(protocol, opcode, buffer) -- i
 
       fazerOferta_btn:setEnabled(true)
       fazerOferta_btn.onClick = function()
-     --[[  market:hide()
-      if makeoffer then
-        return
-      end
-        
-      makeoffer = g_ui.createWidget('MakeOfferWindow', rootWidget)
-      
-      -- Widgets
-      local item_slot = g_ui.createWidget("Item", makeoffer)
-      item_slot:setVirtual(true)
-      item_slot:addAnchor(AnchorTop, "parent", AnchorTop)
-      item_slot:addAnchor(AnchorLeft, "parent", AnchorLeft)
-      item_slot:setItemId(itemid)
-
-      local item_name_label = g_ui.createWidget("MakeOfferItemName", item_slot)
-      item_name_label:addAnchor(AnchorTop, "parent", AnchorTop)
-      item_name_label:addAnchor(AnchorLeft, "parent", AnchorLeft)
-      item_name_label:setText(itemname)
-
-       local panel = g_ui.createWidget("MakeOfferPanel", makeoffer)
-       panel:setId("panel")
-       panel:addAnchor(AnchorTop, "parent", AnchorTop)
-       panel:addAnchor(AnchorLeft, "parent", AnchorLeft)
-
-       for i = 1, 8 do
-          local item_slot_offer = g_ui.createWidget("MakeOfferItem", panel)
-          item_slot_offer:setId("item"..i)
-          item_slot_offer:setMarginTop(40)
-          item_slot_offer:setMarginLeft(10)
-
-          item_slot_offer.onDrop = function(self, widget, mousePos)
-            local item = widget.currentDragThing
-            if not item:isItem() then return false end
-            executeDrop(item_slot_offer, item, transaction_id)
-          end
-        end
-
-        local close_button_offer = g_ui.createWidget("Button", makeoffer)
-        close_button_offer:addAnchor(AnchorTop, "parent", AnchorTop)
-        close_button_offer:addAnchor(AnchorLeft, "parent", AnchorLeft)
-        close_button_offer:setMarginTop(140)
-        close_button_offer:setMarginLeft(-2)
-        close_button_offer:setColor("white")
-        close_button_offer:setSize("86 24")
-        close_button_offer:setText("Fechar")
-        close_button_offer.onClick = function()
-          for it = 1, count_row do
-            if products_list:getChildById("button"..it) then
-              products_list:getChildById("button"..it):setBackgroundColor("#363636")
-            end
-          end
-
-          for it = 1, count_row do
-            if products_list2:getChildById("button"..it) then
-              products_list2:getChildById("button"..it):setBackgroundColor("#363636")
-            end
-          end
-  
-          g_game.getProtocolGame():sendExtendedOpcode(119, "devolver".."@")
-          market:show()
-          makeoffer:hide()
-          makeoffer = nil
-        end
-
-        local confirm_button_offer = g_ui.createWidget("Button", makeoffer)
-        confirm_button_offer:addAnchor(AnchorTop, "parent", AnchorTop)
-        confirm_button_offer:addAnchor(AnchorLeft, "parent", AnchorLeft)
-        confirm_button_offer:setMarginTop(140)
-        confirm_button_offer:setMarginLeft(287)
-        confirm_button_offer:setColor("white")
-        confirm_button_offer:setSize("86 24")
-        confirm_button_offer:setText("Confirmar")
-        confirm_button_offer.onClick = function()
-
-           -- Disable Buy Buttons
-           comprarAgora_btn:setEnabled(false)
-           comprarAgora_btn.onClick = function() end
- 
-           fazerOferta_btn:setEnabled(false)
-           fazerOferta_btn.onClick = function() end
- 
-           for it = 1, count_row do
-             if products_list:getChildById("button"..it) then
-               products_list:getChildById("button"..it):setBackgroundColor("#363636")
-             end
-           end
- 
-           for it = 1, count_row do
-             if products_list2:getChildById("button"..it) then
-               products_list2:getChildById("button"..it):setBackgroundColor("#363636")
-             end
-           end
-
-          for i = 1, 8 do
-            local item_select_slot = panel:getChildById("item"..i)
-            if not item_select_slot:getItem() then
-              if not panel:getChildById("item1"):getItem() and not panel:getChildById("item2"):getItem() and not panel:getChildById("item3"):getItem()
-                and not panel:getChildById("item4"):getItem() and not panel:getChildById("item5"):getItem() and not panel:getChildById("item6"):getItem()
-                and not panel:getChildById("item7"):getItem() and not panel:getChildById("item8"):getItem() then
-                  displayErrorBox(tr, "Voce deve colocar pelo menos um item para poder ofertar.")
-                  return
-                else
-                  g_game.getProtocolGame():sendExtendedOpcode(109, transaction_id.."@"..item_seller.."@"..i.."@")
-                  break
-              end
-            end
-          end
-
-          makeoffer:hide()
-          market:show()
-
-          makeoffer = nil
-        end ]]
       end
 
     button.onMouseRelease = function(self, mousePosition, mouseButton) 
        if mouseButton == 2 then
         for i = 1, #registered2 do
           if products_list:getChildById("button"..i) then
-            products_list:getChildById("button"..i):setBackgroundColor("#363636")
+            products_list:getChildById("button"..i):setBackgroundColor("#1a1314")
           end
         end
   
@@ -684,67 +635,6 @@ ProtocolGame.registerExtendedOpcode(115, function(protocol, opcode, buffer) -- i
         end
 
         fazerOferta_btn:setEnabled(true)
-        --[[ fazerOferta_btn.onClick = function()
-          market:hide()
-          if makeoffer then
-            return
-          end
-            
-          makeoffer = g_ui.createWidget('MakeOfferWindow', rootWidget)
-          
-          -- Widgets
-          local item_slot = g_ui.createWidget("Item", makeoffer)
-          item_slot:setVirtual(true)
-          item_slot:addAnchor(AnchorTop, "parent", AnchorTop)
-          item_slot:addAnchor(AnchorLeft, "parent", AnchorLeft)
-          item_slot:setItemId(itemid)
-
-          local item_name_label = g_ui.createWidget("MakeOfferItemName", item_slot)
-          item_name_label:addAnchor(AnchorTop, "parent", AnchorTop)
-          item_name_label:addAnchor(AnchorLeft, "parent", AnchorLeft)
-          item_name_label:setText(itemname)
-
-          local panel = g_ui.createWidget("MakeOfferPanel", makeoffer)
-          panel:setId("panel")
-          panel:addAnchor(AnchorTop, "parent", AnchorTop)
-          panel:addAnchor(AnchorLeft, "parent", AnchorLeft)
-
-          for i = 1, 8 do
-            item_slot_offer = g_ui.createWidget("MakeOfferItem", panel)
-            item_slot_offer:setId("item"..i)
-            item_slot_offer:setMarginTop(40)
-            item_slot_offer:setMarginLeft(10)
-  
-            item_slot_offer.onDrop = function(self, widget, mousePos)
-              local item = widget.currentDragThing
-              if not item:isItem() then return false end
-              executeDrop(item_slot_offer, item, transaction_id)
-              end
-            end
-          end
-
-          local close_button_offer = g_ui.createWidget("Button", makeoffer)
-          close_button_offer:setMarginTop(140)
-          close_button_offer:setMarginLeft(-2)
-          close_button_offer:setColor("white")
-          close_button_offer:setSize("86 24")
-          close_button_offer:setText("Fechar")
-          close_button_offer.onClick = function()
-          for it = 1, count_row do
-              if products_list:getChildById("button"..it) then
-                products_list:getChildById("button"..it):setBackgroundColor("#363636")
-              end
-            end
-
-            for it = 1, count_row do
-              if products_list2:getChildById("button"..it) then
-                products_list2:getChildById("button"..it):setBackgroundColor("#363636")
-              end
-          end
-  
-          market:show()
-          makeoffer:hide()
-          makeoffer = nil ]]
         end
 
           local confirm_button_offer = g_ui.createWidget("Button", makeoffer)
@@ -761,51 +651,10 @@ ProtocolGame.registerExtendedOpcode(115, function(protocol, opcode, buffer) -- i
 
             fazerOferta_btn:setEnabled(false)
             fazerOferta_btn.onClick = function() end
-
-            --[[ for it = 1, count_row do
-              if products_list:getChildById("button"..it) then
-                products_list:getChildById("button"..it):setBackgroundColor("#363636")
-              end
-            end
-
-            for it = 1, count_row do
-              if products_list2:getChildById("button"..it) then
-                products_list2:getChildById("button"..it):setBackgroundColor("#363636")
-              end
-            end
-
-            for i = 1, 8 do
-              local item_select_slot = panel:getChildById("item"..i)
-              if not item_select_slot:getItem() then
-                g_game.getProtocolGame():sendExtendedOpcode(109, transaction_id.."@"..item_seller.."@"..i.."@")
-                break
-              end
-            end
-
-            makeoffer:hide()
-            market:show()
-
-            makeoffer = nil
-          end ]]
         end
 
         local menu = g_ui.createWidget("PopupMenu")
-        --[[ menu:addOption(tr("Mostrar as ofertas"), function() 
-          if not g_game.isOnline() then
-             return
-          end
 
-          --
-        end) ]]
-
-        menu:addOption(tr("Enviar mensagem para " ..item_seller), function() 
-          if not g_game.isOnline() then
-             return
-          end
-
-          g_game.openPrivateChannel(item_seller)
-        end)
-        menu:display(mousePosition)
        end
     end
 
@@ -814,53 +663,67 @@ ProtocolGame.registerExtendedOpcode(115, function(protocol, opcode, buffer) -- i
     numeration:addAnchor(AnchorLeft, "parent", AnchorLeft)
     numeration:setMarginLeft(5)
     numeration:setMarginTop(7)
-    numeration:setText(count_row)
--- aqui
-    local item = g_ui.createWidget("Item", button)
-    item:setSize("27 27")
-    item:addAnchor(AnchorTop, "parent", AnchorTop)
-    item:addAnchor(AnchorLeft, "parent", AnchorLeft)
-    item:setMarginLeft(40)
-    item:setMarginTop(2)
-    item:setVirtual(true)
-    item:setItemId(itemid)
-    item.onMouseRelease = function()
-      displayErrorBox(tr('Informacoes do Produto'), description)
-    end
+    numeration:setText(""..count_row.."   ")
+
+	local item = g_ui.createWidget("Item", button)
+	item:setSize("27 27")
+	item:addAnchor(AnchorTop, "parent", AnchorTop)
+	item:addAnchor(AnchorLeft, "parent", AnchorLeft)
+	item:setMarginLeft(40)
+	item:setMarginTop(2)
+	if itemname and string.find(itemname, "%[L%]") then
+		item:setImageSource("/images/game/slots/rarity-purple")
+	elseif itemname and string.find(itemname, "%[R%]") then
+		item:setImageSource("/images/game/slots/rarity-orange")
+	elseif itemname and string.find(itemname, "%[N%]") then
+		item:setImageSource("/images/game/slots/rarity-green")
+	end
+	item:setVirtual(true)
+	item:setItemId(itemid)
+
+	item.onMouseRelease = function(widget, mousePos, mouseButton)
+		if mouseButton == MouseLeftButton then
+			displayErrorBox(tr, itemslotmsg)
+		end
+	end
 
     local name = g_ui.createWidget("Label", button)
     name:addAnchor(AnchorTop, "parent", AnchorTop)
     name:addAnchor(AnchorLeft, "parent", AnchorLeft)
-    name:setMarginLeft(82)
-    name:setMarginTop(7)
-    name:setText(itemname)
+	local maxCharacters = 15
+	if string.len(itemname) > maxCharacters then
+		itemname = string.sub(itemname, 1, maxCharacters) .. "..."
+	end
+	name:setMarginLeft(82)
+	name:setMarginTop(7)
+	name:setFont('verdana-11px-rounded')
+	name:setText(""..itemname.."   ")
 
-    local seller = g_ui.createWidget("Label", button)
-    seller:addAnchor(AnchorTop, "parent", AnchorTop)
-    seller:addAnchor(AnchorLeft, "parent", AnchorLeft)
-    seller:setMarginLeft(225)
-    seller:setMarginTop(7)
-    seller:setText(item_seller)
+	local seller = g_ui.createWidget("Label", button)
+	seller:addAnchor(AnchorTop, "parent", AnchorTop)
+	seller:addAnchor(AnchorLeft, "parent", AnchorLeft)
+	seller:setText(""..item_seller.."  ")
+	local widgetWidth = seller:getTextSize().width
+	seller:setMarginLeft((button:getWidth() - widgetWidth) / 2)
+	seller:setFont('verdana-11px-rounded')
+	seller:setMarginTop(7)
 
     local count = g_ui.createWidget("Label", button)
     count:addAnchor(AnchorTop, "parent", AnchorTop)
     count:addAnchor(AnchorLeft, "parent", AnchorLeft)
     count:setMarginLeft(345)
     count:setMarginTop(7)
-    count:setText(amount)
+	count:setFont('verdana-11px-rounded')
+    count:setText(""..amount.."   ")
 
     local pricee = g_ui.createWidget("Label", button)
     pricee:addAnchor(AnchorTop, "parent", AnchorTop)
     pricee:addAnchor(AnchorLeft, "parent", AnchorLeft)
     pricee:setMarginLeft(430)
+	pricee:setFont('verdana-11px-rounded')
     pricee:setMarginTop(7)
     
-    pricee:setText(abreviateNumber(price))
-
-    -- Paginacao
-    if passando == false then
-      page_label:setText("Page: 1 / " .. page_numeration)
-    end
+    pricee:setText(""..abreviateNumber(price).."   ")
 
     registered2[count_row] = itemname
   end
@@ -887,21 +750,6 @@ ProtocolGame.registerExtendedOpcode(116, function(protocol, opcode, buffer) -- i
   end
 end)
 
-ProtocolGame.registerExtendedOpcode(117, function(protocol, opcode, buffer) -- insert market my historic
-  local param = buffer:split("@")
-  local item_name = tostring(param[1])
-  local amount = tonumber(param[2])
-  local date = tonumber(param[3])
-  globalCount = globalCount + 1
-
-  if not registered3[globalCount] then
-    local product_label = g_ui.createWidget("HistoricLabel", products_list5)
-    product_label:setText(os.date("%d/%m/%Y", date) .. " - " .. " Voce comprou " .. amount .. " " ..item_name.. ".")
-
-    registered3[globalCount] = item_name
-  end
-end)
-
 ProtocolGame.registerExtendedOpcode(118, function(protocol, opcode, buffer) -- insert market item in window offer items
   local param = buffer:split("@")
   local item_id = tostring(param[1])
@@ -922,9 +770,6 @@ ProtocolGame.registerExtendedOpcode(118, function(protocol, opcode, buffer) -- i
     if not item:getItem() then
       item:setVirtual(true)
       item:setItemId(item_id)
-      item.onMouseRelease = function()
-        displayErrorBox(tr('Informacoes do Produto'), description)
-      end
       break
     end
   end
@@ -943,9 +788,9 @@ ProtocolGame.registerExtendedOpcode(119, function(protocol, opcode, buffer) -- i
     local button = g_ui.createWidget("UIButton", products_list4)
     button:setId("button"..count_row)
     button:setSize("454 33")
-    button:setBackgroundColor("#363636")
+    button:setBackgroundColor("#1a1314")
     button:setBorderWidth(1)
-	button:setBorderColor("#F38CFF90")
+	button:setBorderColor("#362a2b")
     button:setMarginTop(2)
     button:setMarginBottom(1)
     button:setMarginLeft(2)
@@ -953,7 +798,7 @@ ProtocolGame.registerExtendedOpcode(119, function(protocol, opcode, buffer) -- i
     button.onClick = function()
       for i = 1, #registered do
         if products_list4:getChildById("button"..i) then
-          products_list4:getChildById("button"..i):setBackgroundColor("#363636")
+          products_list4:getChildById("button"..i):setBackgroundColor("#1a1314")
         end
       end
 
@@ -964,7 +809,7 @@ ProtocolGame.registerExtendedOpcode(119, function(protocol, opcode, buffer) -- i
        if mouseButton == 2 then
         for i = 1, #registered do
           if products_list4:getChildById("button"..i) then
-            products_list4:getChildById("button"..i):setBackgroundColor("#363636")
+            products_list4:getChildById("button"..i):setBackgroundColor("#1a1314")
           end
         end
   
@@ -979,31 +824,48 @@ ProtocolGame.registerExtendedOpcode(119, function(protocol, opcode, buffer) -- i
     numeration:setMarginTop(7)
     numeration:setText(count_row)
 
-    local item = g_ui.createWidget("Item", button)
-    item:setSize("27 27")
-    item:addAnchor(AnchorTop, "parent", AnchorTop)
-    item:addAnchor(AnchorLeft, "parent", AnchorLeft)
-    item:setMarginLeft(40)
-    item:setMarginTop(2)
-    item:setVirtual(true)
-    item:setItemId(item_id)
-    item.onMouseRelease = function()
-      displayErrorBox(tr('Informacoes do Produto'), description)
-    end
+	local item = g_ui.createWidget("Item", button)
+	item:setSize("27 27")
+	item:addAnchor(AnchorTop, "parent", AnchorTop)
+	item:addAnchor(AnchorLeft, "parent", AnchorLeft)
+	item:setMarginLeft(40)
+	item:setMarginTop(2)
+	if itemname and string.find(itemname, "%[L%]") then
+		item:setImageSource("/images/game/slots/rarity-purple")
+	elseif itemname and string.find(itemname, "%[R%]") then
+		item:setImageSource("/images/game/slots/rarity-orange")
+	elseif itemname and string.find(itemname, "%[N%]") then
+		item:setImageSource("/images/game/slots/rarity-green")
+	end
+	item:setVirtual(true)
+	item:setItemId(itemid)
+
+	item.onMouseRelease = function(widget, mousePos, mouseButton)
+		if mouseButton == MouseLeftButton then
+			displayErrorBox(tr, itemslotmsg)
+		end
+	end
 
     local name = g_ui.createWidget("Label", button)
     name:addAnchor(AnchorTop, "parent", AnchorTop)
     name:addAnchor(AnchorLeft, "parent", AnchorLeft)
-    name:setMarginLeft(80)
-    name:setMarginTop(7)
-    name:setText(item_name)
+	local maxCharacters = 15
+	if string.len(itemname) > maxCharacters then
+		itemname = string.sub(itemname, 1, maxCharacters) .. "..."
+	end
+	name:setMarginLeft(82)
+	name:setMarginTop(7)
+	name:setText(""..itemname.."   ")
+	name:setFont('verdana-11px-rounded')
+
 
     local seller = g_ui.createWidget("Label", button)
     seller:addAnchor(AnchorTop, "parent", AnchorTop)
     seller:addAnchor(AnchorLeft, "parent", AnchorLeft)
     seller:setMarginLeft(225)
     seller:setMarginTop(7)
-    seller:setText(item_seller)
+    seller:setText(""..item_seller.."   ")
+	seller:setFont('verdana-11px-rounded')
 
     local offer_btn = g_ui.createWidget("Button", button)
     offer_btn:setSize("62 20")
@@ -1027,7 +889,6 @@ ProtocolGame.registerExtendedOpcode(119, function(protocol, opcode, buffer) -- i
           
       -- Widgets
       local item_slot = g_ui.createWidget("Item", makeoffer)
-      item_slot:setVirtual(true)
       item_slot:addAnchor(AnchorTop, "parent", AnchorTop)
       item_slot:addAnchor(AnchorLeft, "parent", AnchorLeft)
       item_slot:setItemId(item_id)
@@ -1061,19 +922,19 @@ ProtocolGame.registerExtendedOpcode(119, function(protocol, opcode, buffer) -- i
       close_button_offer.onClick = function()
         for it = 1, count_row do
           if products_list:getChildById("button"..it) then
-            products_list:getChildById("button"..it):setBackgroundColor("#363636")
+            products_list:getChildById("button"..it):setBackgroundColor("#1a1314")
           end
         end
 
         for it = 1, count_row do
           if products_list2:getChildById("button"..it) then
-            products_list2:getChildById("button"..it):setBackgroundColor("#363636")
+            products_list2:getChildById("button"..it):setBackgroundColor("#1a1314")
           end
         end
 
         for i = 1, #registered4 do
           if products_list4:getChildById("button"..i) then
-            products_list4:getChildById("button"..i):setBackgroundColor("#363636")
+            products_list4:getChildById("button"..i):setBackgroundColor("#1a1314")
           end
         end
 
@@ -1122,9 +983,9 @@ ProtocolGame.registerExtendedOpcode(120, function(protocol, opcode, buffer) -- i
     local button = g_ui.createWidget("UIButton", products_list3)
     button:setId("button"..count_row)
     button:setSize("454 33")
-    button:setBackgroundColor("#363636")
+    button:setBackgroundColor("#1a1314")
     button:setBorderWidth(1)
-	button:setBorderColor("#F38CFF90")
+	button:setBorderColor("#362a2b")
     button:setMarginTop(2)
     button:setMarginBottom(1)
     button:setMarginLeft(2)
@@ -1132,7 +993,7 @@ ProtocolGame.registerExtendedOpcode(120, function(protocol, opcode, buffer) -- i
     button.onClick = function()
       for i = 1, #registered do
         if products_list4:getChildById("button"..i) then
-          products_list4:getChildById("button"..i):setBackgroundColor("#363636")
+          products_list4:getChildById("button"..i):setBackgroundColor("#1a1314")
         end
       end
 
@@ -1143,7 +1004,7 @@ ProtocolGame.registerExtendedOpcode(120, function(protocol, opcode, buffer) -- i
        if mouseButton == 2 then
         for i = 1, #registered do
           if products_list4:getChildById("button"..i) then
-            products_list4:getChildById("button"..i):setBackgroundColor("#363636")
+            products_list4:getChildById("button"..i):setBackgroundColor("#1a1314")
           end
         end
   
@@ -1164,18 +1025,28 @@ ProtocolGame.registerExtendedOpcode(120, function(protocol, opcode, buffer) -- i
     item:addAnchor(AnchorLeft, "parent", AnchorLeft)
     item:setMarginLeft(40)
     item:setMarginTop(2)
+	if itemname and string.find(itemname, "%[L%]") then
+		item:setImageSource("/images/game/slots/rarity-purple")
+	elseif itemname and string.find(itemname, "%[R%]") then
+		item:setImageSource("/images/game/slots/rarity-orange")
+	elseif itemname and string.find(itemname, "%[N%]") then
+		item:setImageSource("/images/game/slots/rarity-green")
+	end
     item:setVirtual(true)
     item:setItemId(item_id)
-    item.onMouseRelease = function()
-      displayErrorBox(tr('Informacoes do Produto'), description)
-    end
 
     local name = g_ui.createWidget("Label", button)
     name:addAnchor(AnchorTop, "parent", AnchorTop)
     name:addAnchor(AnchorLeft, "parent", AnchorLeft)
-    name:setMarginLeft(80)
-    name:setMarginTop(7)
-    name:setText(item_name)
+	local maxCharacters = 15
+	if string.len(itemname) > maxCharacters then
+		itemname = string.sub(itemname, 1, maxCharacters) .. "..."
+	end
+	name:setMarginLeft(82)
+	name:setMarginTop(7)
+	name:setText(""..itemname.."   ")
+	name:setFont('verdana-11px-rounded')
+
 
     local offer_btn = g_ui.createWidget("Button", button)
     offer_btn:setSize("62 20")
@@ -1216,10 +1087,6 @@ ProtocolGame.registerExtendedOpcode(120, function(protocol, opcode, buffer) -- i
 
       for i = 1, 8 do
           item_slot_offer = g_ui.createWidget("MakeOfferItem", panel)
-          item_slot_offer:setVirtual(true)
-          item_slot_offer:setId("item"..i)
-          item_slot_offer:setMarginTop(40)
-          item_slot_offer:setMarginLeft(10)
       end
 
       local close_button_offer = g_ui.createWidget("Button", makeoffer)
@@ -1233,19 +1100,19 @@ ProtocolGame.registerExtendedOpcode(120, function(protocol, opcode, buffer) -- i
       close_button_offer.onClick = function()
         for it = 1, count_row do
           if products_list:getChildById("button"..it) then
-            products_list:getChildById("button"..it):setBackgroundColor("#363636")
+            products_list:getChildById("button"..it):setBackgroundColor("#1a1314")
           end
         end
 
         for it = 1, count_row do
           if products_list2:getChildById("button"..it) then
-            products_list2:getChildById("button"..it):setBackgroundColor("#363636")
+            products_list2:getChildById("button"..it):setBackgroundColor("#1a1314")
           end
         end
 
         for i = 1, #registered4 do
           if products_list4:getChildById("button"..i) then
-            products_list4:getChildById("button"..i):setBackgroundColor("#363636")
+            products_list4:getChildById("button"..i):setBackgroundColor("#1a1314")
           end
         end
 
@@ -1316,6 +1183,8 @@ end)
 
 -- Categoria de Venda
 function sellproductCategory()
+  g_game.getProtocolGame():sendExtendedOpcode(104, "receiveMyItems")
+  g_game.getProtocolGame():sendExtendedOpcode(117, "receiveMyItems")
 
   -- Aba de Compra
   category_label:hide()
@@ -1335,23 +1204,12 @@ function sellproductCategory()
   atualizar_btn:hide()
   fechar_btn:hide()
 
-  page_label:hide()
-  backallpages_btn:hide()
-  backpage_btn:hide()
-  nextpage_btn:hide()
-  nextallpages_btn:hide()
-
   -- Aba de Venda
   seller_panel:show()
   item_seller:show()
   item_name:show()
   pokemon_gender:show()
-  preco:show()
-  taxa:show()
-  total:show()
   amount_text:show()
-  onlyoffers_text:show()
-  onlyoffers_checkbox:show()
   priceperunit_text:show()
   priceperunit_textedit:show()
   select_objectbtn:show()
@@ -1372,9 +1230,13 @@ function sellproductCategory()
     if not g_game.isOnline() then
       return
     end
-    
+
     g_game.getProtocolGame():sendExtendedOpcode(104, "receiveMyItems")
     g_game.getProtocolGame():sendExtendedOpcode(117, "receiveMyItems")
+
+    scheduleEvent(function()
+      sellproductCategory()
+    end, 40)
   end
 
   fechar2_btn.onClick = function()
@@ -1400,8 +1262,6 @@ function sellproductCategory()
   amount_scrollbar:setMinimum(1)
   amount_scrollbar:setValue(1)
 
-  onlyoffers_checkbox:setChecked(false)
-
   -- Disable Buy Buttons
   comprarAgora_btn:setEnabled(false)
   comprarAgora_btn.onClick = function() end
@@ -1411,25 +1271,25 @@ function sellproductCategory()
 
   for i = 1, #registered2 do
     if products_list:getChildById("button"..i) then
-      products_list:getChildById("button"..i):setBackgroundColor("#363636")
+      products_list:getChildById("button"..i):setBackgroundColor("#1a1314")
     end
   end
 
   for i = 1, #registered do
     if products_list2:getChildById("button"..i) then
-      products_list2:getChildById("button"..i):setBackgroundColor("#363636")
+      products_list2:getChildById("button"..i):setBackgroundColor("#1a1314")
     end
   end
 
   for i = 1, #registered3 do
     if products_list3:getChildById("button"..i) then
-      products_list3:getChildById("button"..i):setBackgroundColor("#363636")
+      products_list3:getChildById("button"..i):setBackgroundColor("#1a1314")
     end
   end
 
   for i = 1, #registered4 do
     if products_list4:getChildById("button"..i) then
-      products_list4:getChildById("button"..i):setBackgroundColor("#363636")
+      products_list4:getChildById("button"..i):setBackgroundColor("#1a1314")
     end
   end
 
@@ -1448,17 +1308,34 @@ function buyproductCategory()
   category:show()
   search_product:show()
   search_btn:show()
-  search_btn.onClick = function()
+search_btn.onClick = function()
     if not g_game.isOnline() then
-      return
+        return
     end
 
-    if search_product:getText() == "" then
-      return
+    local searchText = search_product:getText()
+    if searchText == "" then
+        return
     end
 
-    g_game.getProtocolGame():sendExtendedOpcode(134, search_product:getText().."@"..category:getText().."@")
-  end
+    g_game.getProtocolGame():sendExtendedOpcode(134, searchText .. "@" .. category:getText() .. "@")
+end
+
+-- Manipulador de eventos para a tecla Enter
+search_product.onKeyDown = function(widget, keyCode, keyboardModifiers)
+    if keyCode == KeyReturn or keyCode == KeyEnter then
+        if not g_game.isOnline() then
+            return
+        end
+
+        local searchText = search_product:getText()
+        if searchText == "" then
+            return
+        end
+
+        g_game.getProtocolGame():sendExtendedOpcode(134, searchText .. "@" .. category:getText() .. "@")
+    end
+end
 
   sharp_btn:show()
   item_btn:show()
@@ -1473,80 +1350,8 @@ function buyproductCategory()
   atualizar_btn:show()
   fechar_btn:show()
 
-  page_label:show()
-  backallpages_btn:show()
-  backpage_btn:show()
-  nextpage_btn:show()
-  nextallpages_btn:show()
-
-  backallpages_btn.onClick = function()
-    if not g_game.isOnline() then
-      return
-    end
-
-    globalCount_numerationsPage2 = 1
-    g_game.getProtocolGame():sendExtendedOpcode(133, "backAllPages".."@"..category:getText().."@"..globalCount_numerationsPage2.."@")
-    page_label:setText("Page: 1 / " .. globalCount_numerationsPage2)
-    passando = true
-  end
-
-  backpage_btn.onClick = function()
-    if not g_game.isOnline() then
-      return
-    end
-
-    if globalCount_numerationsPage2 <= 1 then
-      globalCount_numerationsPage2 = 1
-      g_game.getProtocolGame():sendExtendedOpcode(133, "backOnePage".."@"..category:getText().."@"..globalCount_numerationsPage2.."@")
-      page_label:setText("Page: "..globalCount_numerationsPage2.." / " .. globalCount_numerationsPage)
-      passando = true
-      return
-    end
-
-    globalCount_numerationsPage2 = globalCount_numerationsPage2 - 1
-    
-    g_game.getProtocolGame():sendExtendedOpcode(133, "backOnePage".."@"..category:getText().."@"..globalCount_numerationsPage2.."@")
-    page_label:setText("Page: "..globalCount_numerationsPage2.." / " .. globalCount_numerationsPage)
-    passando = true
-  end
-
-  nextpage_btn.onClick = function()
-    if not g_game.isOnline() then
-      return
-    end
-
-    if globalCount_numerationsPage2 >= globalCount_numerationsPage then
-      globalCount_numerationsPage2 = globalCount_numerationsPage
-      g_game.getProtocolGame():sendExtendedOpcode(133, "backOnePage".."@"..category:getText().."@"..globalCount_numerationsPage2.."@")
-      page_label:setText("Page: "..globalCount_numerationsPage2.." / " .. globalCount_numerationsPage)
-      passando = true
-      return
-    end
-
-    if (globalCount_numerationsPage2 <= 0) then
-        globalCount_numerationsPage2 = globalCount_numerationsPage2 + 2
-    else
-        globalCount_numerationsPage2 = globalCount_numerationsPage2 + 1
-    end
-
-    g_game.getProtocolGame():sendExtendedOpcode(133, "nextOnePage".."@"..category:getText().."@"..globalCount_numerationsPage2.."@")
-    page_label:setText("Page: "..globalCount_numerationsPage2.." / " .. globalCount_numerationsPage)
-    passando = true
-  end
-  
-    
-  nextallpages_btn.onClick = function()
-    if not g_game.isOnline() then
-      return
-    end
-  
-    globalCount_numerationsPage2 = globalCount_numerationsPage
-    g_game.getProtocolGame():sendExtendedOpcode(133, "nextAllPages".."@"..category:getText().."@")
-    page_label:setText("Page: "..globalCount_numerationsPage.." / " .. globalCount_numerationsPage)
-    passando = true
-  end
-
   atualizar_btn.onClick = function()
+  g_game.getProtocolGame():sendExtendedOpcode(191)
     if not g_game.isOnline() then
       return
     end
@@ -1582,12 +1387,7 @@ function buyproductCategory()
   item_seller:hide()
   item_name:hide()
   pokemon_gender:hide()
-  preco:hide()
-  taxa:hide()
-  total:hide()
   amount_text:hide()
-  onlyoffers_text:hide()
-  onlyoffers_checkbox:hide()
   priceperunit_text:hide()
   priceperunit_textedit:hide()
   select_objectbtn:hide()
@@ -1623,33 +1423,31 @@ function buyproductCategory()
   amount_scrollbar:setMinimum(1)
   amount_scrollbar:setValue(1)
 
-  onlyoffers_checkbox:setChecked(false)
-
   -- Disable Buy Buttons
   comprarAgora_btn:setEnabled(false)
   fazerOferta_btn:setEnabled(false)
 
   for i = 1, #registered2 do
     if products_list:getChildById("button"..i) then
-      products_list:getChildById("button"..i):setBackgroundColor("#363636")
+      products_list:getChildById("button"..i):setBackgroundColor("#1a1314")
     end
   end
 
   for i = 1, #registered do
     if products_list2:getChildById("button"..i) then
-      products_list2:getChildById("button"..i):setBackgroundColor("#363636")
+      products_list2:getChildById("button"..i):setBackgroundColor("#1a1314")
     end
   end
 
   for i = 1, #registered3 do
     if products_list3:getChildById("button"..i) then
-      products_list3:getChildById("button"..i):setBackgroundColor("#363636")
+      products_list3:getChildById("button"..i):setBackgroundColor("#1a1314")
     end
   end
 
   for i = 1, #registered4 do
     if products_list4:getChildById("button"..i) then
-      products_list4:getChildById("button"..i):setBackgroundColor("#363636")
+      products_list4:getChildById("button"..i):setBackgroundColor("#1a1314")
     end
   end
 end
@@ -1687,22 +1485,12 @@ function onChooseItemMouseRelease(self, mousePosition, mouseButton)
     return true
   end
 
-  if item then
-    local container = g_game.getContainer(0)
-    for i = 0, container:getCapacity()-1 do
-        local item2 = container:getItem(i)
-        if item2 == item then
-          if not g_game.isOnline() then
-            return
-          end
-          
-          g_game.getProtocolGame():sendExtendedOpcode(102, i.."@")
-        end
-    end
-
-    local feet = player:getInventoryItem(8)
-    if feet == item then
-      displayErrorBox(tr, "Item nao reconhecido!")
+if item then
+    local ammo = player:getInventoryItem(10)
+    if ammo == item then
+      g_game.getProtocolGame():sendExtendedOpcode(102, "0".."@")
+    else
+    displayErrorBox(tr, "O item precisa estar no slot AMMO para ser anunciado no market.")
     end
   end
   return true
@@ -1710,39 +1498,42 @@ end
 
 -- Vender Produto
 function sellProduct(itemid, name, gender, level, ispokemon, count, integgerAttribute)
+if item_seller:getItemId() == 0 then
+  displayErrorBox(tr, "Precisa selecionar um item.")
+return false
+end
+  if tonumber(priceperunit_textedit:getText()) > 999 then
+  displayErrorBox(tr, "O valor precisa ser menor que 999 premium points.")
+  return false
+  end
   if priceperunit_textedit:getText() == "" then
-    displayErrorBox(tr, "A quantidade precisa ser maior que zero.")
+    displayErrorBox(tr, "O valor precisa ser maior que 0.")
   else if not tonumber(priceperunit_textedit:getText()) then
-    displayErrorBox(tr, "A quantidade precisa ser maior que zero.")
+    displayErrorBox(tr, "A Valor precisa ser maior que 0.")
   else if tonumber(priceperunit_textedit:getText()) <= 0 then
-    displayErrorBox(tr, "A quantidade precisa ser maior que zero.")
+    displayErrorBox(tr, "A valor precisa ser maior que 0.")
+	else if tonumber(priceperunit_textedit:getText()) > 0 then
       end
     end
   end
+ end
 
   if tonumber(priceperunit_textedit:getText()) and tonumber(priceperunit_textedit:getText()) > 0 then
      local price = tonumber(priceperunit_textedit:getText()) -- preco + taxa
-     
      if not g_game.isOnline() then
         return
      end
 
-     local checked = 0
-     if onlyoffers_checkbox:isChecked() == true then
-       checked = 1
-     else
-       checked = 0
-     end
-
+	local checked = 0
+	g_game.getProtocolGame():sendExtendedOpcode(104, "receiveMyItems")
+	g_game.getProtocolGame():sendExtendedOpcode(117, "receiveMyItems")
+	
      g_game.getProtocolGame():sendExtendedOpcode(103, itemid.."@"..name.."@"..gender.."@"..level.."@"..ispokemon.."@"
      ..count.."@"..price.."@"..integgerAttribute.."@"..checked.."@")
-
      amount_scrollbar:setText("1")
      amount_scrollbar:setMaximum(1)
      amount_scrollbar:setMinimum(1)
      amount_scrollbar:setValue(1)
-
-     onlyoffers_checkbox:setChecked(false)
 
      item_seller:setText("")
      item_seller:setItemId(0)
@@ -1798,13 +1589,13 @@ function buyProduct(id, count, price, transaction_id, onlyoffers)
   itembox:setItemId(id)
   itembox:setItemCount(count)
   scrollbar:setMaximum(count)
-  scrollbar:setMinimum(1)
+  scrollbar:setMinimum(count)
   scrollbar:setValue(count)
 
   local spinbox = countWindow:getChildById('spinBox')
   spinbox:setMaximum(count)
-  spinbox:setMinimum(0)
-  spinbox:setValue(0)
+  spinbox:setMinimum(count)
+  spinbox:setValue(count)
   spinbox:hideButtons()
   spinbox:focus()
   spinbox.firstEdit = true
@@ -1839,11 +1630,11 @@ function buyProduct(id, count, price, transaction_id, onlyoffers)
   local buyFunc = function()
     if onlyoffers == 0 then
       g_game.getProtocolGame():sendExtendedOpcode(106, price.."@"..transaction_id.."@"..scrollbar:getValue().."@")
+	  g_game.getProtocolGame():sendExtendedOpcode(191)
       market:show()
       okButton:getParent():destroy()
       countWindow = nil
     else
-      displayErrorBox(tr, "Este item s� aceita ofertas.")
       market:show()
       okButton:getParent():destroy()
       countWindow = nil
@@ -1890,12 +1681,7 @@ function offersCategory()
   item_seller:hide()
   item_name:hide()
   pokemon_gender:hide()
-  preco:hide()
-  taxa:hide()
-  total:hide()
   amount_text:hide()
-  onlyoffers_text:hide()
-  onlyoffers_checkbox:hide()
   priceperunit_text:hide()
   priceperunit_textedit:hide()
   select_objectbtn:hide()
@@ -1931,33 +1717,31 @@ function offersCategory()
   amount_scrollbar:setMinimum(1)
   amount_scrollbar:setValue(1)
 
-  onlyoffers_checkbox:setChecked(false)
-
   -- Disable Buy Buttons
   comprarAgora_btn:setEnabled(false)
   fazerOferta_btn:setEnabled(false)
 
   for i = 1, #registered2 do
     if products_list:getChildById("button"..i) then
-      products_list:getChildById("button"..i):setBackgroundColor("#363636")
+      products_list:getChildById("button"..i):setBackgroundColor("#1a1314")
     end
   end
 
   for i = 1, #registered do
     if products_list2:getChildById("button"..i) then
-      products_list2:getChildById("button"..i):setBackgroundColor("#363636")
+      products_list2:getChildById("button"..i):setBackgroundColor("#1a1314")
     end
   end
 
   for i = 1, #registered3 do
     if products_list3:getChildById("button"..i) then
-      products_list3:getChildById("button"..i):setBackgroundColor("#363636")
+      products_list3:getChildById("button"..i):setBackgroundColor("#1a1314")
     end
   end
 
   for i = 1, #registered4 do
     if products_list4:getChildById("button"..i) then
-      products_list4:getChildById("button"..i):setBackgroundColor("#363636")
+      products_list4:getChildById("button"..i):setBackgroundColor("#1a1314")
     end
   end
 
@@ -1989,23 +1773,12 @@ function historicCategory()
   atualizar_btn:hide()
   fechar_btn:hide()
 
-  page_label:hide()
-  backallpages_btn:hide()
-  backpage_btn:hide()
-  nextpage_btn:hide()
-  nextallpages_btn:hide()
-
   -- Aba de Venda
   seller_panel:hide()
   item_seller:hide()
   item_name:hide()
   pokemon_gender:hide()
-  preco:hide()
-  taxa:hide()
-  total:hide()
   amount_text:hide()
-  onlyoffers_text:hide()
-  onlyoffers_checkbox:hide()
   priceperunit_text:hide()
   priceperunit_textedit:hide()
   select_objectbtn:hide()
@@ -2044,33 +1817,31 @@ function historicCategory()
   amount_scrollbar:setMinimum(1)
   amount_scrollbar:setValue(1)
 
-  onlyoffers_checkbox:setChecked(false)
-
   -- Disable Buy Buttons
   comprarAgora_btn:setEnabled(false)
   fazerOferta_btn:setEnabled(false)
 
   for i = 1, #registered2 do
     if products_list:getChildById("button"..i) then
-      products_list:getChildById("button"..i):setBackgroundColor("#363636")
+      products_list:getChildById("button"..i):setBackgroundColor("#1a1314")
     end
   end
 
   for i = 1, #registered do
     if products_list2:getChildById("button"..i) then
-      products_list2:getChildById("button"..i):setBackgroundColor("#363636")
+      products_list2:getChildById("button"..i):setBackgroundColor("#1a1314")
     end
   end
 
   for i = 1, #registered3 do
     if products_list3:getChildById("button"..i) then
-      products_list3:getChildById("button"..i):setBackgroundColor("#363636")
+      products_list3:getChildById("button"..i):setBackgroundColor("#1a1314")
     end
   end
 
   for i = 1, #registered4 do
     if products_list4:getChildById("button"..i) then
-      products_list4:getChildById("button"..i):setBackgroundColor("#363636")
+      products_list4:getChildById("button"..i):setBackgroundColor("#1a1314")
     end
   end
 
@@ -2131,12 +1902,6 @@ function showOffertTab()
   action2_btn:show()
   atualizar3_btn:show()
   fechar3_btn:show()
-
-  page_label:hide()
-  backallpages_btn:hide()
-  backpage_btn:hide()
-  nextpage_btn:hide()
-  nextallpages_btn:hide()
 
   atualizar3_btn.onClick = function()
     if not g_game.isOnline() then
