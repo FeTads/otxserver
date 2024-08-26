@@ -3306,7 +3306,7 @@ void ProtocolGame::AddCreatureOutfit(OutputMessage_ptr msg, const Creature* crea
 			msg->addByte(outfit.lookAddons);
 		}
 		else if(outfit.lookTypeEx)
-			msg->addItemId(outfit.lookTypeEx);
+			msg->addItemId(outfit.lookTypeEx, player);
 		else
 			msg->add<uint16_t>(outfit.lookTypeEx);
 
