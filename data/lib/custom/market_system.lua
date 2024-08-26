@@ -1,7 +1,7 @@
 -- Sistema de Market --
-OPEN_MARKETWINDOW_OPCODE = 210 -- opcode para abrir a janela de market
-OPEN_MARKETWINDOW_SENDOPTIONS_OPCODE = 216 -- opcode para enviar opcoes do market
-MARKET_AVAIABLE_OPTIONS = {"All", "Weapons", "Armors", "Points"} -- para adicionar mais categorias voce adiciona aqui (e na source)
+OPEN_MARKETWINDOW_OPCODE = 110 -- opcode para abrir a janela de market
+OPEN_MARKETWINDOW_SENDOPTIONS_OPCODE = 116 -- opcode para enviar opcoes do market
+MARKET_AVAIABLE_OPTIONS = {"All", "Armas", "Items"} -- para adicionar mais categorias voce adiciona aqui (e na source)
 
 -- Funcao de abrir a janela de market
 function onOpenMarketWindow(playerId)
@@ -29,7 +29,7 @@ function sendMarketToDatabase(playerId, itemid, name, gender, level, ispokemon, 
 	sendMarketRemovePlayerItem(playerId, integgerAttribute, count, price, gender, level, ispokemon, name, onlyoffers) -- source function
 	sendMarketMyOffers(playerId) -- source function
 
-	doSendPlayerExtendedOpcode(playerId, 214, "destroy2".."@")
+	doSendPlayerExtendedOpcode(playerId, 114, "destroy2".."@")
 	sendMarketAllOffers(playerId) -- source function
 	return true
 end
