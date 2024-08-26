@@ -38,7 +38,7 @@ DATABASE = databasemysql.cpp
 
 # For LOGIN_SERVER, add gameservers.cpp gameservers.h
 # For OT_ADMIN, add admin.cpp admin.h
-EXTRASOURCES = auras.cpp wings.cpp shaders.cpp
+EXTRASOURCES =
 
 CXXSOURCES = 	actions.cpp				allocator.cpp			baseevents.cpp			beds.cpp \
 						chat.cpp  				combat.cpp  			condition.cpp 				configmanager.cpp \
@@ -57,6 +57,7 @@ CXXSOURCES = 	actions.cpp				allocator.cpp			baseevents.cpp			beds.cpp \
 						raids.cpp  				rsa.cpp  				scheduler.cpp  			scriptmanager.cpp \
 						server.cpp  			spawn.cpp 				spectators.cpp			spells.cpp \
 						status.cpp 				talkaction.cpp			teleport.cpp 				textlogger.cpp \
+						auras.cpp 			wings.cpp		shaders.cpp\
 						thing.cpp 				tile.cpp 					tools.cpp 					trashholder.cpp \
 						waitlist.cpp 			weapons.cpp 			vocation.cpp
 
