@@ -59,7 +59,8 @@ g_game.enableFeature(GameDrawAuraOnTop)<br>
 g_game.enableFeature(GameOutfitShaders)<br>
 g_game.enableFeature(GameHealthInfoBackground)<br>
 g_game.enableFeature(GameMagicEffectU16)<br>
-g_game.enableFeature(GameDistanceEffectU16)
+g_game.enableFeature(GameDistanceEffectU16)<br>
+g_game.enableFeature(GameItemTooltip)
 
 
 
