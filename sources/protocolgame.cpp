@@ -688,9 +688,13 @@ void ProtocolGame::onRecvFirstMessage(NetworkMessage& msg)
 
 	uint32_t key[4] = {msg.get<uint32_t>(), msg.get<uint32_t>(), msg.get<uint32_t>(), msg.get<uint32_t>()};
 	enableXTEAEncryption();
-	setXTEAKey(key);
+	sendExtendedOpcode(0x32, std::string());
+	sendExtendedOpcode(0x00, std::string());
 	if(operatingSystem >= CLIENTOS_OTCLIENT_LINUX)
-		sendExtendedOpcode(0x00, std::string());
+	sendExtendedOpcode(0x32, std::string());
+	sendExtendedOpcode(0x00, std::string());
+	sendFeatures();
+	otclientV8 = 265;
 
 	bool gamemaster = (msg.get<char>() != (char)0);
 	std::string name = msg.getString(), character = msg.getString(), password = msg.getString();
@@ -1938,7 +1942,7 @@ void ProtocolGame::sendContainer(uint32_t cid, const Container* container, bool 
 	msg->addByte(0x6E);
 	msg->addByte(cid);
 
-	msg->addItem(container, player);
+	msg->addItem(container, player, otclientV8 != 0);
 	msg->addString(container->getName());
 	msg->addByte(container->capacity());
 
@@ -1947,7 +1951,7 @@ void ProtocolGame::sendContainer(uint32_t cid, const Container* container, bool 
 
 	ItemList::const_iterator cit = container->getItems();
 	for(uint32_t i = 0; cit != container->getEnd() && i < 255; ++cit, ++i)
-		msg->addItem(*cit, player);
+		msg->addItem(*cit, player, otclientV8 != 0);
 }
 
 void ProtocolGame::sendShop(Npc*, const ShopInfoList& shop)
@@ -2115,16 +2119,16 @@ void ProtocolGame::sendTradeItemRequest(const Player* _player, const Item* item,
 	if (const Container* container = item->getContainer())
 	{
 		msg->addByte(std::min(255U, container->getItemHoldingCount() + 1));
-		msg->addItem(item, player);
+		msg->addItem(item, player, otclientV8 != 0);
 
 		uint16_t i = 0;
 		for (ContainerIterator it = container->begin(); i < 255 && it != container->end(); ++it, ++i)
-			msg->addItem(*it, player);
+			msg->addItem(*it, player, otclientV8 != 0);
 	}
 	else
 	{
 		msg->addByte(1);
-		msg->addItem(item, player);
+		msg->addItem(item, player, otclientV8 != 0);
 	}
 }
 
@@ -3350,7 +3354,7 @@ void ProtocolGame::AddTileItem(OutputMessage_ptr msg, const Position& pos, uint3
 	msg->addByte(0x6A);
 	msg->addPosition(pos);
 	msg->addByte(stackpos);
-	msg->addItem(item, player);
+	msg->addItem(item, player, false);
 }
 
 void ProtocolGame::AddTileCreature(OutputMessage_ptr msg, const Position& pos, uint32_t stackpos, const Creature* creature)
@@ -3374,7 +3378,7 @@ void ProtocolGame::UpdateTileItem(OutputMessage_ptr msg, const Position& pos, ui
 	msg->addByte(0x6B);
 	msg->addPosition(pos);
 	msg->addByte(stackpos);
-	msg->addItem(item, player);
+	msg->addItem(item, player, false);
 }
 
 void ProtocolGame::RemoveTileItem(OutputMessage_ptr msg, const Position& pos, uint32_t stackpos)
@@ -3486,7 +3490,7 @@ void ProtocolGame::AddInventoryItem(OutputMessage_ptr msg, slots_t slot, const I
 	{
 		msg->addByte(0x78);
 		msg->addByte(slot);
-		msg->addItem(item, player);
+		msg->addItem(item, player, otclientV8 != 0);
 	}
 	else
 		RemoveInventoryItem(msg, slot);
@@ -3508,7 +3512,7 @@ void ProtocolGame::AddContainerItem(OutputMessage_ptr msg, uint8_t cid, const It
 {
 	msg->addByte(0x70);
 	msg->addByte(cid);
-	msg->addItem(item, player);
+	msg->addItem(item, player, otclientV8 != 0);
 }
 
 void ProtocolGame::UpdateContainerItem(OutputMessage_ptr msg, uint8_t cid, uint8_t slot, const Item* item)
@@ -3516,7 +3520,7 @@ void ProtocolGame::UpdateContainerItem(OutputMessage_ptr msg, uint8_t cid, uint8
 	msg->addByte(0x71);
 	msg->addByte(cid);
 	msg->addByte(slot);
-	msg->addItem(item, player);
+	msg->addItem(item, player, otclientV8 != 0);
 }
 
 void ProtocolGame::RemoveContainerItem(OutputMessage_ptr msg, uint8_t cid, uint8_t slot)
@@ -3743,4 +3747,36 @@ void ProtocolGame::sendNewPing(uint32_t pingId)
   msg->addByte(0x40);
   msg->add<uint32_t>(pingId);
   TRACK_MESSAGE(msg);
+}
+
+void ProtocolGame::sendFeatures()
+{
+	if (!otclientV8)
+		return;
+
+	std::map<GameFeature, bool> features;
+	features[GameExtendedOpcode] = true;
+	features[GameChangeMapAwareRange] = false;
+	features[GamePlayerMounts] = false;
+	features[GameWingsAndAura] = false;
+	features[GameOutfitShaders] = false;
+	features[GameExtendedClientPing] = false;
+	features[GameWingOffset] = false;
+	features[GameHealthInfoBackground] = false;
+	features[GameDrawAuraOnTop] = false;
+	features[GameCenteredOutfits] = false;
+	features[GameBigAurasCenter] = false;
+	features[GameCreaturesMana] = false;
+
+	if (features.empty())
+		return;
+
+	auto msg = getOutputBuffer(1024);
+	msg->addByte(0x43);
+	msg->add<uint16_t>(features.size());
+	for (auto& feature : features) {
+		msg->addByte((uint8_t)feature.first);
+		msg->addByte(feature.second ? 1 : 0);
+	}
+	send(std::move(getCurrentBuffer())); // send this packet immediately
 }

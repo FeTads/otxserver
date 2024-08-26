@@ -114,7 +114,7 @@ uint16_t NetworkMessage::getReplaceMW(uint16_t spriteId /*= 0*/, Player* player)
 	return spriteId;
 }
 
-void NetworkMessage::addItem(uint16_t id, uint8_t count, Player* player)
+void NetworkMessage::addItem(uint16_t id, uint8_t count, Player* player, bool withDescription)
 {
 	const ItemType& it = Item::items[id];
 	uint16_t spriteId = it.clientId;
@@ -127,9 +127,12 @@ void NetworkMessage::addItem(uint16_t id, uint8_t count, Player* player)
 	} else if (it.isSplash() || it.isFluidContainer()) {
 		addByte(fluidMap[count & 7]);
 	}
+	if (withDescription) {
+		addString("");
+	}
 }
 
-void NetworkMessage::addItem(const Item* item, Player* player)
+void NetworkMessage::addItem(const Item* item, Player* player, bool withDescription)
 {
 	const ItemType& it = Item::items[item->getID()];
 	uint16_t spriteId = it.clientId;
@@ -141,6 +144,9 @@ void NetworkMessage::addItem(const Item* item, Player* player)
 		addByte(std::min<uint16_t>(0xFF, item->getItemCount()));
 	} else if (it.isSplash() || it.isFluidContainer()) {
 		addByte(fluidMap[item->getFluidType() & 7]);
+	}
+	if (withDescription) {
+		addString(item->getDescription(0));
 	}
 }
 
