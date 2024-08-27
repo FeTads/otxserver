@@ -60,7 +60,8 @@ g_game.enableFeature(GameOutfitShaders)<br>
 g_game.enableFeature(GameHealthInfoBackground)<br>
 g_game.enableFeature(GameMagicEffectU16)<br>
 g_game.enableFeature(GameDistanceEffectU16)<br>
-g_game.enableFeature(GameItemTooltip)
+g_game.enableFeature(GameItemTooltip)<br>
+g_game.enableFeature(GameChangeMapAwareRange)
 
 
 

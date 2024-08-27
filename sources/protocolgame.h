@@ -384,6 +384,25 @@ class ProtocolGame : public Protocol
 		template<class FunctionType>
 		void addGameTaskInternal(uint32_t delay, const FunctionType&);
 
+		void parseChangeAwareRange(NetworkMessage& msg);
+		void updateAwareRange(int width, int height);
+		void sendAwareRange();
+		void sendMapDescription(const Position& pos, OutputMessage_ptr msg = NULL);
+		void sendFloorDescription(const Position& pos, int floor);
+
+		struct AwareRange {
+			int width = 17;
+			int height = 13;
+
+			int left() const { return width / 2; }
+			int right() const { return 1 + width / 2; }
+			int top() const { return height / 2; }
+			int bottom() const { return 1 + height / 2; }
+			int horizontal() const { return width + 1; }
+			int vertical() const { return height + 1; }
+
+		} awareRange;
+
 		friend class Player;
 		friend class Spectators;
 		Player* player;
