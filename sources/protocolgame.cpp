@@ -3624,8 +3624,8 @@ void ProtocolGame::sendExtendedOpcode(uint8_t opcode, const std::string& buffer)
 	if(player && !player->isUsingOtclient())
 		return;
 
-	OutputMessage_ptr msg = getOutputBuffer();
-	msg->addByte(0x32);
+	OutputMessage_ptr msg = getOutputBuffer(); // Necessário deixar getOutputBuffer(1024); para monitor 2560x1080.                                        
+	msg->addByte(0x32);                        // Somente deixar 1024 caso a função sendfeature for desativado. 
 	msg->addByte(opcode);
 	msg->addString(buffer);
 }
@@ -3799,25 +3799,26 @@ void ProtocolGame::sendFeatures()
 {
 	if (!otclientV8)
 		return;
-
+  // Ativação automática sem precisar de adicionar ao otclientv8
 	std::map<GameFeature, bool> features;
 	features[GameExtendedOpcode] = true;
-	features[GameChangeMapAwareRange] = true;
-	features[GamePlayerMounts] = false;
-	features[GameWingsAndAura] = false;
-	features[GameOutfitShaders] = false;
-	features[GameExtendedClientPing] = false;
-	features[GameWingOffset] = false;
-	features[GameHealthInfoBackground] = false;
-	features[GameDrawAuraOnTop] = false;
-	features[GameCenteredOutfits] = false;
-	features[GameBigAurasCenter] = false;
-	features[GameCreaturesMana] = false;
+	features[GameChangeMapAwareRange] = true; // Deixando false -> você precisa alterar na função (sendExtendedOpcode).
+	features[GameWingsAndAura] = true;
+	features[GameOutfitShaders] = true;
+	features[GameExtendedClientPing] = true;
+	features[GameHealthInfoBackground] = true;
+	features[GameDrawAuraOnTop] = true;
+	features[GameDoubleHealth] = true;
+	features[GameDoubleSkills] = true;
+	features[GameDoubleMagicLevel] = true;
+	features[GameMagicEffectU16] = true;
+	features[GameDistanceEffectU16] = true;
+	features[GameItemTooltip] = true;
 
 	if (features.empty())
 		return;
 
-	auto msg = getOutputBuffer(1024);
+	auto msg = getOutputBuffer(1024); // 1024 reconhece monitor 2560x1080
 	msg->addByte(0x43);
 	msg->add<uint16_t>(features.size());
 	for (auto& feature : features) {
