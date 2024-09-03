@@ -3164,13 +3164,13 @@ void ProtocolGame::AddPlayerStatsNew(OutputMessage_ptr msg)
     msg->addByte(0xA0);
     if (player->getPlayerInfo(PLAYERINFO_MAXHEALTH) > 0)
     {
-        msg->add<uint16_t>(player->getHealth() * 100 / player->getPlayerInfo(PLAYERINFO_MAXHEALTH));
-        msg->add<uint16_t>(100);
+        msg->add<uint32_t>(player->getHealth() * 100 / player->getPlayerInfo(PLAYERINFO_MAXHEALTH));
+        msg->add<uint32_t>(100);
     }
     else
     {
-        msg->add<uint16_t>(0);
-        msg->add<uint16_t>(0);
+        msg->add<uint32_t>(0);
+        msg->add<uint32_t>(0);
     }
     msg->add<uint32_t>(uint32_t(player->getFreeCapacity() * 100));
     uint64_t experience = player->getExperience();
@@ -3184,15 +3184,15 @@ void ProtocolGame::AddPlayerStatsNew(OutputMessage_ptr msg)
     msg->addByte(player->getPlayerInfo(PLAYERINFO_LEVELPERCENT));
     if (player->getPlayerInfo(PLAYERINFO_MAXMANA) > 0)
     {
-        msg->add<uint16_t>(player->getPlayerInfo(PLAYERINFO_MANA) * 100 / player->getPlayerInfo(PLAYERINFO_MAXMANA));
-        msg->add<uint16_t>(100);
+        msg->add<uint32_t>(player->getPlayerInfo(PLAYERINFO_MANA) * 100 / player->getPlayerInfo(PLAYERINFO_MAXMANA));
+        msg->add<uint32_t>(100);
     }
     else
     {
-        msg->add<uint16_t>(0);
-        msg->add<uint16_t>(0);
+        msg->add<uint32_t>(0);
+        msg->add<uint32_t>(0);
     }
-    msg->addByte(player->getPlayerInfo(PLAYERINFO_MAGICLEVEL));
+    msg->add<uint16_t>(player->getPlayerInfo(PLAYERINFO_MAGICLEVEL));
     msg->addByte(player->getPlayerInfo(PLAYERINFO_MAGICLEVELPERCENT));
     msg->addByte(player->getPlayerInfo(PLAYERINFO_SOUL));
     msg->add<uint16_t>(player->getStaminaMinutes());
@@ -3200,6 +3200,13 @@ void ProtocolGame::AddPlayerStatsNew(OutputMessage_ptr msg)
 
 void ProtocolGame::AddPlayerStats(OutputMessage_ptr msg)
 {
+
+	std::string sto = "-1";
+	player->getStorage("5556667", sto);
+	if(g_config.getBool(ConfigManager::LIFE_IN_PERCENTUAL) || std::stoi(sto) == 1){
+		AddPlayerStatsNew(msg);
+		return;
+	}	
 	msg->addByte(0xA0);
 	msg->add<uint32_t>(player->getHealth());
 	msg->add<uint32_t>(player->getPlayerInfo(PLAYERINFO_MAXHEALTH));
