@@ -331,7 +331,14 @@ class Item : virtual public Thing, public ItemAttributes
 		uint16_t getSubType() const;
 		void setSubType(uint16_t n);
 
-		uint32_t getDefaultDuration() const {return items[id].decayTime * 1000;}
+		uint32_t getDefaultDuration() const 
+		{
+			const ItemType& it = items[id];
+			if (it.transformEquipTo)
+				return items[it.transformEquipTo].decayTime * 1000;
+
+			return it.decayTime * 1000;
+		}
 		void setDefaultDuration()
 		{
 			uint32_t duration = getDefaultDuration();

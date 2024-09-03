@@ -11845,6 +11845,12 @@ int32_t LuaInterface::luaGetItemAttribute(lua_State* L)
 		return 1;
 	}
 
+	if (key == "duration")
+	{
+		lua_pushnumber(L, item->getDuration());
+		return 1;
+	}
+
 	boost::any value = item->getAttribute(key.c_str());
 	if(value.empty())
 		lua_pushnil(L);
@@ -11914,6 +11920,8 @@ int32_t LuaInterface::luaDoItemSetAttribute(lua_State* L)
 		}
 		else if(key == "aid")
 			item->setActionId(boost::any_cast<int32_t>(value));
+		else if(key == "duration")
+			item->setDuration(boost::any_cast<int32_t>(value));
 		else
 			item->setAttribute(key.c_str(), boost::any_cast<int32_t>(value));
 	}
@@ -11944,10 +11952,12 @@ int32_t LuaInterface::luaDoItemEraseAttribute(lua_State* L)
 		errorEx("Attempt to erase protected key \"uid\"");
 		ret = false;
 	}
-	else if(key != "aid")
-		item->eraseAttribute(key.c_str());
-	else
+	else if (key == "aid")
 		item->resetActionId();
+	else if (key == "duration")
+		item->setDefaultDuration();
+	else
+		item->eraseAttribute(key.c_str());
 
 	lua_pushboolean(L, ret);
 	return 1;
