@@ -68,6 +68,9 @@ class Vocation
 		int32_t getVocType() const {return typeVoc;}
 		void setVocType(int32_t v) {typeVoc = v;}
 
+		uint32_t getCorpseId() const {return corpseId;}
+		void setCorpseId(uint32_t v) {corpseId = v;}
+
 		int32_t getLessLoss() const {return lessLoss;}
 		void setLessLoss(int32_t v) {lessLoss = v;}
 
@@ -108,7 +111,7 @@ class Vocation
 		uint16_t clientId;
 		int32_t lessLoss, capGain;
 		int32_t typeVoc = 0;
-		uint32_t id, fromVocation, baseSpeed, attackSpeed;
+		uint32_t id, fromVocation, baseSpeed, attackSpeed, corpseId;
 		std::string name, description;
 		vocationTypeClasses type;
 
