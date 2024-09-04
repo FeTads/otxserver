@@ -2544,6 +2544,10 @@ BlockType_t Player::blockHit(Creature* attacker, CombatType_t combatType, int32_
 		sendCreatureSquare(attacker, color);
 	}
 
+	if (vocation->getVocType() == VOCATIONTYPE_TANK) {
+		damage -= std::ceil(damage * (10 / 100.));
+	}
+
 	if(blockType != BLOCK_NONE)
 		return blockType;
 
@@ -5882,15 +5886,26 @@ void Player::clearPartyInvitations()
 
 void Player::increaseCombatValues(int32_t& min, int32_t& max, bool useCharges, bool countWeapon)
 {
-	if(min > 0)
-		min = (int32_t)(min * vocation->getMultiplier(MULTIPLIER_HEALING));
-	else
-		min = (int32_t)(min * vocation->getMultiplier(MULTIPLIER_MAGIC));
+	if(min > 0) {
+		min = (min * vocation->getMultiplier(MULTIPLIER_HEALING));
+	if (vocation->getVocType() == VOCATIONTYPE_SUPPORT)
+			min += std::ceil(min * (10 / 100.));
+	} else {
+		min = (min * vocation->getMultiplier(MULTIPLIER_MAGIC));		
+	if (vocation->getVocType() == VOCATIONTYPE_DAMAGER)
+			min += std::ceil(min * (10 / 100.));
+	}
+	
 
-	if(max > 0)
-		max = (int32_t)(max * vocation->getMultiplier(MULTIPLIER_HEALING));
-	else
-		max = (int32_t)(max * vocation->getMultiplier(MULTIPLIER_MAGIC));
+	if(max > 0) {
+		max = (max * vocation->getMultiplier(MULTIPLIER_HEALING));
+		if (vocation->getVocType() == VOCATIONTYPE_SUPPORT)
+			max += std::ceil(max * (10 / 100.));
+	} else {
+		max = (max * vocation->getMultiplier(MULTIPLIER_MAGIC));	
+		if (vocation->getVocType() == VOCATIONTYPE_DAMAGER)
+			max += std::ceil(max * (10 / 100.));
+	}
 
 	Item* item = NULL;
 	int32_t minValue = 0, maxValue = 0, i = SLOT_FIRST;

@@ -101,6 +101,9 @@ bool Vocations::parseVocationNode(xmlNodePtr p)
 	if(readXMLInteger(p, "basespeed", intValue))
 		voc->setBaseSpeed(intValue);
 
+	if(readXMLInteger(p, "typeVoc", intValue))
+		voc->setVocType(intValue);
+
 	if(readXMLInteger(p, "soulmax", intValue))
 		voc->setGain(GAIN_SOUL, intValue);
 

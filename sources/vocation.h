@@ -65,6 +65,9 @@ class Vocation
 		uint32_t getBaseSpeed() const {return baseSpeed;}
 		void setBaseSpeed(uint32_t v) {baseSpeed = v;}
 
+		int32_t getVocType() const {return typeVoc;}
+		void setVocType(int32_t v) {typeVoc = v;}
+
 		int32_t getLessLoss() const {return lessLoss;}
 		void setLessLoss(int32_t v) {lessLoss = v;}
 
@@ -104,8 +107,10 @@ class Vocation
 		bool attackable, needPremium, dropLoot, skillLoss;
 		uint16_t clientId;
 		int32_t lessLoss, capGain;
+		int32_t typeVoc = 0;
 		uint32_t id, fromVocation, baseSpeed, attackSpeed;
 		std::string name, description;
+		vocationTypeClasses type;
 
 		int16_t absorb[COMBAT_LAST + 1], reflect[REFLECT_LAST + 1][COMBAT_LAST + 1];
 		uint32_t gain[GAIN_LAST + 1], gainTicks[GAIN_LAST + 1], gainAmount[GAIN_LAST + 1], skillBase[SKILL_LAST + 1];

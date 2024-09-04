@@ -21,6 +21,14 @@
 
 #define NETWORKMESSAGE_MAXSIZE 65500
 
+enum vocationTypeClasses : uint8_t {
+    VOCATIONTYPE_NONE,
+    VOCATIONTYPE_TANK = 1,
+    VOCATIONTYPE_SUPPORT = 2,
+    VOCATIONTYPE_DAMAGER = 3,
+    VOCATIONTYPE_ASSASSIN = 4,
+};
+
 enum OperatingSystem_t
 {
 	CLIENTOS_LINUX = 1,
