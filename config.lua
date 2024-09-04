@@ -227,7 +227,7 @@
 	replaceKickOnLogin = true
 	forceSlowConnectionsToDisconnect = false
 	premiumPlayerSkipWaitList = false
-	packetsPerSecond = 1000
+	packetsPerSecond = 200
 	loginProtectionTime = 5
 	tibiaClassicSlots = true
 
