@@ -810,7 +810,7 @@ bool Player::canOpenCorpse(uint32_t ownerId)
 
 uint16_t Player::getLookCorpse() const
 {
-	return vocation->getCorpseId();
+	return vocation->getCorpseId() ? vocation->getCorpseId() : ((sex % 2) ? ITEM_MALE_CORPSE : ITEM_FEMALE_CORPSE);
 }
 
 void Player::dropLoot(Container* corpse)
