@@ -490,7 +490,7 @@ void Vocation::reset()
 	gainTicks[GAIN_SOUL] = 120;
 	baseSpeed = 220;
 	attackSpeed = 1500;
-	corpseId = 3058;
+	corpse = 3058;
 	name = description = "";
 
 	gainAmount[GAIN_HEALTH] = gainAmount[GAIN_MANA] = gainAmount[GAIN_SOUL] = 1;
