@@ -1248,19 +1248,6 @@ bool TalkAction::diagnostics(Creature* creature, const std::string&, const std::
 	return true;
 }
 
-std::string TalkAction::trim(const std::string& str) {
-    size_t first = str.find_first_not_of(' ');
-    if (std::string::npos == first)
-        return str;
-    size_t last = str.find_last_not_of(' ');
-    return str.substr(first, (last - first + 1));
-}
-
-bool TalkAction::isInputValid(const std::string& input) {
-    boost::regex validInputRegex("^[a-zA-Z0-9,! ]*$");
-    return boost::regex_match(input, validInputRegex);
-}
-
 bool TalkAction::autoLoot(Creature* creature, const std::string&, const std::string& param) {
 	Player* player = creature->getPlayer();
 	if(!player)
@@ -1323,7 +1310,7 @@ bool TalkAction::autoLoot(Creature* creature, const std::string&, const std::str
 
 	if(command == "money" && params.size() >= 2)
 	{
-		std::string mode = params[1];
+		std::string mode = trimString(params[1]);
 		if(mode == "bank" || mode == "bag")
 		{
 			bool isBank = (mode == "bank");
@@ -1342,15 +1329,20 @@ bool TalkAction::autoLoot(Creature* creature, const std::string&, const std::str
 
 		for(size_t i = 1; i < params.size(); ++i)
 		{
-			std::string itemName = trim(params[i]);
+			std::string itemName = trimString(params[i]);
 			int32_t itemId = Item::items.getItemIdByName(itemName);
 			if (itemId > 0)
 			{
-				if(adding && !player->checkAutoLoot(itemId) && !player->limitAutoLoot())
+				if(adding && !player->checkAutoLoot(itemId))
 				{
-					player->addAutoLoot(itemId);
-					actionMsg << (successCount > 0 ? ", " : "") << itemName;
-					++successCount;
+					if(!player->limitAutoLoot()){
+						player->addAutoLoot(itemId);
+						actionMsg << (successCount > 0 ? ", " : "") << itemName;
+						++successCount;
+					}else{
+						errorMsg << (errorCount > 0 ? ", " : "") << itemName;
+						++errorCount;
+					}
 				} else if(!adding && player->checkAutoLoot(itemId))
 				{
 					player->removeAutoLoot(itemId);
@@ -1379,9 +1371,13 @@ bool TalkAction::autoLoot(Creature* creature, const std::string&, const std::str
 	// Display help or information about autoloot
 	std::list<uint16_t> list = player->getAutoLoot();
 	uint16_t lootsize = list.size();
+	std::string moneyIds = g_config.getString(ConfigManager::AUTOLOOT_MONEYIDS);
+	StringVec strVector = explodeString(moneyIds, ";");
+	lootsize -= strVector.size();	// don't count money ids of lootsize
+	
 	uint16_t max_allowed = player->isPremium() ? g_config.getNumber(ConfigManager::AUTOLOOT_MAXPREMIUM) : g_config.getNumber(ConfigManager::AUTOLOOT_MAXFREE);
 
-	info << "_____Perfect AutoLoot System_____\n\n"
+	info << "_____ Perfect AutoLoot System _____\n\n"
 		<< "AutoLoot Status: " << player->statusAutoLoot() << "\n"
 		<< "AutoMoney Mode: " << player->statusAutoMoneyCollect() << "\n\n"
 		<< "Commands:\n"
