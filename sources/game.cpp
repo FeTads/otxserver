@@ -2467,7 +2467,7 @@ Item* Game::transformItem(Item* item,const uint16_t& newId, const int32_t& newCo
 
     const ItemType &curType = Item::items[item->getID()], &newType = Item::items[newId];
 
-    if ((item->isContainer() && !newType->isContainer()) || (curType.alwaysOnTop != newType.alwaysOnTop))
+    if ((item->isContainer() && !newType.isContainer()) || (curType.alwaysOnTop != newType.alwaysOnTop))
     {
         ReturnValue ret = internalRemoveItem(NULL, item);
         if(ret != RET_NOERROR)
