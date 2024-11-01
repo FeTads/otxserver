@@ -104,7 +104,7 @@ bool Vocations::parseVocationNode(xmlNodePtr p)
 	if(readXMLInteger(p, "typeVoc", intValue))
 		voc->setVocType(intValue);
 
-	if(readXMLInteger(p, "corpse", intValue))
+	if(readXMLInteger(p, "corpseId", intValue))
 		voc->setCorpseId(intValue);
 
 	if(readXMLInteger(p, "soulmax", intValue))
@@ -490,7 +490,7 @@ void Vocation::reset()
 	gainTicks[GAIN_SOUL] = 120;
 	baseSpeed = 220;
 	attackSpeed = 1500;
-	corpse = 3058;
+	corpseId = 3058;
 	name = description = "";
 
 	gainAmount[GAIN_HEALTH] = gainAmount[GAIN_MANA] = gainAmount[GAIN_SOUL] = 1;
