@@ -3806,7 +3806,6 @@ void ProtocolGame::sendFeatures()
 {
 	if (!otclientV8)
 		return;
-  // Ativação automática sem precisar de adicionar ao otclientv8
 	std::map<GameFeature, bool> features;
 	features[GameExtendedOpcode] = true;
 	features[GameChangeMapAwareRange] = true; // Deixando false -> você precisa alterar na função (sendExtendedOpcode).
