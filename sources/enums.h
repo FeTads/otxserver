@@ -25,6 +25,9 @@
 #define MONSTER_ID_RANGE 0x40000000
 #define NPC_ID_RANGE 0x80000000
 
+#define __EXTENDED_MAGIC_EFFECTS__
+#define __EXTENDED_DISTANCE_SHOOT__
+
 enum Vocation_t
 {
 	VOCATION_NONE = 0,
