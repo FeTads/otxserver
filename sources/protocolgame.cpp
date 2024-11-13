@@ -3836,11 +3836,12 @@ void ProtocolGame::sendFeatures()
 
 void ProtocolGame::parseChangeAwareRange(NetworkMessage& msg)
 {
-	
+
 	uint8_t width = msg.get<uint8_t>();
 	uint8_t height = msg.get<uint8_t>();
 
-	Dispatcher::getInstance().addTask(createTask(1, boost::bind(&ProtocolGame::updateAwareRange, getThis(), width, height)));
+	eventConnect = Scheduler::getInstance().addEvent(createSchedulerTask(
+		1, boost::bind(&ProtocolGame::updateAwareRange, getThis(), width, height)));
 }
 
 
