@@ -66,15 +66,20 @@ all: $(BIN)
 clean:
 	$(RM) $(CXXOBJECTS) $(BIN)
 
-$(BIN): $(CXXOBJECTS)
-	$(CXX) $(CXXFLAGS) -o $@ $(CXXOBJECTS) $(LDFLAGS)
-
 YELLOW = \033[1;33m
 GREEN = \033[0;32m
-NC = \033[0m
+RED = \033[0;31m
+CYAN = \033[0;36m
+ON_RED = \033[41m
+ON_GREEN = \033[42m
+NC = \033[0m 
+
+$(BIN): $(CXXOBJECTS)
+	$(CXX) $(CXXFLAGS) -o $@ $(CXXOBJECTS) $(LDFLAGS)
+	@printf "${GREEN}\n\n-----------[Successful compilation]-----------${NC}\n\n"
 
 $(OBJDIR)/%.o: %.cpp
-	@printf "\033[K${GREEN}[CC]${NC} $@ ${YELLOW}[compiling...]${NC}\r"
+	@printf "\033[K${ON_RED}[CC]${NC} $@ ${RED}❌${NC}\r"
 	@$(CXX) -c $(CXXFLAGS) -o $@ $< && \
-		{ printf "\033[K${GREEN}[CC]${NC} $@ ${GREEN}[OK]${NC}\n" || true; }
+		{ printf "\033[K${ON_GREEN}[CC]${CYAN} $@ ${GREEN}✅${NC}\n" || true; }
 	
