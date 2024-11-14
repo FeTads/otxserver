@@ -1,4 +1,7 @@
 BIN = theotxserver
+sucess = Compilação bem-sucedida
+Move = mv -f 
+Main = /home/otxserver-custom/
 
 #-- If you installed the required libs on a different folder, change it here --#
 INCLUDE = 	-I"/usr/include/libxml2"				-I"/usr/include/lua5.1"				-I"/usr/include/mysql" \
@@ -76,7 +79,10 @@ NC = \033[0m
 
 $(BIN): $(CXXOBJECTS)
 	$(CXX) $(CXXFLAGS) -o $@ $(CXXOBJECTS) $(LDFLAGS)
-	@printf "${GREEN}\n\n-----------[Successful compilation]-----------${NC}\n\n"
+	@printf "${GREEN}\n\n----------- $(sucess) ✅ -----------${NC}\n\n"
+	
+	$(Move) $(BIN) $(Main) 
+	@printf "${RED}\n\n----------- $(BIN) foi Movido para pasta $(Main) ✅ -----------${NC}\n\n"
 
 $(OBJDIR)/%.o: %.cpp
 	@printf "\033[K${ON_RED}[CC]${NC} $@ ${RED}❌${NC}\r"
