@@ -76,6 +76,42 @@ void TalkActions::clear()
 	defaultTalkAction = NULL;
 }
 
+bool TalkAction::executeChangeMode(Creature* creature, const std::string& words, const std::string& param)
+{
+    Player* player = creature->getPlayer();
+    if (!player) {
+        return false;
+    }
+
+    const std::string exhaustStorage = "429833";
+    const std::string modeStorage = "5556667";
+    const int32_t exhaustTime = 10; // Tempo em segundos
+
+
+    std::string exhaustValue;
+    if (player->getStorage(exhaustStorage, exhaustValue) && std::stoi(exhaustValue) > std::time(nullptr)) {
+        player->sendCancelMessage(RET_YOUAREEXHAUSTED);
+        return true;
+    }
+
+    // Verifica e alterna o modo HP/MP do jogador
+    std::string modeValue;
+    int32_t currentMode = (player->getStorage(modeStorage, modeValue) && std::stoi(modeValue) == -1) ? 1 : -1;
+    std::string modeMessage = currentMode == 1 ? "normal" : "porcentagem";
+    
+    player->sendTextMessage(MSG_INFO_DESCR, "Você mudou seu HP/MP para o modo " + modeMessage + ".");
+    player->setStorage(modeStorage, std::to_string(currentMode));
+    
+
+    player->setStorage(exhaustStorage, std::to_string(std::time(nullptr) + exhaustTime));
+    
+
+    player->changeHealth(1);
+    player->changeMana(1);
+    
+    return true;
+}
+
 Event* TalkActions::getEvent(const std::string& nodeName)
 {
 	if(asLowerCaseString(nodeName) == "talkaction")
@@ -315,46 +351,49 @@ bool TalkAction::configureEvent(xmlNodePtr p)
 
 bool TalkAction::loadFunction(const std::string& functionName)
 {
-	m_functionName = asLowerCaseString(functionName);
-	if(m_functionName == "housebuy")
-		m_function = houseBuy;
-	else if(m_functionName == "housesell")
-		m_function = houseSell;
-	else if(m_functionName == "housekick")
-		m_function = houseKick;
-	else if(m_functionName == "housedoorlist")
-		m_function = houseDoorList;
-	else if(m_functionName == "houseguestlist")
-		m_function = houseGuestList;
-	else if(m_functionName == "housesubownerlist")
-		m_function = houseSubOwnerList;
-	else if(m_functionName == "guildjoin")
-		m_function = guildJoin;
-	else if(m_functionName == "guildcreate")
-		m_function = guildCreate;
-	else if(m_functionName == "thingproporties")
-		m_function = thingProporties;
-	else if(m_functionName == "banishmentinfo")
-		m_function = banishmentInfo;
-	else if(m_functionName == "diagnostics")
-		m_function = diagnostics;
-	else if(m_functionName == "autoloot") //autoloot by naze
-		m_function = autoLoot;
-	else if(m_functionName == "houseprotect") //house protect
-		m_function = houseProtect;
-	else if(m_functionName == "ghost")
-		m_function = ghost;
-	else if(m_functionName == "software")
-		m_function = software;
-	else
-	{
-		std::clog << "[Warning - TalkAction::loadFunction] Function \"" << m_functionName << "\" does not exist." << std::endl;
-		return false;
-	}
+    m_functionName = asLowerCaseString(functionName);
+    if (m_functionName == "housebuy")
+        m_function = houseBuy;
+    else if (m_functionName == "housesell")
+        m_function = houseSell;
+    else if (m_functionName == "housekick")
+        m_function = houseKick;
+    else if (m_functionName == "housedoorlist")
+        m_function = houseDoorList;
+    else if (m_functionName == "houseguestlist")
+        m_function = houseGuestList;
+    else if (m_functionName == "housesubownerlist")
+        m_function = houseSubOwnerList;
+    else if (m_functionName == "guildjoin")
+        m_function = guildJoin;
+    else if (m_functionName == "guildcreate")
+        m_function = guildCreate;
+    else if (m_functionName == "thingproporties")
+        m_function = thingProporties;
+    else if (m_functionName == "banishmentinfo")
+        m_function = banishmentInfo;
+    else if (m_functionName == "diagnostics")
+        m_function = diagnostics;
+    else if (m_functionName == "autoloot") //autoloot by naze
+        m_function = autoLoot;
+    else if (m_functionName == "houseprotect") //house protect
+        m_function = houseProtect;
+    else if (m_functionName == "ghost")
+        m_function = ghost;
+    else if (m_functionName == "software")
+        m_function = software;
+    else if (m_functionName == "changemode")
+        m_function = executeChangeMode;
+    else
+    {
+        std::clog << "[Warning - TalkAction::loadFunction] Function \"" << m_functionName << "\" does not exist." << std::endl;
+        return false;
+    }
 
-	m_scripted = EVENT_SCRIPT_FALSE;
-	return true;
+    m_scripted = EVENT_SCRIPT_FALSE;
+    return true;
 }
+
 
 int32_t TalkAction::executeSay(Creature* creature, const std::string& words, std::string param, uint16_t channel)
 {
