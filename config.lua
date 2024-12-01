@@ -175,46 +175,46 @@
 	rsaPrivate = "46730330223584118622160180015036832148732986808519344675210555262940258739805766860224610646919605860206328024326703361630109888417839241959507572247284807035235569619173792292786907845791904955103601652822519121908367187885509270025388641700821735345222087940578381210879116823013776808975766851829020659073"
 
 
-		optionalWarAttackableAlly = true
-		fistBaseAttack = 7
-		criticalHitChance = 7
-		noDamageToGuildMates = false
-		noDamageToPartyMembers = true
+	optionalWarAttackableAlly = true
+	fistBaseAttack = 7
+	criticalHitChance = 7
+	noDamageToGuildMates = false
+	noDamageToPartyMembers = true
 
-		rookLevelTo = 5
-		rookLevelToLeaveRook = 8
-		rookTownId = 1
-		useRookSystem = true
+	rookLevelTo = 5
+	rookLevelToLeaveRook = 8
+	rookTownId = 1
+	useRookSystem = true
 
-		paralyzeDelay = 1500
+	paralyzeDelay = 1500
 
-		premiumDaysToAddByGui = 0
+	premiumDaysToAddByGui = 0
 
-		useCapacity = true
-		defaultDepotSize = 400
-		defaultDepotSizePremium = 400
-		enableProtectionQuestForGM = false
-		cleanItemsInMap = false
-		playerFollowExhaust = 500
+	useCapacity = true
+	defaultDepotSize = 400
+	defaultDepotSizePremium = 400
+	enableProtectionQuestForGM = false
+	cleanItemsInMap = false
+	playerFollowExhaust = 500
 
-		monsterSpawnWalkback = false
-		allowBlockSpawn = true
-		
-		classicEquipmentSlots = true
+	monsterSpawnWalkback = false
+	allowBlockSpawn = true
+	
+	classicEquipmentSlots = true
 
-		NoShareExpSummonMonster = false
+	NoShareExpSummonMonster = false
 
-		enableLootBagDisplay = true
-		highscoreDisplayPlayers = 10
-		updateHighscoresAfterMinutes = 60
-		attackImmediatelyAfterLoggingIn = false
-		exhaustionNPC = true
-		exhaustionInSecondsNPC = 0.5
+	enableLootBagDisplay = true
+	highscoreDisplayPlayers = 10
+	updateHighscoresAfterMinutes = 60
+	attackImmediatelyAfterLoggingIn = false
+	exhaustionNPC = true
+	exhaustionInSecondsNPC = 0.5
 
-		manualVersionConfig = true
-		versionMin = 854
-		versionMax = 861
-		versionMsg = "Only clients with protocol 8.60 allowed!"
+	manualVersionConfig = true
+	versionMin = 854
+	versionMax = 861
+	versionMsg = "Only clients with protocol 8.60 allowed!"
 
 	loginTries = 20
 	retryTimeout = 5 * 1000
