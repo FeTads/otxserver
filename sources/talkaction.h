@@ -95,8 +95,6 @@ class TalkAction : public Event
 
 		IntegerVec::const_iterator getGroupsBegin() const {return m_groups.begin();}
 		IntegerVec::const_iterator getGroupsEnd() const {return m_groups.end();}
-		
-		static bool executeChangeMode(Creature* creature, const std::string& words, const std::string& param);
 
 	protected:
 		virtual std::string getScriptEventName() const {return "onSay";}
