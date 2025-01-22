@@ -428,7 +428,12 @@ int32_t Player::getArmor() const
 	for(; i < SLOT_LAST; ++i)
 	{
 		if(Item* item = getInventoryItem((slots_t)i))
-			armor += item->getArmor();
+		{
+			if (item->getWieldPosition() == i)
+			{
+				armor += item->getArmor();
+			}
+		}
 	}
 
 	if(vocation->getMultiplier(MULTIPLIER_ARMOR) != 1.0)
