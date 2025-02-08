@@ -1,0 +1,231 @@
+ItemTask < UIItem
+  size: 38 38
+  virtual: true
+
+  Label
+    id: itemCount
+    anchors.bottom: parent.bottom
+    anchors.right: parent.right
+
+TaskOutfit < UICreature
+  size: 38 38
+  old-scaling: true
+
+PanelTask < UIWidget
+  padding: 5
+  opacity: 0.5
+  image-source: images/panel
+
+  $hover:
+    opacity: 1
+
+  $focus:
+    opacity: 1
+
+  UICreature
+    id: outfitBox
+    size: 38 38
+    anchors.left: parent.left
+    anchors.verticalCenter: parent.verticalCenter
+    old-scaling: true
+
+  Label
+    id: labelTaskName
+    anchors.verticalCenter: outfitBox.verticalCenter
+    anchors.left: outfitBox.right
+    text-auto-resize: true
+    margin-left: 5
+
+Window
+  text: Task System
+  size: 600 500
+  anchors.centerIn: parent
+  padding-bottom: 25
+
+  Label
+    id: description
+    anchors.left: parent.left
+    anchors.right: parent.right
+    anchors.top: parent.top
+    anchors.bottom: PanelTaskList.top
+    margin-bottom: 5
+    text-align: center
+    text-wrap: true
+
+  Panel
+    width: 220
+    id: PanelTaskList
+    image-source: images/tasklist
+    anchors.top: parent.top
+    anchors.bottom: searchTask.top
+    anchors.left: parent.left
+    margin: 50 0 10 0
+    padding: 10
+
+    ScrollablePanel
+      id: taskList
+      anchors.fill: parent
+      vertical-scrollbar: scrollTaskList
+      layout:
+        type: grid
+        cell-size: 180 45
+        cell-spacing: 5
+        flow: true
+
+    VerticalScrollBar
+      id: scrollTaskList
+      anchors.top: parent.top
+      anchors.bottom: parent.bottom
+      anchors.right: parent.right
+      step: 14
+      pixels-scroll: true
+
+  Panel
+    id: panelTaskInfo
+    image-source: images/tasklist
+    anchors.top: PanelTaskList.top
+    anchors.bottom: parent.bottom
+    anchors.left: PanelTaskList.right
+    anchors.right: parent.right
+    margin-left: 10
+    padding-top: 10
+    padding-right: 10
+    padding-left: 10
+
+    Panel
+      id: panelMonsterList
+      height: 80
+      anchors.top: parent.top
+      anchors.left: parent.left
+      anchors.right: parent.right
+      padding: 10
+
+      ScrollablePanel
+        id: monsterList
+        anchors.verticalCenter: parent.verticalCenter
+        anchors.horizontalCenter: parent.horizontalCenter
+        horizontal-scrollbar: scrollMonsterList
+        layout:
+          type: horizontalBox
+          spacing: 5
+
+      HorizontalScrollBar
+        id: scrollMonsterList
+        anchors.left: parent.left
+        anchors.right: parent.right
+        anchors.bottom: parent.bottom
+        step: 14
+        pixels-scroll: true
+        visible: false
+
+    Panel
+      id: taskInfo
+      height: 85
+      anchors.top: prev.bottom
+      anchors.left: parent.left
+      anchors.right: parent.right
+      margin-top: 10
+      padding: 5
+
+      Label
+        id: labelMonstersName
+        anchors.top: parent.top
+        anchors.left: parent.left
+        anchors.right: parent.right
+        text-auto-resize: true
+        text-align: left
+        text-wrap: true
+
+      Label
+        id: labelMonsterCount
+        anchors.top: prev.bottom
+        anchors.left: parent.left
+        text-auto-resize: true
+
+      Label
+        id: labelExperience
+        anchors.top: prev.bottom
+        anchors.left: parent.left
+        text-auto-resize: true
+
+    Panel
+      id: taskReward
+      height: 50
+      anchors.top: prev.bottom
+      anchors.left: parent.left
+      anchors.right: parent.right
+      margin-top: 10
+      padding: 5
+
+      ScrollablePanel
+        id: rewardList
+        anchors.verticalCenter: parent.verticalCenter
+        anchors.horizontalCenter: parent.horizontalCenter
+        horizontal-scrollbar: scrollRewardList
+        layout:
+          type: horizontalBox
+          spacing: 5
+
+      HorizontalScrollBar
+        id: scrollRewardList
+        anchors.left: parent.left
+        anchors.right: parent.right
+        anchors.bottom: parent.bottom
+        step: 14
+        pixels-scroll: true
+        visible: false
+
+    Button
+      id: startTask
+      text: Start Task
+      height: 23
+      anchors.top: prev.bottom
+      anchors.left: taskReward.left
+      anchors.right: taskReward.right
+      margin: 10 25 0 25
+
+    Button
+      id: getReward
+      text: Get Reward
+      height: 23
+      anchors.top: prev.bottom
+      anchors.left: taskReward.left
+      anchors.right: taskReward.right
+      margin: 5 25 0 25
+
+    Button
+      id: cancelTask
+      text: Cencel Task
+      height: 23
+      anchors.top: prev.bottom
+      anchors.left: taskReward.left
+      anchors.right: taskReward.right
+      margin: 5 25 0 25
+
+
+    Button
+      id: close
+      text: Close
+      height: 23
+      anchors.bottom: parent.bottom
+      anchors.left: taskReward.left
+      anchors.right: taskReward.right
+      margin: 0 25 2 25
+      @onClick: naoexibir()
+
+
+  Label
+    text: Find
+    anchors.bottom: parent.bottom
+    anchors.left: parent.left
+    text-auto-resize: true
+
+  TextEdit
+    id: searchTask
+    color: white
+    size: 163 25
+    anchors.bottom: parent.bottom
+    anchors.left: prev.right
+    padding: 5 10 0 10
+    margin-left: 10
+    focusable: true

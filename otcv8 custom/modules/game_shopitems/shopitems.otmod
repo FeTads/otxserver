@@ -1,9 +1,0 @@
-Module
-  name: game_shopitems
-  description: Sistema de SHOP
-  author: Thalles Vitor
-  website: wwww.thallesdev.com
-  sandboxed: true
-  scripts: [ shopitems ]
-  @onLoad: init()
-  @onUnload: terminate()

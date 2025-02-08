@@ -1,245 +1,342 @@
-ShopCategory < Panel
-  height: 36
-  focusable: true
-  background: alpha
+transferPanel < Window
+  anchors.centerIn: parent
+  size: 291 251
+  image-source: transfer/transferPanel
+  padding: 10
 
-  $focus:
-    background: #99999999
-  
-  Label
-    id: name
-    anchors.top: parent.top
-    anchors.left: parent.left
-    anchors.right: parent.right
-    anchors.bottom: parent.bottom
-    margin-left: 40
-    text-align: left
-    color: white
-    font: verdana-11px-rounded    
-    
-ShopCategoryItem < ShopCategory
-  UIItem
-    id: item
-    anchors.top: parent.top
-    anchors.left: parent.left
-    anchors.bottom: parent.bottom
-    margin-top: 2
-    margin-bottom: 2
-    margin-left: 2
-    virtual: true
-    size: 32 32
-    
-ShopCategoryCreature < ShopCategory
-  UICreature
-    id: creature
-    anchors.top: parent.top
-    anchors.left: parent.left
-    anchors.bottom: parent.bottom
-    margin-top: 2
-    margin-bottom: 2
-    margin-left: 2
-    size: 32 32
-    
-ShopCategoryImage < ShopCategory
-  Label
-    id: image
-    anchors.top: parent.top
-    anchors.left: parent.left
-    anchors.bottom: parent.bottom
-    margin-top: 2
-    margin-bottom: 2
-    margin-left: 2
-    size: 32 32    
-    
-    
-    
-ShopOffer < Panel
-  height: 56
-  background: alpha
-  
-  $focus:
-    background: #99999999
-
-  Label
-    id: title
+  Panel
+    id: panelText
+    height: 55
+    margin-top: 33
     anchors.left: parent.left
     anchors.right: parent.right
     anchors.top: parent.top
-    margin-top: 4
-    margin-left: 55
-    text-align: topleft
-    color: white
-    font: verdana-11px-rounded
 
-  Label
-    id: description
-    anchors.top: prev.bottom
-    anchors.left: parent.left
-    anchors.right: parent.right
-    anchors.bottom: parent.bottom
-    margin-left: 55
-    margin-right: 55
-    text-align: topleft
-    text-auto-resize: true
-    text-wrap: true
-    color: white
-    font: verdana-11px-rounded
-    
-  Button
-    id: buyButton
-    text: BUY
-    height: 25
+    Label
+      text: Você tem a opção de transferir uma quantidade específica de Premium Points para outro jogador. Escolha a quantidade e o destinatário com cuidado!
+      anchors.fill: parent
+      text-wrap: true
+      text-align: center
+      font: verdana-11px-antialised
+
+  TextEdit
+    id: playerName
+    size: 130 22
     anchors.verticalCenter: parent.verticalCenter
-    anchors.left: prev.right
-    anchors.right: parent.right    
-    margin-right: 15
-    text-align: center
-    
-ShopOfferItem < ShopOffer
+    anchors.horizontalCenter: parent.horizontalCenter
+    padding: 5 10 0 10
+
+  AmountPanel
+    id: amountPanel
+    height: 40
+    anchors.left: parent.left
+    anchors.right: parent.right
+    anchors.top: prev.bottom
+    margin-top: 10
+
+  Label
+    id: labelTransfer
+    anchors.top: prev.bottom
+    anchors.left: parent.horizontalCenter
+    text-auto-resize: true
+
+  UIWidget
+    id: icon
+    size: 16 16
+    anchors.right: parent.horizontalCenter
+    anchors.verticalCenter: labelTransfer.verticalCenter
+    image-source: images/icon-diamond
+    margin-bottom: 1
+
+  ShopButton
+    id: transfer
+    size: 80 27
+    image-source: transfer/transfer
+    anchors.bottom: parent.bottom
+    anchors.left: parent.left
+
+  ShopButton
+    id: closeTransferPanel
+    size: 80 27
+    image-source: transfer/fechar
+    anchors.bottom: parent.bottom
+    anchors.right: parent.right
+
+ShopButton < UIButton
+  opacity: 0.7
+
+  $hover:
+    opacity: 1
+
+ButtonCategory < UIWidget
+  size: 194 45
+  opacity: 0.5
+
+  $hover:
+    opacity: 1
+
+  $focus:
+    opacity: 1
+
+shopItem < UIWidget
+  image-source: /images/ui/panel
+  opacity: 0.8
+
+  $hover:
+    image-source: images/shopItem
+    opacity: 1
+
   UIItem
     id: item
-    anchors.top: parent.top
-    anchors.left: parent.left
-    anchors.bottom: parent.bottom
-    margin-top: 4
-    margin-bottom: 4
-    margin-left: 2
+    size: 50 50
+    anchors.verticalCenter: parent.verticalCenter
+    anchors.horizontalCenter: parent.horizontalCenter
     virtual: true
-    size: 48 48
-    
-ShopOfferCreature < ShopOffer
-  UICreature
-    id: creature
-    anchors.top: parent.top
-    anchors.left: parent.left
-    anchors.bottom: parent.bottom
-    margin-top: 4
-    margin-bottom: 4
-    margin-left: 2
-    size: 48 48
-    
-ShopOfferImage < ShopOffer
+    phantom: true
+
   Label
-    id: image
+    id: itemName
+    height: 32
+    color: white
     anchors.top: parent.top
+    anchors.horizontalCenter: parent.horizontalCenter
     anchors.left: parent.left
-    anchors.bottom: parent.bottom
-    margin-top: 4
-    margin-bottom: 4
-    margin-left: 2
-    size: 48 48    
-  
-MainWindow
-  id: shopWindow
-  !text: tr('Shop')
-  size: 750 500
-  @onEscape: modules.game_shop.hide()
-  $mobile:
-    size: 500 360
-
-  Panel
-    id: infoPanel
-    anchors.top: parent.top
-    anchors.left: parent.left
-    width: 230
-    height: 60
-
-    Label
-      id: points
-      anchors.horizontalCenter: parent.horizontalCenter
-      anchors.top: parent.top
-      margin-top: 10
-      text: -
-      text-auto-resize: true
-    
-    Button
-      id: buy
-      anchors.horizontalCenter: parent.horizontalCenter
-      width: 150
-      anchors.top: prev.bottom
-      margin-top: 10
-      visible: false
-      !text: tr("Buy points")
-
-  Panel
-    id: adPanel
-    anchors.top: parent.top
-    anchors.left: infoPanel.right
     anchors.right: parent.right
-    margin-left: 10
-    height: 0
-    
-    Label
-      id: ad
+    text-wrap: true
+    text-align: center
+    font: verdana-11px-antialised
+
+  UIWidget
+    id: icon
+    size: 16 16
+    anchors.right: parent.horizontalCenter
+    anchors.verticalCenter: itemPoints.verticalCenter
+    image-source: images/icon-diamond
+    margin-bottom: 1
+
+  Label
+    id: itemPoints
+    height: 28
+    anchors.left: parent.horizontalCenter
+    anchors.bottom: parent.bottom
+    text-auto-resize: true
+
+BuyPanel < Window
+  anchors.centerIn: parent
+  image-source: buyPanel/buyPanel
+  size: 291 251
+  padding: 10
+
+  Label
+    id: buyLabelName
+    anchors.top: parent.top
+    anchors.left: parent.left
+    anchors.right: parent.right
+    text-align: center
+    margin-top: 38
+
+  UIItem
+    id: item
+    size: 45 45
+    anchors.verticalCenter: parent.verticalCenter
+    anchors.horizontalCenter: parent.horizontalCenter
+    margin-bottom: 35
+    virtual: true
+
+  Label
+    text: Escolha uma quantidade
+    anchors.horizontalCenter: parent.horizontalCenter
+    anchors.verticalCenter: parent.verticalCenter
+
+  AmountPanel
+    id: amountPanel
+    height: 40
+    anchors.left: parent.left
+    anchors.right: parent.right
+    anchors.top: prev.bottom
+    margin-top: 10
+
+  Label
+    id: price
+    anchors.top: prev.bottom
+    anchors.left: parent.horizontalCenter
+    text-auto-resize: true
+    margin-top: 10
+
+  UIWidget
+    id: icon
+    size: 16 16
+    anchors.right: parent.horizontalCenter
+    anchors.verticalCenter: price.verticalCenter
+    image-source: images/icon-diamond
+    margin-bottom: 1
+    tooltip: Points
+
+  ShopButton
+    id: buy
+    size: 80 27
+    image-source: buyPanel/comprar
+    anchors.bottom: parent.bottom
+    anchors.left: parent.left
+
+  ShopButton
+    id: closeBuyPanel
+    size: 80 27
+    image-source: buyPanel/fechar
+    anchors.bottom: parent.bottom
+    anchors.right: parent.right
+
+Window
+  size: 778 510
+  image-source: images/window
+  anchors.centerIn: parent
+  padding-top: 0
+
+  Panel
+    id: logoPanel
+    size: 233 120
+    anchors.top: parent.top
+    anchors.left: parent.left
+    margin-top: 60
+
+    UIWidget
+      id: logo
+      width: 100
+      tooltip: Sua logo
       anchors.horizontalCenter: parent.horizontalCenter
       anchors.top: parent.top
       anchors.bottom: parent.bottom
-      text-auto-resize: true
-      text-wrap: true
-      text-align: center
-      font: sans-bold-16px
-  
-  TextList    
-    id: categories
-    vertical-scrollbar: categoriesScrollBar
-    anchors.top: infoPanel.bottom
-    anchors.left: infoPanel.left
-    anchors.right: infoPanel.right
-    anchors.bottom: transactionHistory.top
-    margin-top: 10
-    margin-bottom: 10
-    padding: 1
-    focusable: false
+      image-source: images/logo
 
-  VerticalScrollBar
-    id: categoriesScrollBar
-    anchors.top: categories.top
-    anchors.bottom: categories.bottom
-    anchors.right: categories.right
-    step: 50
-    pixels-scroll: true
-
-  TextList
-    id: offers
-    vertical-scrollbar: offersScrollBar
-    anchors.top: adPanel.bottom
-    anchors.left: adPanel.left
-    anchors.right: adPanel.right
-    anchors.bottom: transactionHistory.top
-    margin-top: 10
-    margin-bottom: 10
-    padding: 1
-    focusable: false
-
-  VerticalScrollBar
-    id: offersScrollBar
-    anchors.top: offers.top
-    anchors.bottom: offers.bottom
-    anchors.right: offers.right
-    step: 50
-    pixels-scroll: true
-
-  Button
-    id: transactionHistory
-    !text: tr('Transaction history')
-    width: 128
-    anchors.left: parent.left
-    anchors.bottom: parent.bottom
-    @onClick: modules.game_shop.showHistory()
-
-  Button
-    id: transferOpen
-    !text: tr('Transfer Coins')
-    width: 128
-    anchors.left: prev. right
-    margin-left: 10
-    anchors.verticalCenter: prev.verticalCenter
-    @onClick: modules.game_shop.showTransfer()
-
-  Button
-    id: buttonCancel
-    !text: tr('Close')
-    width: 64
+  WidgetPanel
+    id: categoryInfo
+    size: 499 45
+    margin-top: 60
+    image-source: images/categoryInfo
+    anchors.top: parent.top
     anchors.right: parent.right
+
+    Panel
+      id: descriptionPanel
+      anchors.fill: parent
+      margin: 0 10 0 58
+
+      Label
+        id: descriptionLabel
+        anchors.fill: parent
+        font: verdana-11px-antialised
+        text-align: center
+        text-wrap: true
+
+  WidgetPanel
+    id: PanelCategory
+    size: 233 312
+    image-source: images/menu
     anchors.bottom: parent.bottom
-    @onClick: modules.game_shop.hide()
+    anchors.left: parent.left
+    padding: 10
+
+    ScrollablePanel
+      id: categoryList
+      anchors.fill: parent
+      vertical-scrollbar: scroll_category
+      margin: 42 20 0 0
+      layout: 
+        type: verticalBox
+        spacing: 5
+
+    UIWidget
+      size: 16 160
+      image-source: /images/game/chat/scrollBar
+      image-border: 5
+      image-border-top: 5
+      image-border-bottom: 5
+      anchors.top: categoryList.top
+      anchors.bottom: parent.bottom
+      anchors.right: parent.right
+      margin-top: 14
+      margin-bottom: 14
+
+    VerticalScrollBar
+      id: scroll_category
+      anchors.top: categoryList.top
+      anchors.bottom: parent.bottom
+      anchors.right: parent.right
+      step: 78
+      pixels-scroll: true
+
+  WidgetPanel
+    id: PanelShopList
+    size: 499 392
+    image-source: images/panelItems
+    anchors.top: categoryInfo.bottom
+    anchors.right: parent.right
+    margin-left: 10
+    padding: 10
+
+    ScrollablePanel
+      id: shopList
+      anchors.fill: parent
+      vertical-scrollbar: scroll_shopList
+      margin-right: 20
+      layout: 
+        type: grid
+        cell-size: 110 127
+        cell-spacing: 5
+        flow: true
+
+    UIWidget
+      size: 16 160
+      image-source: /images/game/chat/scrollBar
+      image-border: 5
+      image-border-top: 5
+      image-border-bottom: 5
+      anchors.top: parent.top
+      anchors.bottom: parent.bottom
+      anchors.right: parent.right
+      margin-top: 14
+      margin-bottom: 14
+
+    VerticalScrollBar
+      id: scroll_shopList
+      anchors.top: parent.top
+      anchors.bottom: parent.bottom
+      anchors.right: parent.right
+      step: 78
+      pixels-scroll: true
+
+  UIWidget
+    id: premiumPoints
+    size: 102 27
+    image-source: images/premium-points
+    anchors.left: parent.left
+    anchors.top: parent.top
+    font: sono_bold_border_14
+    margin: 18 0 0 5
+    text-offset: 5 4
+
+  ShopButton
+    size: 92 25
+    margin: 18 20 0 0
+    image-source: images/depositar
+    tooltip: Clique aqui para depositar
+    anchors.right: PanelCategory.right
+    anchors.top: parent.top
+    @onClick: os.execute("start https://www.youtube.com/")
+
+  ShopButton
+    id: transfer
+    size: 92 25
+    tooltip: Clique aqui para transferir pontos para seus amigos
+    margin-left: 12
+    image-source: images/transfer
+    anchors.left: prev.right
+    anchors.top: prev.top
+
+  ShopButton
+    size: 29 29
+    margin: 15 10 0 0
+    image-source: images/close
+    anchors.right: parent.right
+    anchors.top: parent.top
+    @onClick: naoexibir()

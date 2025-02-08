@@ -1,10 +1,10 @@
 Module
   name: game_shop
-  description: Game shop
-  author: otclient.ovh
-  website: http://otclient.ovh
+  description: Sistema de Shop
+  author: Anyone
+  website: dbonewage.online
   sandboxed: true
+  security: jR$5p@9Qz!
   scripts: [ shop ]
-  dependencies: [ client_topmenu ]
   @onLoad: init()
   @onUnload: terminate()

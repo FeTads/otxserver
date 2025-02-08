@@ -68,7 +68,13 @@
 	<event type="extendedopcode" name="MarketRRITP" event="script" value="market/market_reedemofferstoplayeragain.lua"/>
 	<event type="extendedopcode" name="MarketSearch" event="script" value="market/market_search.lua"/>
 
-	<!-- Shop System  -->
-	<event type="extendedopcode" name="ShopReceive" event="script" value="shop/shop_receive.lua"/>
+	<!-- Task System -->
+	<event type="extendedopcode" name="TaskSystemOpcodes" event="script" value="task/task_opcodes.lua"/>
+	<event type="kill" name="TaskKill" event="script" value="task/task_kill.lua"/>
+	<event type="kill" name="playerTaskKill" script="task/task_system.lua"/>
+
+	<!-- Craft system -->
+	<event type="login" name="CraftOpcode_login" event="script" value="craft_opcode.lua"/>
+	<event type="extendedopcode" name="CraftOpcode_extendedopcode" event="script" value="craft_opcode.lua"/>
 
 </creaturescripts>

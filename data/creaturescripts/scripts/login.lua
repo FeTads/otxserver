@@ -100,8 +100,6 @@ function onLogin(cid)
 	registerCreatureEvent(cid, "MarketRRITP")
 	registerCreatureEvent(cid, "MarketSearch")
 
-    -- Shop System
-	registerCreatureEvent(cid, "ShopReceive")
 	
 	-- Autoloot System
 	doPlayerOpenChannel(cid, 15)  --channel_death

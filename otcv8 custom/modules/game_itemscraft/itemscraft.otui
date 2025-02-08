@@ -1,0 +1,177 @@
+Window
+  id: background
+  image-source: window/window
+  size: 715 494
+  anchors.centerIn: parent
+
+  GODzruHorizontalScrollBar
+    id: countScrollBar
+    size: 40 14
+    anchors.left: parent.left
+    anchors.right: parent.right
+    anchors.top: parent.top
+    margin-left: 460
+    margin-right: 140
+    margin-top: 328
+    step: 1
+    pixels-scroll: true
+      $!on:
+        width: 0
+
+  Label
+    id: textcount
+    width: 100
+    anchors.top: parent.top
+    anchors.horizontalCenter: parent.horizontalCenter
+    text-align: center
+    text-auto-resize: true
+    margin-top: 298
+    margin-left: 157
+
+  ScrollablePanel
+    id: panelitemscraft
+    size: 200 250
+    anchors.left: parent.left
+    anchors.top: parent.top
+    margin-left: 65
+    margin-top: 123
+    vertical-scrollbar: panel_itemsScrollBar
+    layout:
+      type: grid
+      cell-size: 55 55
+      cell-spacing: 8
+      flow: true
+
+  VerticalScrollBar
+    id: panel_itemsScrollBar
+    anchors.top: panel_image.top
+    anchors.bottom: prev.bottom
+    anchors.right: parent.right
+    margin-top: -5
+    margin-bottom: 16
+    margin-right: 8
+    step: 78
+    visible: false
+    pixels-scroll: true
+      $!on:
+        width: 0
+
+  ScrollablePanel
+    id: panelitemsinfo
+    size: 310 70
+    anchors.right: parent.right
+    anchors.top: parent.top
+    margin-top: 93
+    margin-right: 30
+    layout:
+      type: horizontalBox
+      spacing: 14
+      flow: true
+    horizontal-scrollbar: panel_infoScrollBar
+
+  HorizontalScrollBar
+    id: panel_infoScrollBar
+    anchors.top: panel_image.top
+    anchors.bottom: prev.bottom
+    anchors.right: parent.right
+    margin-top: -5
+    margin-bottom: 16
+    margin-right: 8
+    step: 78
+    visible: false
+    pixels-scroll: true
+      $!on:
+        width: 0
+
+  TextEdit
+    id: searchItem
+    color: white
+    size: 163 36
+    image-source: window/search
+    anchors.top: parent.top
+    anchors.left: parent.left
+    margin-top: -15
+    padding: 10 0 0 10
+    margin-left: 260
+    visible: false
+
+  UIButton
+    id: buttoncraft
+    size: 101 48
+    opacity: 0.6
+    image-source: window/craft
+    anchors.bottom: parent.bottom
+    anchors.right: parent.right
+    margin-right: 135
+    margin-bottom: 50
+
+    $hover:
+      opacity: 100
+
+  UIButton
+    size: 101 48
+    image-source: window/fechar
+    anchors.bottom: parent.bottom
+    anchors.right: parent.right
+    opacity: 0.6
+    margin-bottom: -15
+    @onClick: naoexibir()
+
+    $hover:
+      opacity: 100
+
+  MyComboBox
+    id: categorylist
+    image-source: window/combobox
+    width: 261
+    height: 68
+    anchors.top: parent.top
+    anchors.left: parent.left
+    text-align: center
+    font: sans-bold-16px
+    margin-top: 52
+    opacity: 0.6
+    margin-left: 32
+    margin-right: 5
+    text-offset: 0 0
+    image-clip: 0 0 261 68
+
+    $hover !disabled:
+      image-clip: 0 0 261 68
+      opacity: 100
+
+    $on:
+      image-clip: 0 0 261 68
+
+  UIWidget
+    id: money_uiwidget
+    width: 200
+    !text: tr ('')
+    anchors.top: parent.top
+    anchors.right: parent.right
+    text-align: center
+    color: yellow
+    text-auto-resize: true
+    margin-right: 170
+    margin-top: 185
+    
+  UIWidget
+    id: balance
+    width: 200
+    !text: tr ('')
+    anchors.top: parent.top
+    anchors.right: parent.right
+    text-align: center
+    color: yellow
+    text-auto-resize: true
+    margin-right: 70
+    font: sans-bold-16px
+    margin-top: -4
+
+  UIItem
+    id: itemiduiwidget
+    size: 60 60
+    anchors.top: money_uiwidget.top
+    anchors.right: money_uiwidget.right
+    margin-top: 30
+    margin-right: -15

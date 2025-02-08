@@ -42,7 +42,10 @@ Module
     - game_stats
     - game_shaders
     - game_bot
-    - game_shopitems
+    - game_shop
     - game_marketplayer
+    - game_task
+    - game_itemscraft
+
   @onLoad: init()
   @onUnload: terminate()

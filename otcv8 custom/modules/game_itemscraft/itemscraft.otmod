@@ -1,0 +1,9 @@
+Module
+  name: game_itemscraft
+  description: craft system, criação de items!
+  author: Anyone
+  website: dboinside.online
+  sandboxed: true
+  scripts: [ itemscraft ]
+  @onLoad: init()
+  @onUnload: terminate()
