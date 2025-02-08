@@ -18,6 +18,7 @@ local files = {
     'custom/task.lua',
     'custom/craft.lua',
     'custom/json.lua',
+    'custom/quiz.lua',
     '100-shortcut.lua',
     'killuaslib.lua',
     'deletebra_lib.lua',
