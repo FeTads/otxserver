@@ -59,21 +59,26 @@ quiz.rewards = {
     [2] = {itemid = 2152, count = 100} -- Exemplo de recompensa: 100 Platinum Coins
 }
 
-quiz.questionAnswered = false
+quiz.exhaustion = {}
+
+quiz.questionAnswered = false 
 
 function quiz.checkAnswer(cid, answer)
-    -- Verificar exhaust
-    local exhaustStorage = 19001
-    local exhaustTime = 5 -- Tempo de exhaust em segundos
-    
-    if exhaustion.get(cid, exhaustStorage) then
-        doPlayerSendTextMessage(cid, MESSAGE_INFO_DESCR, "Você deve esperar " .. exhaustion.get(cid, exhaustStorage) .. " segundos antes de responder novamente.")
+    local now = os.time()
+    local exhaustTime = 5 -- Tempo de cooldown
+
+    if quiz.exhaustion[cid] and quiz.exhaustion[cid] > now then
+        local waitTime = quiz.exhaustion[cid] - now
+        doPlayerSendTextMessage(cid, MESSAGE_INFO_DESCR, "Você deve esperar " .. waitTime .. " segundos antes de responder novamente.")
         return
     end
 
+
+    quiz.exhaustion[cid] = now + exhaustTime
+
     local questionId = getGlobalStorageValue(19000)
     if questionId == -1 then
-        doPlayerSendTextMessage(cid, MESSAGE_INFO_DESCR, "Não há nenhuma pergunta ativa no momento. Aguarde a próxima pergunta.")
+        doPlayerSendTextMessage(cid, MESSAGE_INFO_DESCR, "Não há nenhuma pergunta ativa no momento. Aguarde a próxima rodada.")
         return
     end
 
@@ -81,23 +86,23 @@ function quiz.checkAnswer(cid, answer)
     if answer:lower() == correctAnswer:lower() then
         local reward = quiz.rewards[math.random(1, #quiz.rewards)]
         doPlayerAddItem(cid, reward.itemid, reward.count)
-        doPlayerSendTextMessage(cid, MESSAGE_INFO_DESCR, "Parabéns! Você respondeu corretamente e ganhou sua recompensa.")
+        doPlayerSendTextMessage(cid, MESSAGE_INFO_DESCR, "Parabéns! Você acertou e ganhou sua recompensa.")
         broadcastMessage(getCreatureName(cid) .. " respondeu corretamente à pergunta do quiz!", MESSAGE_EVENT_ADVANCE)
+        
         quiz.questionAnswered = true -- Marcar a pergunta como respondida
-        setGlobalStorageValue(19000, -1) -- Atualizar o valor de armazenamento global para indicar que a pergunta foi respondida
+        setGlobalStorageValue(19000, -1) -- Resetar a pergunta ativa
     else
         doPlayerSendTextMessage(cid, MESSAGE_INFO_DESCR, "Resposta errada! Tente novamente na próxima pergunta.")
     end
-    
-    exhaustion.set(cid, exhaustStorage, exhaustTime)
 end
 
 
-
 function quiz.broadcastQuestion()
-    quiz.questionAnswered = false
+    quiz.questionAnswered = false 
     local questionId = math.random(1, #quiz.questions)
     local question = quiz.questions[questionId].question
-    broadcastMessage("Quiz! " .. question .. " Use o comando !responder <sua resposta> para responder.", MESSAGE_EVENT_ADVANCE)
+
+    broadcastMessage("[QUIZ] " .. question .. " | Use o comando !responder <sua resposta> para participar!", MESSAGE_EVENT_ADVANCE)
+    
     setGlobalStorageValue(19000, questionId) -- Armazena o ID da pergunta atual
 end

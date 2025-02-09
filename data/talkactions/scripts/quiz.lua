@@ -1,4 +1,3 @@
-dofile('data/lib/quiz.lua')
 
 function onSay(cid, words, param)
     if param ~= "" then

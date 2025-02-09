@@ -79,6 +79,8 @@ function onStartup()
 	db.executeQuery("UPDATE `bans` SET `active` = 0 WHERE `expires` <= " .. time .. " AND `expires` >= 0 AND `active` = 1")
 	db.executeQuery("DELETE FROM `guild_wars` WHERE `status` = 0 AND `begin` < " .. (time - 2 * 86400) .. ";")
 	db.executeQuery("UPDATE `players` SET `broadcasting` = 0")
+	setGlobalStorageValue(19000, -1) -- Reseta o armazenamento global para indicar que não há perguntas ativas
+	print("[INFO] Question OK.")
 
 	doSetGameState(GAMESTATE_NORMAL)
 
