@@ -187,7 +187,7 @@
 	rookLevelTo = 5
 	rookLevelToLeaveRook = 8
 	rookTownId = 1
-	useRookSystem = true
+	useRookSystem = false
 
 	paralyzeDelay = 1500
 
