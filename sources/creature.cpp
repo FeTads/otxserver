@@ -768,59 +768,73 @@ bool Creature::onDeath()
 
 void Creature::dropCorpse(DeathList deathList)
 {
-	if(master)
-	{
-		g_game.addMagicEffect(getPosition(), MAGIC_EFFECT_POFF);
-		return;
-	}
+    if(master) {
+        g_game.addMagicEffect(getPosition(), MAGIC_EFFECT_POFF);
+        return;
+    }
 
-	Item* corpse = createCorpse(deathList);
-	if(corpse)
-		corpse->setParent(VirtualCylinder::virtualCylinder);
+    Item* corpse = createCorpse(deathList);
+    if(corpse) {
+        corpse->setParent(VirtualCylinder::virtualCylinder);
+    }
 
-	bool deny = false;
-	CreatureEventList deathEvents = getCreatureEvents(CREATURE_EVENT_DEATH);
-	for(CreatureEventList::iterator it = deathEvents.begin(); it != deathEvents.end(); ++it)
-	{
-		if(!(*it)->executeDeath(this, corpse, deathList) && !deny)
-			deny = true;
-	}
+    bool deny = false;
+    CreatureEventList deathEvents = getCreatureEvents(CREATURE_EVENT_DEATH);
+    for(CreatureEventList::iterator it = deathEvents.begin(); it != deathEvents.end(); ++it) {
+        if(!(*it)->executeDeath(this, corpse, deathList) && !deny) {
+            deny = true;
+        }
+    }
 
-	if(!corpse)
-		return;
+    if(!corpse) {
+        return;
+    }
 
-	corpse->setParent(NULL);
-	if(deny)
-		return;
+    corpse->setParent(nullptr);
+    if(deny) {
+        return;
+    }
 
-	Tile* tile = getTile();
-	if(!tile)
-		return;
+    Tile* tile = getTile();
+    if(!tile) {
+        return;
+    }
+   
+    std::set<int32_t> amuletsIDs = {14561, 14562, 14563, 14564, 14800};
 
-	Item* splash = NULL;
-	switch(getRace())
-	{
-		case RACE_VENOM:
-			splash = Item::CreateItem(ITEM_FULLSPLASH, FLUID_GREEN);
-			break;
+    Player* player = getPlayer();
+    if(player && player->getSkull() != SKULL_RED) {
+        Item* ring = player->getInventoryItem(SLOT_NECKLACE); // SLOT 
+        if(ring && amuletsIDs.count(ring->getID()) > 0) {
+            player->setDropLoot(LOOT_DROP_NONE);
+            std::string itemName = ring->getName();
+            std::string message = "Você possui ('" + itemName + "') que não pode ser dropado, exceto quando você possui red skull.";
+            player->sendTextMessage(MSG_STATUS_CONSOLE_ORANGE, message);
+        }
+    }
 
-		case RACE_BLOOD:
-			splash = Item::CreateItem(ITEM_FULLSPLASH, FLUID_BLOOD);
-			break;
+    Item* splash = nullptr;
+    switch(getRace()) {
+        case RACE_VENOM:
+            splash = Item::CreateItem(ITEM_FULLSPLASH, FLUID_GREEN);
+            break;
 
-		default:
-			break;
-	}
+        case RACE_BLOOD:
+            splash = Item::CreateItem(ITEM_FULLSPLASH, FLUID_BLOOD);
+            break;
 
-	if(splash)
-	{
-		g_game.internalAddItem(NULL, tile, splash, INDEX_WHEREEVER, FLAG_NOLIMIT);
-		g_game.startDecay(splash);
-	}
+        default:
+            break;
+    }
 
-	g_game.internalAddItem(NULL, tile, corpse, INDEX_WHEREEVER, FLAG_NOLIMIT);
-	dropLoot(corpse->getContainer());
-	g_game.startDecay(corpse);
+    if(splash) {
+        g_game.internalAddItem(nullptr, tile, splash, INDEX_WHEREEVER, FLAG_NOLIMIT);
+        g_game.startDecay(splash);
+    }
+
+    g_game.internalAddItem(nullptr, tile, corpse, INDEX_WHEREEVER, FLAG_NOLIMIT);
+    dropLoot(corpse->getContainer());
+    g_game.startDecay(corpse);
 }
 
 DeathList Creature::getKillers()
