@@ -5129,10 +5129,37 @@ uint64_t Player::getLostExperience() const
 
 uint32_t Player::getAttackSpeed() const
 {
-    static const std::vector<int32_t> attackSpeeds = {3000, 2800, 2600, 2400, 2200, 2000, 1800, 1600, 1400, 1200, 1000, 800, 600, 500}; //limit 500
-    int32_t skill = getSkill(SKILL_FIST, SKILL_LEVEL);
-    int32_t index = std::min(std::max(skill / 10 - 1, 0), static_cast<int32_t>(attackSpeeds.size() - 1));
-    return attackSpeeds[index];
+	int32_t SpeedAttack;
+	SpeedAttack = getSkill(SKILL_FIST, SKILL_LEVEL);
+
+	if(SpeedAttack < 10)
+	SpeedAttack = 1500;
+	else if(SpeedAttack >= 10 && SpeedAttack < 30)
+	SpeedAttack = 1400;
+	else if(SpeedAttack >= 30 && SpeedAttack < 50)
+	SpeedAttack = 1300;
+	else if(SpeedAttack >= 50 && SpeedAttack < 60)
+	SpeedAttack = 1200;
+	else if(SpeedAttack >= 60 && SpeedAttack < 70)
+	SpeedAttack = 1000;
+	else if(SpeedAttack >= 70 && SpeedAttack < 80)
+	SpeedAttack = 900;
+	else if(SpeedAttack >= 80 && SpeedAttack < 90)
+	SpeedAttack = 800;
+	else if(SpeedAttack >= 90 && SpeedAttack < 100)
+	SpeedAttack = 700;
+	else if(SpeedAttack >= 100 && SpeedAttack < 110)
+	SpeedAttack = 600;
+	else if(SpeedAttack >= 110 && SpeedAttack < 120)
+	SpeedAttack = 500;
+	else if(SpeedAttack >= 120 && SpeedAttack < 130)
+	SpeedAttack = 400;
+	else if(SpeedAttack >= 130 && SpeedAttack < 140)
+	SpeedAttack = 350;
+	else
+	SpeedAttack = 350;   
+
+	return SpeedAttack;
 }
 
 void Player::learnInstantSpell(const std::string& name)
