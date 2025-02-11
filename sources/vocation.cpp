@@ -125,6 +125,12 @@ bool Vocations::parseVocationNode(xmlNodePtr p)
 	if(readXMLInteger(p, "lessloss", intValue))
 		voc->setLessLoss(intValue);
 
+	if(readXMLInteger(p, "effect", intValue))
+        voc->setEffect(intValue);
+
+	if(readXMLInteger(p, "interval", intValue))
+    	voc->setEffectInterval(intValue);
+
 	if(readXMLString(p, "droploot", strValue) || readXMLString(p, "lootdrop", strValue))
 		voc->setDropLoot(booleanString(strValue));
 
@@ -492,6 +498,8 @@ void Vocation::reset()
 	attackSpeed = 1500;
 	corpseId = 3058;
 	name = description = "";
+	effect = 2; // default effect
+	effectInterval = 2000; // default interval
 
 	gainAmount[GAIN_HEALTH] = gainAmount[GAIN_MANA] = gainAmount[GAIN_SOUL] = 1;
 	gain[GAIN_HEALTH] = gain[GAIN_MANA] = capGain = 5;

@@ -91,7 +91,7 @@ Player::Player(const std::string& _name, ProtocolGame_ptr p):
 	soulMax = 100;
 	capacity = 400.00;
 	stamina = STAMINA_MAX;
-	lastLoad = lastPing = lastPong = lastAttack = lastMail = OTSYS_TIME();
+	lastLoad = lastPing = lastPong = lastAttack = lastEffect = lastMail = OTSYS_TIME();
 
 	writeItem = NULL;
 	group = NULL;
@@ -2192,6 +2192,12 @@ void Player::onThink(uint32_t interval)
 {
 	Creature::onThink(interval);
 	int64_t timeNow = OTSYS_TIME();
+
+	if(vocation && vocation->getEffect() && timeNow - lastEffect >= vocation->getEffectInterval())
+	{
+    g_game.addMagicEffect(getPosition(), vocation->getEffect());
+    lastEffect = timeNow;
+	}
 	if(timeNow - lastPing >= 5000)
 	{
 		lastPing = timeNow;

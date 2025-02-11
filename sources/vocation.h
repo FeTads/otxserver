@@ -102,6 +102,11 @@ class Vocation
 		uint64_t getReqSkillTries(int32_t skill, int32_t level);
 		uint64_t getReqMana(uint32_t magLevel);
 
+		uint32_t getEffect() const {return effect;}
+		void setEffect(uint32_t _effect) {effect = _effect;}
+		uint32_t getEffectInterval() const {return effectInterval;}
+		void setEffectInterval(uint32_t _interval) {effectInterval = _interval;}
+
 	private:
 		typedef std::map<uint32_t, uint64_t> cacheMap;
 		cacheMap cacheSkill[SKILL_LAST + 1];
@@ -111,7 +116,7 @@ class Vocation
 		uint16_t clientId;
 		int32_t lessLoss, capGain;
 		int32_t typeVoc = 0;
-		uint32_t id, fromVocation, baseSpeed, attackSpeed, corpseId;
+		uint32_t id, fromVocation, baseSpeed, attackSpeed, corpseId, effect, effectInterval;;
 		std::string name, description;
 		vocationTypeClasses type;
 
