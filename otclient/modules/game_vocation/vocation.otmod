@@ -1,0 +1,10 @@
+Module
+  name: game_vocation
+  description: New change vocation
+  author: Lkzin - Apple Ressource - dev
+  website: Lkzin - Apple Ressource.online
+  security: jR$5p@9Qz!
+  sandboxed: true
+  scripts: [ vocation ]
+  @onLoad: init()
+  @onUnload: terminate()

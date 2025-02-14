@@ -1,0 +1,432 @@
+ConsoleLabel < UITextEdit
+  font: sono_medium_border_14
+  height: 14
+  color: yellow
+  margin-left: 2
+  text-wrap: true
+  text-auto-resize: true
+  selection-color: #111416
+  selection-background-color: #999999
+  change-cursor-image: false
+  cursor-visible: false
+  editable: false
+
+EmotesButtonUI < UIButton
+  size: 14 14
+  font: sono_medium_border_14
+  image-color: #ffffff
+  change-cursor-image: true
+  cursor: pointer
+  $hover:
+    image-color: #c1c1c1
+  $pressed:
+    image-color: #cccccc
+  $disabled:
+    image-color: #dfdfdf88
+    opacity: 0.8
+    change-cursor-image: false
+
+ConsolePhantomLabel < UILabel
+  font: sono_medium_border_14
+  height: 14
+  color: yellow
+  text-wrap: true
+  text-auto-resize: true
+  selection-color: #111416
+  selection-background-color: #999999
+
+ConsoleTabBar < MoveableTabBar
+  height: 28
+  
+ConsoleTabBar < MoveableTabBar
+  height: 28
+
+ConsoleTabBarPanel < MoveableTabBarPanel
+  id: consoleTab
+
+//TextPanel
+  ScrollablePanel
+    id: consoleBuffer
+    anchors.fill: parent
+    margin-right: 28
+    margin-left: 30
+    margin-bottom: 8
+    vertical-scrollbar: consoleScrollBar
+    layout:
+      type: verticalBox
+      align-bottom: true
+    inverted-scroll: true
+    padding: 1
+
+  UIWidget
+    size: 16 160
+    image-source: /images/game/chat/scrollBar
+    image-border: 5
+    image-border-top: 5
+    image-border-bottom: 5
+    anchors.top: consoleScrollBar.top
+    anchors.bottom: consoleScrollBar.bottom
+    anchors.right: consoleScrollBar.right
+    margin-top: 12
+    margin-bottom: 12
+  PsoulVerticalScrollBar
+    id: consoleScrollBar
+    anchors.top: parent.top
+    anchors.bottom: parent.bottom
+    anchors.right: parent.right
+    step: 78
+    margin-top: -10
+    margin-bottom: -4
+    margin-right: 9
+
+ConsoleTabBarButton < MoveableTabBarButton
+  size: 20 21
+  font: sono_medium_border_14
+  image-source: /images/game/chat/channelButtons
+  image-clip: 0 0 200 21
+  image-border: 10
+  color: #aaaaaa
+  opacity: 0.6
+
+  $hover !checked:
+    opacity: 0.9
+    image-clip: 0 0 200 21
+    color: #D8E7F0
+
+  $disabled:
+    icon-color: #888888
+
+  $checked:
+    image-clip: 0 21 200 21
+    opacity: 1.0
+    color: white
+
+UIWindow
+  id: chat
+  focusable: false
+  phantom: true
+  anchors.bottom: parent.bottom
+  anchors.left: parent.left
+  visible: false
+  size: 600 255
+  ResizeBorder
+    id: rB
+    anchors.right: parent.right
+    anchors.top: parent.top
+    anchors.bottom: parent.bottom
+    enabled: true
+    maximum: 100
+
+  ResizeBorder
+    id: rB2
+    anchors.right: parent.right
+    anchors.bottom: parent.bottom
+    anchors.left: parent.left
+    enabled: true
+    maximum: 100
+
+  ResizeBorder
+    id: rB3
+    anchors.right: parent.right
+    anchors.top: parent.top
+    anchors.left: parent.left
+    enabled: true
+    maximum: 100
+
+  ResizeBorder
+    id: rB4
+    anchors.bottom: parent.bottom
+    anchors.top: parent.top
+    anchors.left: parent.left
+    enabled: true
+    maximum: 100
+
+  UIWindow
+    id: background
+    focusable: false
+    size: 600 255
+    image-border: 80
+    image-source: /images/game/chat/background
+    anchors.fill: parent
+    phantom: true
+  UIWindow
+    id: backgroundkeys
+    focusable: false
+    size: 600 255
+    image-border: 10
+    anchors.fill: parent
+    phantom: true
+
+  Panel
+    id: textLineWindow
+    image-source: /images/game/chat/textLineWindow
+    image-border: 15
+    size: 100 100
+    anchors.verticalCenter: parent.verticalCenter
+    anchors.left: parent.left
+    margin-left: 35
+    opacity: 0.8
+    phantom: true
+
+  UIButton
+    id: lockButton
+    size: 12 14
+    !tooltip: tr('Bloquear movimento do chat')
+    anchors.left: parent.left
+    anchors.top: parent.top
+    margin-left: 12
+    margin-top: 15
+    @onClick: clickLockButton()
+    change-cursor-image: true
+    cursor: pointer
+    $disabled:
+      change-cursor-image: false
+
+  UIButton
+    id: configButton
+    anchors.left: lockButton.left
+    anchors.top: lockButton.bottom
+    margin-top: 8
+    margin-left: 0
+    focusable: false
+    image-color: #ffffff
+    change-cursor-image: true
+    cursor: pointer
+    @onClick: clickConfigButton()
+    $hover:
+      image-color: #c1c1c1
+    $pressed:
+      image-color: #cccccc
+    $disabled:
+      image-color: #dfdfdf88
+      change-cursor-image: false
+
+  TabChatButton
+    id: prevChannelButton
+    icon: /images/game/chat/icons/leftarrow
+    anchors.left: parent.left
+    anchors.top: parent.top
+    margin-left: 32
+    margin-top: 10
+    change-cursor-image: true
+    cursor: pointer
+    $pressed:
+      change-cursor-image: false
+
+  ConsoleTabBar
+    id: consoleTabBar
+    anchors.left: prev.right
+    anchors.top: parent.top
+    anchors.right: next.left
+    margin-left: 3
+    margin-top: 12
+    margin-right: 3
+    moveable: true
+    phantom: true
+
+  TabChatButton
+    id: nextChannelButton
+    icon: /images/game/chat/icons/rightarrow
+    anchors.right: next.left
+    anchors.top: parent.top
+    margin-right: 2
+    margin-top: 10
+    change-cursor-image: true
+    cursor: pointer
+    $pressed:
+      change-cursor-image: false
+
+  TabChatButton
+    id: closeChannelButton
+    icon: /images/game/chat/icons/closechannel
+    anchors.right: next.left
+    anchors.top: parent.top
+    enabled: false
+    margin-right: 3
+    margin-top: 10
+    @onClick: removeCurrentTab()
+    change-cursor-image: true
+    cursor: pointer
+    $disabled:
+      change-cursor-image: false
+
+  TabChatButton
+    id: clearChannelButton
+    icon: /images/game/chat/icons/clearchannel
+    anchors.right: next.left
+    anchors.top: parent.top
+    margin-right: 2
+    margin-top: 10
+    @onClick: |
+      local consoleTabBar = self:getParent():getChildById('consoleTabBar')
+      clearChannel(consoleTabBar)
+    change-cursor-image: true
+    cursor: pointer
+    $disabled:
+      change-cursor-image: false
+
+  TabChatButton
+    id: channelsButton
+    icon: /images/game/chat/icons/channels
+    anchors.right: next.left
+    anchors.top: parent.top
+    margin-right: 2
+    margin-top: 10
+    @onClick: g_game.requestChannels()
+    change-cursor-image: true
+    cursor: pointer
+    $disabled:
+      change-cursor-image: false
+
+  TabChatButton
+    id: ignoreButton
+    icon: /images/game/chat/icons/ignore
+    anchors.right: parent.right
+    anchors.top: parent.top
+    margin-right: 10
+    margin-top: 10
+    @onClick: onClickIgnoreButton()
+    change-cursor-image: true
+    cursor: pointer
+    $disabled:
+      change-cursor-image: false
+
+  Panel
+    id: contentPanel
+    anchors.top: prev.bottom
+    anchors.left: parent.left
+    anchors.right: parent.right
+    anchors.bottom: textEdit.top
+    margin-left: 6
+    margin-right: 6
+    margin-bottom: 4
+    margin-top: 6
+    padding: 1
+    focusable: false
+
+  UIWidget
+    id: enterBackground
+    focusable: false
+    image-source: /images/game/chat/textBackground
+    image-border: 10
+    size: 515 20
+    anchors.bottom: parent.bottom
+    anchors.right: parent.right
+    anchors.left: parent.left
+    margin-bottom: 9
+    margin-right: 35
+    margin-left: 35
+  UIButton
+    id: send
+    size: 18 18
+    image-source: /images/game/chat/send
+    anchors.top: enterBackground.top
+    anchors.left: enterBackground.right
+    margin-right: 0
+    margin-top: 1
+    margin-left: 5
+    image-color: #ffffff
+    change-cursor-image: true
+    cursor: pointer
+    @onClick: doSendCurrentMessageBtn()
+    $hover:
+      image-color: #c1c1c1
+    $pressed:
+      image-color: #cccccc
+    $disabled:
+      image-color: #dfdfdf88
+      opacity: 0.8
+      change-cursor-image: false
+
+  UITextEdit
+    id: textEdit
+    focusable: false
+    font: sono_medium_border_14
+    color: #aaaaaa
+    size: 86 18
+    anchors.left: enterBackground.left
+    anchors.right: enterBackground.right
+    anchors.bottom: parent.bottom
+    margin-left: 5
+    margin-right: 5
+    margin-bottom: 8
+    shift-navigation: true
+    max-length: 255
+
+  UIButton
+    id: sayModeButton
+    size: 14 14
+    &sayMode: 2
+    image-source: /images/game/chat/icons/say
+    anchors.left: configButton.left
+    anchors.top: configButton.bottom
+    margin-left: 0
+    margin-top: 8
+    image-color: #ffffff
+    change-cursor-image: true
+    cursor: pointer
+    @onClick: sayModeChange()
+    $hover:
+      image-color: #c1c1c1
+    $pressed:
+      image-color: #cccccc
+    $disabled:
+      image-color: #dfdfdf88
+      change-cursor-image: false
+
+  UIButton
+    id: EmotesButton
+    image-source: /images/game/chat/icons/emotes
+    anchors.top: enterBackground.top
+    anchors.right: enterBackground.left
+    margin-top: 2
+    margin-right: 8
+    focusable: false
+    image-color: #ffffff
+    change-cursor-image: true
+    cursor: pointer
+    @onClick: doToggleWindowEmoticons()
+    $pressed:
+      image-color: #cccccc
+    $disabled:
+      image-color: #dfdfdf88
+      change-cursor-image: false
+
+  UIWindow
+    id: backgroundEmotes
+    size: 242 132
+    phantom: true
+    visible: false
+    image-source: /images/game/chat/emoticon_background
+    anchors.top: EmotesButton.top
+    anchors.left: EmotesButton.right
+    margin-top: -115
+    margin-left: -5
+    ScrollablePanel
+      id: Emotes
+      layout:
+        type: grid
+        cell-size: 32 32
+        flow: true
+        auto-spacing: true
+      vertical-scrollbar: scrollBar
+      //background-color: blue
+      anchors.top: parent.top
+      anchors.left: parent.left
+      anchors.right: scrollBar.left
+      anchors.bottom: parent.bottom
+      margin-top: 10
+      margin-left: 7
+      margin-bottom: 20
+    PsoulVerticalScrollBar
+      id: scrollBar
+      pixels-scroll: true
+      anchors.top: parent.top
+      anchors.right: parent.right
+      anchors.bottom: parent.bottom
+      margin-top: 0
+      margin-bottom: 8
+      margin-right: 10
+      step: 78
+      $!on:
+        width: 15

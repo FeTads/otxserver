@@ -1,0 +1,262 @@
+PokemonReward < UICreature
+  size: 79 79
+  padding: 1
+  border-color: alpha
+
+HeadlessWindow
+  id: donateWindow
+  size: 548 214
+  image-source: images/background.png
+  anchors.centerIn: parent
+
+  UIButton
+    id: rewardBtn
+    size: 146 164
+    image-source: images/mainreward_back.png
+    anchors.top: parent.top
+    anchors.left: parent.left
+    margin-top: 20
+    margin-left: 8
+
+  UIItem
+    id: reward
+    size: 64 64
+    anchors.top: parent.top
+    anchors.left: parent.left
+    margin-top: 55
+    margin-left: 53
+
+  PokemonReward
+    id: reward2
+    size: 96 111
+    anchors.top: parent.top
+    anchors.left: parent.left
+    margin-top: 30
+    margin-left: 35
+
+  Label
+    id: rewardText
+    text-auto-resize: true
+    color: white
+    //font: verdana-11px-rounded
+    text: PREMIAÇÃO GLOBAL
+    anchors.top: parent.top
+    anchors.left: parent.left
+    margin-left: 33
+    margin-top: 158
+
+  Label
+    id: goalOfDonate
+    color: yellow
+    //font: verdana-11px-rounded
+    text: META DE DOAÇÕES
+    text-auto-resize: true
+    anchors.top: parent.top
+    anchors.left: parent.left
+    margin-top: 19
+    margin-left: 242
+
+  UIButton
+    id: calendarIcon
+    size: 19 20
+    image-source: images/calendar
+    anchors.top: parent.top
+    anchors.left: parent.left
+    margin-top: 40
+    margin-left: 172
+
+  Label
+    id: timeToGoal
+    color: white
+    //font: verdana-11px-rounded
+    text: TEMPO PARA FINALIZAR
+    anchors.top: parent.top
+    anchors.left: parent.left
+    margin-top: 39
+    margin-left: 196
+
+  Label
+    id: timeEnd
+    color: white
+    //font: verdana-11px-rounded
+    text: Ends in 0/0/0000
+    text-auto-resize: true
+    anchors.top: parent.top
+    anchors.left: parent.left
+    margin-top: 50
+    margin-left: 198
+
+  Label
+    id: globalDonationGoal
+    color: red
+    //font: verdana-11px-rounded
+    text: META GLOBAL
+    text-auto-resize: true
+    anchors.top: parent.top
+    anchors.left: parent.left
+    margin-top: 80
+    margin-left: 172
+
+  Label
+    id: globalDonationGoalCount
+    color: red
+    //font: verdana-11px-rounded
+    text: R$0,00/R$0,00
+    text-auto-resize: true
+    anchors.top: parent.top
+    anchors.left: prev.right
+    margin-top: 79
+    margin-left: 50
+
+  ProgressBar
+    id: progressBarDonateGoal
+    border: 2 alpha
+    background-color: #0087FF
+    size: 336 16
+    anchors.top: parent.top
+    anchors.left: parent.left
+    margin-top: 95
+    margin-left: 173
+
+  UIButton
+    id: progressBarDonateGoalIMG
+    size: 339 16
+    image-source: images/border_progress.png
+    anchors.top: parent.top
+    anchors.left: parent.left
+    margin-top: 95
+    margin-left: 172 
+
+  UIWidget
+    id: progressBarDonateGoalIMG_KING
+    image-source: images/king_off.png
+    size: 12 12
+    anchors.top: parent.top
+    anchors.left: prev.right
+    margin-top: 97
+    margin-left: -14 
+
+    $on:
+      image-source: images/king_on.png
+
+  Label
+    id: personalDonationGoal
+    color: green
+    //font: verdana-11px-rounded
+    text: META PESSOAL
+    text-auto-resize: true
+    anchors.top: parent.top
+    anchors.left: parent.left
+    margin-top: 120
+    margin-left: 172
+
+  Label
+    id: personalDonationGoalCount
+    color: green
+    //font: verdana-11px-rounded
+    text: R$0,00/R$0,00
+    text-auto-resize: true
+    anchors.top: parent.top
+    anchors.left: prev.right
+    margin-top: 120
+    margin-left: 35
+
+  ProgressBar
+    id: progressBarDonatePersonal
+    border: 2 alpha
+    background-color: #0087FF
+    size: 336 16
+    anchors.top: parent.top
+    anchors.left: parent.left
+    margin-top: 135
+    margin-left: 173
+
+  UIButton
+    id: progressBarDonatePersonalIMG
+    size: 339 16
+    image-source: images/border_progress.png
+    anchors.top: parent.top
+    anchors.left: parent.left
+    margin-top: 135
+    margin-left: 172
+
+  UIWidget
+    id: chest1
+    image-source: images/chest_off.png
+    size: 15 16
+    anchors.top: parent.top
+    anchors.left: parent.left
+    margin-top: 135
+    margin-left: 190
+
+    $on:
+      image-source: images/chest_on.png
+
+  Label
+    id: chest1_value
+    color: white
+    //font: verdana-11px-rounded
+    text: R$0,00
+    text-auto-resize: true
+    anchors.top: parent.top
+    anchors.left: parent.left
+    margin-top: 155
+    margin-left: 180
+
+  UIWidget
+    id: chest2
+    image-source: images/chest_off.png
+    size: 15 16
+    anchors.top: parent.top
+    anchors.left: parent.left
+    margin-top: 135
+    margin-left: 330
+
+    $on:
+      image-source: images/chest_on.png
+
+
+  Label
+    id: chest2_value
+    color: white
+    //font: verdana-11px-rounded
+    text: R$0,00
+    text-auto-resize: true
+    anchors.top: parent.top
+    anchors.left: parent.left
+    margin-top: 155
+    margin-left: 310
+
+  UIWidget
+    id: chest3
+    image-source: images/chest_off.png
+    size: 15 16
+    anchors.top: parent.top
+    anchors.left: parent.left
+    margin-top: 135
+    margin-left: 470
+
+    $on:
+      image-source: images/chest_on.png
+
+  Label
+    id: chest3_value
+    color: white
+    //font: verdana-11px-rounded
+    text: R$0,00
+    text-auto-resize: true
+    anchors.top: parent.top
+    anchors.left: parent.left
+    margin-top: 155
+    margin-left: 450
+
+  UIButton
+    id: closeBtn
+    tooltip: Fechar
+    image-source: images/close.png
+    size: 10 10
+    anchors.top: parent.top
+    anchors.left: prev.right
+    margin-top: 2
+    margin-left: 27
+    @onClick: exibir()

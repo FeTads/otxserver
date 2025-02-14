@@ -1,0 +1,12 @@
+Module
+  name: game_info
+  description: Changes the position of the informations point to correctly draw names and creature bars.
+  author: Snowsz
+  website: tibiaking.com
+  autoload: true
+  reloadable: true
+  sandboxed: true
+  version: 1.0
+  scripts: [ game_info ]
+  @onLoad: init()
+  @onUnload: terminate()

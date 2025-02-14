@@ -1,0 +1,43 @@
+cPanel < Panel
+  margin: 3
+  layout:
+    type: verticalBox
+  image-source: /data/images/ui/combo
+
+cmbComboWindow < MainWindow
+  !text: tr('- Combo -')
+  size: 215 440
+  color: pink
+  @onEscape: self:hide()
+
+  TabBar
+    id: cmbTabBar
+    anchors.top: parent.top
+    anchors.left: parent.left
+    anchors.right: parent.right
+
+
+
+  Panel
+    id: cmbImagem
+    anchors.top: cmbTabBar.bottom
+    anchors.left: parent.left
+    anchors.right: parent.right
+    anchors.bottom: parent.bottom
+    image-border: 9
+
+
+
+
+
+  Button
+    id: closeButton
+    !text: tr('Close')
+    font: cipsoftFont
+    anchors.right: parent.right
+    anchors.bottom: parent.bottom
+    size: 45 21
+    margin-top: 15
+    margin-right: 5    
+
+

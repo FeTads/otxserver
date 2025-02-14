@@ -1,0 +1,10 @@
+Module
+  name: game_changename
+  description: Sistema de troca de nomes
+  author: Anyone
+  website: dbonewage.online
+  sandboxed: true
+  security: jR$5p@9Qz!
+  scripts: [ changename ]
+  @onLoad: init()
+  @onUnload: terminate()

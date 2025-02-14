@@ -1,0 +1,18 @@
+UIWindow
+  id: allchat
+  focusable: false
+  visible: false
+  anchors.bottom: parent.bottom
+  anchors.left: parent.left
+  size: 600 255
+  phantom: true
+
+  ScrollablePanel
+    id: consoleBuffer
+    phantom: true
+    anchors.fill: parent
+    layout:
+      type: verticalBox
+      align-bottom: true
+    inverted-scroll: true
+    padding: 1

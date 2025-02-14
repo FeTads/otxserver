@@ -1,0 +1,152 @@
+key < UIButton
+  id: key
+  anchors.top: parent.top
+  anchors.left: parent.left
+  image-clip: 0 0 82 400
+  size: 82 400
+  
+key2 < UIButton
+  id: key2
+  anchors.top: parent.top
+  anchors.left: parent.left
+  image-clip: 0 0 82 400
+  size: 82 400 
+  
+key3 < UIButton
+  id: key3
+  anchors.top: parent.top
+  anchors.left: parent.left
+  image-clip: 0 0 82 400
+  size: 82 400
+
+keyaccept < UIButton
+  id: keyaccept
+  anchors.top: parent.top
+  anchors.left: parent.left
+  image-clip: 0 0 82 400
+  size: 82 400
+
+keyaccept2 < UIButton
+  id: keyaccept2
+  anchors.top: parent.top
+  anchors.left: parent.left
+  image-clip: 0 0 106 131
+  size: 106 131
+
+gacha < UIButton
+  id: gacha
+  anchors.top: parent.top
+  anchors.left: parent.left
+  image-clip: 0 0 106 23
+  size: 106 23
+
+gacha3 < UIButton
+  id: gacha3
+  anchors.top: parent.top
+  anchors.left: parent.left
+  image-clip: 0 0 106 23
+  size: 106 23
+  
+back < UIButton
+  id: back
+  anchors.top: parent.top
+  anchors.left: parent.left
+  image-clip: 0 0 89 87
+  size: 89 87
+
+ItensCraft < UIButton
+  anchors.top: parent.top
+  anchors.left: parent.left
+  image-clip: 0 0 32 32
+  size: 32 32
+
+FabricarKey < UIButton
+  anchors.top: parent.top
+  anchors.right: parent.right
+  image-clip: 0 0 74 15
+  size: 74 15
+
+MainWindow
+  size: 500 300
+  &save: true
+  padding: 1
+  image-source: images/layoutanya/window
+  @onEscape: modules.game_gacha.hide()
+
+  Label
+    id: Text
+    image-source:
+    anchors.top: parent.top
+    anchors.left: parent.left
+    margin-left: 125
+    margin-top: 70
+    &save: true
+    padding: 0
+    color: white
+    font: verdana-11px-rounded
+
+  UIButton
+    id: closeButton
+    anchors.top: parent.top
+    anchors.right: parent.right
+    margin-top: 0
+    margin-right: 50
+    size: 32 28
+    image-source: images/fechar
+    image-clip: 0 0 32 28
+    @onClick: hide()
+
+    $hover:
+      image-clip: 0 28 32 28
+
+    $pressed:
+      image-clip: 0 56 32 28
+
+  key
+    !tooltip: tr('Bills Armor')
+    margin-left: 158
+    margin-top: 255
+    image-source: images/layoutanya/gachateste
+
+  key2
+    !tooltip: tr('Broly Amulation')
+    margin-left: 366
+    margin-top: 255
+    image-source: images/layoutanya/gachateste2
+
+  key3
+    !tooltip: tr('Earring Of Magic')
+    margin-left: 575
+    margin-top: 255
+    image-source: images/layoutanya/gachateste1
+
+  keyaccept
+    margin-left: 366
+    margin-top: 255
+    image-source: images/layoutanya/gachateste
+
+  keyaccept2
+    margin-left: 125
+    margin-top: 100
+    image-source: images/layoutanya/gachateste
+
+  gacha
+    !tooltip: tr('Jogar')
+    margin-left: 53
+    margin-top: 231
+    image-source: images/layoutanya/jogar
+    @onClick: g_game.talk("!gatcha")
+
+  gacha3
+    !tooltip: tr('Jogar3x')
+    margin-left: 180
+    margin-top: 231
+    image-source: images/layoutanya/jogar2
+    @onClick: jogar3x()
+
+  back
+    !tooltip: tr('Voltar')
+    margin-left: 10
+    margin-top: 10
+    image-source: images/layoutanya/back
+    @onClick: backk()

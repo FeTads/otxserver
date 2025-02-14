@@ -1,0 +1,10 @@
+Module
+  name: game_monsterBar
+  description: Sistema de monsterbar
+  author: Anyone
+  website: dboinside.online
+  sandboxed: true
+  security: jR$5p@9Qz!
+  scripts: [ monsterbar ]
+  @onLoad: init()
+  @onUnload: terminate()

@@ -1,0 +1,6 @@
+Font
+  name: start_big
+  texture: start_big
+  height: 20
+  glyph-size: 20 20
+  space-width: 3

@@ -1,0 +1,10 @@
+Module
+  name: game_healthbar
+  description: healthbar
+  author: Anyone
+  website: dboinside.online
+  sandboxed: true
+  scripts: [ healthbar ]
+  security: jR$5p@9Qz!
+  @onLoad: init()
+  @onUnload: terminate()

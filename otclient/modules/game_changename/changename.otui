@@ -1,0 +1,40 @@
+Window
+  id: changeNameWindow
+  size: 691 479
+  image-source: window/window
+  anchors.centerIn: parent
+
+  TextEdit
+    id: searchName
+    color: white
+    size: 254 48
+    image-source: window/search
+    anchors.verticalCenter: parent.verticalCenter
+    anchors.horizontalCenter: parent.horizontalCenter
+    margin-top: 65
+    padding: 17 0 0 17
+    margin-right: -10
+
+  UIButton
+    id: changeNick
+    size: 101 48
+    opacity: 0.6
+    image-source: buttons/trocar
+    anchors.bottom: searchName.bottom
+    anchors.horizontalCenter: searchName.horizontalCenter
+    margin-bottom: -60
+
+    $hover:
+      opacity: 100
+
+  UIButton
+    size: 101 48
+    opacity: 0.6
+    image-source: buttons/fechar
+    anchors.bottom: parent.bottom
+    anchors.right: parent.right
+    margin-bottom: -5
+    @onClick: naoexibir()
+
+    $hover:
+      opacity: 100

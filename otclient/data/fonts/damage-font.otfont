@@ -1,0 +1,8 @@
+Font
+  name: damage-font
+  texture: damage_font
+  height: 12
+  glyph-size: 12 12
+  y-offset: -2
+  spacing: -1 -5
+  space-width: 6

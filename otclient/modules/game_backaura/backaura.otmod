@@ -1,0 +1,8 @@
+Module
+  name: game_backaura
+  description: backaura
+  author: Thony
+  sandboxed: true
+  scripts: [ backaura ]
+  @onLoad: init()
+  @onUnload: terminate()

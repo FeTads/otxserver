@@ -1,0 +1,839 @@
+{
+  "UP9": "",
+  "UP7Text": "magia 6",
+  "ativo3Text": "tempo da magia ativa",
+  "UP5": "",
+  "fugaa": {
+    "max": 45,
+    "title": "HP%",
+    "on": true,
+    "min": 0,
+    "text": "kawarimi no jutsu"
+  },
+  "pp": "360",
+  "magia2Text": "mode bijuu",
+  "autoEatingPanel2": {
+    "items": [
+      0,
+      0,
+      0,
+      0,
+      0
+    ]
+  },
+  "Combo4": "Bijuu Shudan",
+  "autoHealthItemPanel2": {
+    "max": 81,
+    "item": 107,
+    "min": 0,
+    "enabled": true
+  },
+  "autoEatingPanel1": {
+    "items": [
+      3577,
+      0,
+      0,
+      0,
+      0
+    ],
+    "enabled": false
+  },
+  "autoAntiParalyzeText": "kai",
+  "autoManaItemPanel2": {
+    "max": 60,
+    "item": 268,
+    "min": 0
+  },
+  "tt": "Tempo do PK",
+  "Combo10Text": "",
+  "Combo9": "sekizo",
+  "UP7": "",
+  "magia4Text": "Nome da magia!",
+  "fugaa4": {
+    "max": 20,
+    "title": "HP%",
+    "on": true,
+    "min": 0,
+    "text": "izanagi"
+  },
+  "clearing": false,
+  "nome4Text": "Texto",
+  "_icons": {
+    "Bug Map": {
+      "y": 0.31275167785235,
+      "x": 0.013422818791946,
+      "enabled": false
+    },
+    "Summon": {
+      "y": 0.22668004012036,
+      "x": 0.013368983957219,
+      "enabled": false
+    },
+    "Treino": {
+      "y": 0.45369127516779,
+      "x": 0.0033557046979866,
+      "enabled": false
+    },
+    "COMBO": {
+      "y": 0.14630872483221,
+      "x": 0.0078299776286353,
+      "enabled": false
+    },
+    "Buff": {
+      "y": 0.13540621865597,
+      "x": 0.53048128342246,
+      "enabled": true
+    },
+    "DANCE": {
+      "y": 0.61073825503356,
+      "x": 0,
+      "enabled": false
+    },
+    "pot": {
+      "y": 0.083451202263083,
+      "x": 0.10588235294118,
+      "enabled": true
+    },
+    "SetDistance": {
+      "y": 0.16750250752257,
+      "x": 0.5,
+      "enabled": true
+    },
+    "=D": {
+      "y": 0.85,
+      "x": 0.01,
+      "enabled": false
+    },
+    "Sense": {
+      "y": 0.13640922768305,
+      "x": 0.46149732620321,
+      "enabled": false
+    },
+    "Combo": {
+      "y": 0.13440320962889,
+      "x": 0.49946524064171,
+      "enabled": true
+    },
+    "Anti-Push": {
+      "y": 0.31006711409396,
+      "x": 0,
+      "enabled": false
+    },
+    "UP": {
+      "y": 0.16148445336008,
+      "x": 0.012299465240642,
+      "enabled": false
+    },
+    "POT": {
+      "y": 0.60961810466761,
+      "x": 0.25058823529412,
+      "enabled": false
+    }
+  },
+  "yy4Text": "posi�ao para os lados",
+  "Combo2Text": "shinra tensei",
+  "autofollow": {
+    "player": "Sr Kure"
+  },
+  "zz": "justified",
+  "fugaa5": {
+    "max": 40,
+    "title": "HP%",
+    "on": false,
+    "min": 0,
+    "text": "fuga"
+  },
+  "fugaa2": {
+    "max": 30,
+    "title": "HP%",
+    "on": true,
+    "min": 0,
+    "text": "mode bijuu"
+  },
+  "healing3": {
+    "max": 20,
+    "title": "HP%",
+    "on": false,
+    "min": 0,
+    "text": "fuga"
+  },
+  "timers": {
+    "time": 43
+  },
+  "autoAjudaMessage": "I'm using OTC!",
+  "autoHelpMessage": "hi",
+  "Scriptss": [
+
+  ],
+  "fugaa3": {
+    "max": 76,
+    "title": "HP%",
+    "on": true,
+    "min": 0,
+    "text": "mangekyou susanoo"
+  },
+  "isUsing": false,
+  "UP3Text": "magia 3",
+  "nome3Text": "Texto",
+  "fuga2": {
+    "max": 30,
+    "title": "HP%",
+    "on": false,
+    "min": 0,
+    "text": "magia de fuga !"
+  },
+  "supplies": {
+    "imbues": false,
+    "item6": 0,
+    "item4": 0,
+    "item5Max": 0,
+    "item3": 0,
+    "item3Min": 0,
+    "item1Min": 0,
+    "item7Max": 0,
+    "item6Max": 0,
+    "item2": 0,
+    "item1Max": 0,
+    "item6Min": 0,
+    "potionBp": 0,
+    "SoftBoots": false,
+    "item2Min": 0,
+    "item1": 0,
+    "item5Min": 0,
+    "item4Max": 0,
+    "capValue": 0,
+    "item4Min": 0,
+    "item2Max": 0,
+    "item3Max": 0,
+    "staminaSwitch": false,
+    "item5": 0,
+    "staminaValue": 900,
+    "capSwitch": false,
+    "sortSupplies": false,
+    "item7": 0,
+    "runeBp": 0,
+    "ammoBp": 0
+  },
+  "buff2": "Kekkei Genkai",
+  "UP1": "hachimon tonkou",
+  "autoVendasMessage": "I'm using OTC!",
+  "UP4Text": "magia 4",
+  "buff3": "",
+  "summonText": "Nome da magia de summon !",
+  "Combo5Text": "hachimon tonkou",
+  "UP1Text": "magia 1",
+  "cooldowns": [
+
+  ],
+  "heal": {
+    "max": 99,
+    "title": "HP%",
+    "on": false,
+    "min": 0,
+    "text": "big regeneration"
+  },
+  "autoEquip": [
+    {
+      "item1": 0,
+      "title": "Auto Equip",
+      "item2": 0,
+      "on": false,
+      "slot": 9
+    },
+    {
+      "item1": 0,
+      "title": "Auto Equip",
+      "item2": 0,
+      "on": false,
+      "slot": 0
+    }
+  ],
+  "killedCreatures": {
+    "Shenlong Dragon Bar": 1,
+    "Mummy": 6,
+    "Vampire": 1324,
+    "Kabutomushi": 65,
+    "snake": 293,
+    "fugaku": 1,
+    "shiro": 12247,
+    "Gedou Skeleton": 17,
+    "Salamandra": 11,
+    "Mizukii": 6,
+    "Spy Oto no Kuni": 2,
+    "Pain Nagato": 1,
+    "Venom Scorpion": 45,
+    "Yazu": 1,
+    "Kentaurea": 89,
+    "Oukina": 2,
+    "Mamushi": 31829,
+    "Kimimaru": 3,
+    "haku": 4,
+    "Devil": 46,
+    "Frozen Monster": 9,
+    "akimichi": 1,
+    "kakashi": 1,
+    "Supreme Sand": 156,
+    "Bandit": 9,
+    "skeleton": 25,
+    "Konchu": 123,
+    "Gamaguren": 9,
+    "Dino": 35,
+    "beaver": 26,
+    "Yoth Furie": 211,
+    "Araken": 1673,
+    "boxer": 3,
+    "itachi": 1,
+    "Kamon": 111,
+    "sasuke": 3,
+    "sabuza": 1,
+    "Yurei Sand": 61,
+    "Kuroari": 31,
+    "Stealth Sand": 10,
+    "Dark Snake": 4,
+    "wolf": 51,
+    "gamaguren": 45,
+    "Tayuya": 3,
+    "Wolf": 6,
+    "bikkubado": 479,
+    "Goupa Assasin": 2,
+    "Human": 2,
+    "Kakarasu": 1,
+    "Keshin": 2347,
+    "Black Death": 36,
+    "shikamaru": 3,
+    "Sasuke Henbi": 2,
+    "Ocult samurai": 54,
+    "Vampire Mutated": 2013,
+    "Eirian": 1,
+    "Shiro Jya": 20,
+    "fear": 451,
+    "Miratsu": 380,
+    "Jaakuna Tako": 3523,
+    "Senchou": 13181,
+    "Denka": 5,
+    "Gatou": 3,
+    "Orochimaro": 2,
+    "Kushimaru": 1,
+    "Rat": 1,
+    "Outori": 12,
+    "Aracnideo": 454,
+    "Akamanto": 525,
+    "Bitoru": 27,
+    "Zabusa": 3,
+    "anko": 1,
+    "Bandit Nekromen": 8,
+    "of sound": 1030,
+    "Gedou Koutta": 7,
+    "nukenin": 6746,
+    "neji": 3,
+    "Oukami": 44,
+    "Master Anbu": 159,
+    "Ibuki": 11766,
+    "Supekutoru": 5,
+    "Hogosha": 38,
+    "Wamu": 7,
+    "Anbu": 211,
+    "Severium Snake": 62,
+    "Deiidara": 3,
+    "Hebi Jya": 36,
+    "Kakuzu": 1,
+    "yoth": 15,
+    "Jiiroubou": 18,
+    "prisioneira": 3,
+    "Cerbero": 16,
+    "Zagara": 7,
+    "Lavernoide": 3,
+    "zetsu": 1,
+    "scorpion": 7685,
+    "kikkai": 91,
+    "deidara": 1,
+    "Arak": 2528,
+    "Godokawa": 4,
+    "howaito": 12,
+    "najin": 5,
+    "gaara": 19,
+    "Ishikawa": 9,
+    "Katon Shinobi": 7,
+    "insecnoide": 51,
+    "Ocult Shinobi": 3414,
+    "Iranki": 11516,
+    "Spectro": 8,
+    "Itachi susanoo": 60,
+    "Gedou Dog": 363,
+    "Dokuhebi": 35,
+    "Yochu": 8,
+    "Tsuyoi Kyojin": 75,
+    "Ribaiasan": 936,
+    "Werekan": 1613,
+    "bandit": 23,
+    "Akaname": 1554,
+    "cros": 44,
+    "sword": 7,
+    "Supaidan": 4,
+    "Saizo": 1,
+    "Yudoku": 31,
+    "shinobi": 247,
+    "Shinobi Renegade": 912,
+    "furie": 32,
+    "Konchu Doku": 89,
+    "kiba": 3,
+    "Zyhan": 1213,
+    "Kimimaro": 68,
+    "Itachi Mei": 2,
+    "Karasu": 27,
+    "Ultimate Skeleton": 7162,
+    "fire": 93,
+    "man": 26,
+    "akatsuki": 46,
+    "renegade": 69,
+    "Heishi": 10722
+  },
+  "ingame_hotkeys2": "local distancia = 2\naddIcon(\"SetDistance\", {text=\"Dist = \"..distancia, switchable=true}, function(widget, enabled)\n  distancia = (distancia == 7 and 2 or distancia + 1)\n  info(distancia)\nend)\n\nlocal function checkPos(x, y)\n xyz = g_game.getLocalPlayer():getPosition()\n xyz.x = xyz.x + x\n xyz.y = xyz.y + y\n tile = g_map.getTile(xyz)\n if tile then\n  return g_game.use(tile:getTopUseThing())\n else\n  return false\n end\nend\n\nmacro(1, 'Bug Map', function() \n if modules.corelib.g_keyboard.isKeyPressed('w') then\n  checkPos(0, -distancia)\n elseif modules.corelib.g_keyboard.isKeyPressed('d') then\n  checkPos(distancia, 0)\n elseif modules.corelib.g_keyboard.isKeyPressed('s') then\n  checkPos(0, distancia)\n elseif modules.corelib.g_keyboard.isKeyPressed('a') then\n  checkPos(-distancia, 0)\n end\nend)\nonKeyPress(function(keys)\n    if keys == \"1\" then\n        say(\"jump up\")\n    end\nend)\nonKeyPress(function(keys)\n    if keys == \"2\" then\n        say(\"jump down\")\n    end\nend)\nmacro(1, 'Turn', function()\n if modules.corelib.g_keyboard.isKeyPressed('w') and dir ~= 0 then\n    return turn(0)\n elseif modules.corelib.g_keyboard.isKeyPressed('d') and dir ~= 1 then\n    return turn(1)\n elseif modules.corelib.g_keyboard.isKeyPressed('s') and dir ~= 2 then\n    return turn(2)\n elseif modules.corelib.g_keyboard.isKeyPressed('a') and dir ~= 3 then\n    return turn(3)\n end\nend)\n\nonKeyPress(function(keys)\n    if keys == \"4\" then\n        say(\"mangekyou susanoo\")\n    end\nend)\n\nmacro(200, \"ID heal\", function()\nif hppercent() >99 then return end\nif outfit().type == 302 then say(\"Bijuu regeneration\") else say(\"big regeneration\")\n end \nend)\n\nMaker = {}\n\n\nfriendList = {'shisui zodiaco', 'velho da lancha'}\n\nenemyList = {'shisui zodiaco', 'velho da lancha'}\n\nfor index, value in ipairs(enemyList) do\n    enemyList[value:lower():trim()] = true\n    enemyList[index] = nil\nend\n\n\nfor index, value in ipairs(friendList) do\n    friendList[value:lower():trim()] = true\n    friendList[index] = nil\nend\n\n\n\n\n\nmacro(1, 'Combo Auto' , function()\n \n\n    local pos = pos()\n    local actualTarget\n    for _, creature in ipairs(getSpectators(pos)) do\n        local specHp = creature:getHealthPercent()\n        local specPos = creature:getPosition()\n        local specName = creature:getName():lower()\n        if creature:isPlayer() and specHp and specHp > 0 then\n            if (creature ~= player and creature:getEmblem() ~= 1 and creature:getShield() < 3 ) then\n                if creature:canShoot() then\n                    if not actualTarget or actualTargetHp > specHp or (actualTargetHp == specHp and getDistanceBetween(pos, actualTargetPos) > getDistanceBetween(specPos, pos)) then\n                        actualTarget, actualTargetPos, actualTargetHp = creature, specPos, specHp\n                    end\n                end\n            end\n        end\n    end\n    if actualTarget and g_game.getAttackingCreature() ~= actualTarget then\n        modules.game_interface.processMouseAction(nil, 2, pos, nil, actualTarget, actualTarget)\n    end\n\n  end)\n\n",
+  "UP3": "",
+  "tempo1Text": "35000",
+  "pkz": "15",
+  "nome1Text": "kawarimi: ",
+  "Combo7Text": "",
+  "timeee5": 603865,
+  "z1Text": "440",
+  "z3Text": "posi�ao para cima / baixo",
+  "ativo4Text": "tempo da magia ativa",
+  "ativoText": "5000",
+  "OpenPrivateTabs": false,
+  "yy2Text": "800",
+  "Combo9Text": "",
+  "Combo7": "dai hirudora",
+  "stacktime": 0,
+  "ingame_hotkeys": "\n\n\n--------------------------------------------------------------------------\n\nmacro(200, \"Auto Treinar\", function()\n    if treinar ~= true then\n        treinar = true\n        say(\"!treinar\")\n    end\nend)\n\n\n\n\n\nmacro(200, \"ID heal\", function()\nif hppercent() >99 then return end\nif outfit().type == 302 then say(\"Bijuu regeneration\") else say(\"big regeneration\")\n end \nend)\n\n",
+  "TimeRemain": 0,
+  "yy1Text": "800",
+  "UP11": "",
+  "UP": "",
+  "Combo6": "yagai",
+  "Combo11Text": "",
+  "ativo2Text": "30000",
+  "sensePlayer": "lewiz",
+  "nomeText": "Dash: ",
+  "lastsave": {
+    "y": 924,
+    "x": 1034,
+    "z": 7
+  },
+  "UP8": "",
+  "magia3Text": "Nome da magia!",
+  "autoEquipItem4": {
+    "slot": 1
+  },
+  "autoHealthItemPanel1": {
+    "max": 63,
+    "item": 11813,
+    "min": 0,
+    "enabled": true
+  },
+  "Kunai": "",
+  "_macros": {
+    "": false,
+    "Buff": true,
+    "Combo Pain PVP": true,
+    "Stack": false,
+    "Anti-Push": false,
+    "UP": false,
+    "Combo deidara": true,
+    "Dan�ar": false,
+    "SENSE": false,
+    "Bug Setas": false,
+    "Combo": true,
+    "Bijuu Regeneration": false,
+    "Dash Sushin": false,
+    "Combo 2": false,
+    "Attack LOW HP": false,
+    "Msg Help": false,
+    "Kawarimi": false,
+    "Combo temari": false,
+    "Bug Numpad": false,
+    "Turn": true,
+    "Auto Bless": false,
+    "Auto JUMP": false,
+    "Auto-Jump": false,
+    "VIRAR N/ALVO": true,
+    "Follow Attack": false,
+    "Reta Atk": false,
+    "Follow Change": false,
+    "Bug WASD": false,
+    "Auto Treinar": false,
+    "Summon": false,
+    "Treino": false,
+    "Anti Paralyze": true,
+    "Enemy": false,
+    "=D": false,
+    "Msg trade": false,
+    "Monster HP %": false,
+    "Sense": false,
+    "Auto Target": false,
+    "Buff 2": false,
+    "Dance": false,
+    "Follow": false,
+    "Treinar Mana": false,
+    "Auto Buff": false,
+    "buff temari": true,
+    "Treinar": false,
+    "Combo Auto": false,
+    "BugMap": true,
+    "Auto Loot Look": false,
+    "testing": true,
+    "Money": false,
+    "Follow Ataque": false,
+    "sense": true,
+    "Auto Haste": true,
+    "Converter Dinheiro": false,
+    "Bug Map": false,
+    "Reta Ataque": false,
+    "Dash": false,
+    "buff deidara": true,
+    "auto follow": false,
+    "Cronometro": false,
+    "Big & Bijuu": false,
+    "Puxar itens": false,
+    "mana shield": false,
+    "Sense Target": false,
+    "ID heal": true,
+    "Atacar Monstros": false,
+    "Dash Kunai": false,
+    "Auto Jam": false,
+    "Coletar itens do ch�o": false,
+    "Monstro Vida %": false
+  },
+  "z4Text": "posi�ao para cima / baixo",
+  "ComboText": "fuinjutsu genryu kyufujin",
+  "z2Text": "400",
+  "magia1Text": "kawarimi",
+  "dText": "posi�ao para cima / baixo",
+  "autoHasteText": "concentrate chakra feet",
+  "UP12": "",
+  "doorIdss": [
+    {
+      "count": 1,
+      "id": 7771
+    },
+    {
+      "count": 1,
+      "id": 13296
+    },
+    {
+      "count": 1,
+      "id": 1948
+    }
+  ],
+  "autoManaItemPanel1": {
+    "max": 60,
+    "item": 268,
+    "min": 0
+  },
+  "advancedFriendHealer": {
+    "spellName": "magia de cura",
+    "itemHeal": false,
+    "minFriendHp": 40,
+    "id": 266,
+    "enabled": false,
+    "distance": 3,
+    "spellHeal": false,
+    "minMana": 2
+  },
+  "UP2Text": "magia 2",
+  "yy3Text": "posi�ao para os lados",
+  "UP2": "",
+  "UP6": "",
+  "Combo10": "koyubi kougeki",
+  "autoTradeMessage": "/guild GGN SEUS FDP",
+  "Combo1Text": "shin chibaku tensei",
+  "monsterKill": {
+    "min": true
+  },
+  "Combo8Text": "",
+  "foodItems": [
+    {
+      "id": 3577,
+      "count": 1
+    }
+  ],
+  "listt": {
+    "Combo": "senei jashu"
+  },
+  "ativo1Text": "5000",
+  "healing2": {
+    "max": 50,
+    "title": "HP%",
+    "on": true,
+    "min": 0,
+    "text": "kawarimi no jutsu defensive"
+  },
+  "atalho": "*",
+  "nome2Text": "bijuu: ",
+  "Combo3Text": "banshou tein",
+  "Combo12": "",
+  "jumps": [
+    {
+      "dirc": 2,
+      "y": 927,
+      "x": 1022,
+      "z": 7,
+      "jp": "Jump up"
+    },
+    {
+      "dirc": 3,
+      "y": 927,
+      "x": 1026,
+      "z": 7,
+      "jp": "Jump Down"
+    },
+    {
+      "dirc": 1,
+      "y": 927,
+      "x": 1025,
+      "z": 7,
+      "jp": "Jump Down"
+    },
+    {
+      "dirc": 1,
+      "y": 924,
+      "x": 1034,
+      "z": 7,
+      "jp": "Jump up"
+    }
+  ],
+  "heal2": {
+    "max": 99,
+    "title": "HP%",
+    "on": false,
+    "min": 0,
+    "text": "regeneration"
+  },
+  "Combo6Text": "chikushodou tensei",
+  "yyText": "800",
+  "Combo55Text": "jigokudou tensei no jutsu",
+  "pc": "940",
+  "autoEquipItem2": {
+    "slot": 1
+  },
+  "Combo3": "Bijuu Sabaku Taisou",
+  "ManatrainText": "chakra down",
+  "UP5Text": "magia em area !",
+  "_configs": {
+    "cavebot_configs": {
+      "selected": "HEBI_SCOR_GGN",
+      "enabled": true
+    },
+    "targetbot_configs": {
+      "selected": "KAmonzada",
+      "enabled": true
+    }
+  },
+  "Combo11": "kougeki",
+  "magiaText": "undo cho kosoku",
+  "Combo8": "saigo asa kujaku",
+  "zText": "420",
+  "UP4": "",
+  "autoEquipItem1": {
+    "enabled": false,
+    "item1": 0,
+    "slot": 6,
+    "item2": 0
+  },
+  "UP10": "",
+  "Fuga": "Heeey",
+  "tempo2Text": "180000",
+  "timeee3": 139809261,
+  "tempo4Text": "tempo da magia",
+  "id": 268436930,
+  "extras": [
+
+  ],
+  "fuga3": {
+    "max": 40,
+    "title": "HP%",
+    "on": false,
+    "min": 0,
+    "text": "magia de fuga !"
+  },
+  "attacked": [
+
+  ],
+  "antiPushPanel": {
+    "lastItem": 2,
+    "enabled": false,
+    "items": [
+      3031,
+      3035,
+      0,
+      0,
+      0
+    ]
+  },
+  "Combo4Text": "chibaku tensei",
+  "autoEquipItem3": {
+    "slot": 1
+  },
+  "fuga": {
+    "max": 20,
+    "title": "HP%",
+    "on": false,
+    "min": 0,
+    "text": "magia de fuga !"
+  },
+  "UP6Text": "magia 5",
+  "Combo5": "hachimon tonkou",
+  "Combo1": "Bijuu Sabaku Kyu",
+  "TreinarText": "power down",
+  "afkMsg": "?",
+  "timeee": 241788545,
+  "tempoText": "35000",
+  "doorIds": [
+    {
+      "count": 1,
+      "id": 5258
+    },
+    {
+      "count": 1,
+      "id": 12097
+    },
+    {
+      "count": 1,
+      "id": 12620
+    },
+    {
+      "count": 1,
+      "id": 1067
+    },
+    {
+      "count": 1,
+      "id": 8657
+    },
+    {
+      "count": 1,
+      "id": 8658
+    },
+    {
+      "count": 1,
+      "id": 369
+    },
+    {
+      "count": 1,
+      "id": 10879
+    },
+    {
+      "count": 1,
+      "id": 13892
+    },
+    {
+      "count": 1,
+      "id": 469
+    },
+    {
+      "count": 1,
+      "id": 1962
+    },
+    {
+      "count": 1,
+      "id": 6915
+    },
+    {
+      "count": 1,
+      "id": 1956
+    },
+    {
+      "count": 1,
+      "id": 10881
+    },
+    {
+      "count": 1,
+      "id": 10880
+    },
+    {
+      "count": 1,
+      "id": 432
+    }
+  ],
+  "zz3Text": "posi�ao para cima / baixo",
+  "healing4": {
+    "max": 35,
+    "title": "HP%",
+    "on": false,
+    "min": 0,
+    "text": "fuga"
+  },
+  "healing1": {
+    "max": 90,
+    "title": "HP%",
+    "on": false,
+    "min": 51,
+    "text": "regeneration"
+  },
+  "autoHealthPanel1": {
+    "max": 99,
+    "enabled": false,
+    "item": 266,
+    "min": 0,
+    "text": "big regeneration"
+  },
+  "timeee2": 35578227,
+  "superDash": false,
+  "tempo3Text": "tempo da magia",
+  "alarms": {
+    "playerpk": true,
+    "playerDetected": true,
+    "privateMessage": false,
+    "healthValue": 100,
+    "creatureDetected": false,
+    "healthBelow": true,
+    "playerAttack": false,
+    "manaValue": 54,
+    "manaBelow": false,
+    "bossName": "nome do monstro",
+    "messageText": "Nome do loot",
+    "playerDetectedLogout": false,
+    "enabled": false,
+    "warnBoss": false,
+    "warnMessage": false
+  },
+  "playerList": {
+    "enemyList": [
+
+    ],
+    "outfits": false,
+    "friendList": [
+      "name1",
+      "nameother"
+    ],
+    "groupMembers": false,
+    "blackList": [
+
+    ],
+    "marks": false
+  },
+  "buff": "rikudou no kuuin ",
+  "Combo2": "Ultimate Bijuu Dama",
+  "jewelleryEquipper": {
+    "ringMin": 30,
+    "safe": true,
+    "ammyMin": 30,
+    "ringEnabled": false,
+    "valueAmmy": false,
+    "ammySwitch": true,
+    "ringMax": 80,
+    "valueRing": false,
+    "ringId": 3048,
+    "ringValue": "HP",
+    "safeMin": 30,
+    "ammyId": 3081,
+    "ringSwitch": true,
+    "ammyMax": 80,
+    "ammyValue": "HP"
+  },
+  "manatrainer": {
+    "max": 90,
+    "title": "mana%",
+    "on": false,
+    "min": 0,
+    "text": "powerdown"
+  }
+}

@@ -1,0 +1,42 @@
+Panel
+  id: backgroundTooltip
+  phantom: true
+  focusable: false
+
+  Panel
+    id: panelHeader
+    anchors.top: parent.top
+    anchors.left: parent.left
+    anchors.right: parent.right
+    height: 70
+
+    Item
+      id: itemImage
+      anchors.left: parent.left
+      margin-left: 137
+      margin-top: -43
+      anchors.verticalCenter: parent.verticalCenter
+
+    Label
+      id: itemName
+      text-auto-resize: true
+      height: 20
+      margin-left: 50
+      anchors.left: parent.left
+      anchors.verticalCenter: parent.verticalCenter
+
+    Label
+      id: itemName2
+      text-auto-resize: true
+      height: 20
+      margin-left: 50
+      anchors.left: parent.left
+      anchors.verticalCenter: parent.verticalCenter
+
+    Label
+      id: itemName3
+      text-auto-resize: true
+      height: 20
+      margin-left: 50
+      anchors.left: parent.left
+      anchors.verticalCenter: parent.verticalCenter

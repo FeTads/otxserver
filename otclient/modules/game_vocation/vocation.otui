@@ -1,0 +1,111 @@
+imageVocation < UIWidget
+  image-source: images/bloqueado
+  opacity: 0.5
+
+  $hover:
+    opacity: 1
+
+  Panel
+    id: imagePersonagem
+    size: 90 90
+    anchors.verticalCenter: parent.verticalCenter
+    anchors.horizontalCenter: parent.horizontalCenter
+    margin-bottom: 10
+
+  Label
+    id: vocationName
+    height: 28
+    color: white
+    anchors.bottom: parent.bottom
+    anchors.horizontalCenter: parent.horizontalCenter
+    anchors.left: parent.left
+    anchors.right: parent.right
+    text-wrap: true
+    text-align: center
+    font: verdana-11px-antialised
+
+VocationButtonCategory < UIWidget
+  width: 140
+  padding: 5
+  opacity: 0.3
+  image-source: images/panel
+  font: sono_bold_border_14
+
+  $hover:
+    opacity: 1
+    font: montserrat-18
+
+  $focus:
+    opacity: 1
+
+Window
+  text: Change Vocation
+  size: 760 575
+  anchors.centerIn: parent
+  font: montserrat-18
+
+  ScrollablePanel
+    id: PanelFilters
+    height: 30
+    anchors.top: parent.top
+    anchors.left: parent.left
+    anchors.right: parent.right
+    horizontal-scrollbar: scrollCategoryList
+    layout:
+      type: horizontalBox
+      spacing: 3
+
+  VerticalScrollBar
+    id: scrollCategoryList
+    anchors.top: prev.bottom
+    anchors.left: parent.left
+    anchors.right: parent.right
+    margin-right: 5
+    step: 14
+    pixels-scroll: true
+    visible: false
+
+  Label
+    id: description
+    anchors.left: parent.left
+    anchors.right: parent.right
+    anchors.top: prev.bottom
+    anchors.bottom: PanelVocations.top
+    text-align: center
+    text-wrap: true
+    margin: 0 0 10 10
+
+  Panel
+    id: PanelVocations
+    image-source: images/widgetPanel
+    anchors.left: parent.left
+    anchors.right: parent.right
+    anchors.top: parent.top
+    anchors.bottom: buttonClose.top
+    margin: 90 0 10 10
+    padding: 10
+
+    ScrollablePanel
+      id: VocationList
+      anchors.fill: parent
+      vertical-scrollbar: scrollList
+      layout:
+        type: grid
+        cell-size: 105 127
+        cell-spacing: 5
+        flow: true
+
+    VerticalScrollBar
+      id: scrollList
+      anchors.top: parent.top
+      anchors.bottom: parent.bottom
+      anchors.right: parent.right
+      step: 14
+      pixels-scroll: true
+
+  Button
+    id: buttonClose
+    text: Fechar
+    anchors.bottom: parent.bottom
+    anchors.right: parent.right
+    @onClick: naoexibir()

@@ -1,0 +1,9 @@
+Module
+  name: game_npcdialog
+  description: Game NpcDialog
+  author: Gengo
+  scripts: [ npcdialog ]
+  autoload: true
+  autoload-priority: 1001
+  @onLoad: init()
+  @onUnload: terminate()

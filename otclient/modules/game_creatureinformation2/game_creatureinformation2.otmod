@@ -1,0 +1,9 @@
+Module
+  name: game_creatureinformation2
+  description: a
+  author: 
+  website: 
+  sandboxed: false
+  scripts: [ game_creatureinformation2 ]
+  @onLoad: init()
+  @onUnload: terminate()

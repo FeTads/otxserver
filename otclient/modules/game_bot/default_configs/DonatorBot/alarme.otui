@@ -1,0 +1,186 @@
+AlarmsWindow < MainWindow
+  !text: tr('Alarme')
+  size: 300 300
+  @onEscape: self:hide()
+  image-source: /data/images/ui/caveiraalarme
+
+  Label
+    id: playerAttack
+    anchors.left: parent.left
+    anchors.right: parent.right
+    anchors.top: parent.top
+    text-align: center
+    color: red
+    text: @Donator
+    !tooltip: tr('Alerts when attacked by player.')	
+
+
+  BotSwitch
+    id: playerpk
+    anchors.left: parent.left
+    anchors.top: prev.bottom
+    anchors.right: parent.right
+    text-align: center
+    margin-top: 4
+    text: Jogador PK na tela
+    !tooltip: tr('Alertar se algum jogador PK aparecer na sua tela.')
+
+
+
+  BotSwitch
+    id: playerDetected
+    anchors.left: parent.left
+    anchors.right: parent.horizontalCenter
+    anchors.top: prev.bottom
+    margin-top: 4
+    text-align: center
+    text: Jogador na tela
+    !tooltip: tr('Alertar se algum jogador aparecer na sua tela.')
+
+  CheckBox
+    id: playerDetectedLogout
+    anchors.top: playerDetected.top
+    anchors.left: parent.horizontalCenter
+    anchors.right: parent.right
+    margin-top: 3
+    margin-left: 4
+    text: Deslogar
+    !tooltip: tr('Deslogar se algum jogador aparecer na sua tela.')
+
+  HorizontalSeparator
+    id: sepPlayer
+    anchors.right: parent.right
+    anchors.left: parent.left
+    anchors.top: prev.bottom
+    margin-top: 4
+
+  BotSwitch
+    id: creatureDetected
+    anchors.left: parent.left
+    anchors.right: parent.right
+    anchors.top: sepPlayer.bottom
+    margin-top: 4
+    text-align: center
+    text: Monstro na tela
+    !tooltip: tr('Alertar se algum monstro aparecer na sua tela.')
+
+  BotSwitch
+    id: warnBoss
+    anchors.left: parent.left
+    anchors.top: prev.bottom
+    anchors.right: parent.horizontalCenter
+    text-align: center
+    margin-top: 5
+    text: Nome do monstro
+    !tooltip: tr('Alertar se o nome do monstro que voc� colocou aparecer na sua tela.')
+
+  BotTextEdit
+    id: bossName
+    anchors.left: prev.right
+    margin-left: 4
+    anchors.top: prev.top
+    anchors.right: parent.right
+    margin-top: 1
+    height: 17
+    font: terminus-10px
+
+  HorizontalSeparator
+    id: sepCreature
+    anchors.right: parent.right
+    anchors.left: parent.left
+    anchors.top: prev.bottom
+    margin-top: 4
+
+  BotSwitch
+    id: healthBelow
+    anchors.left: parent.left
+    anchors.top: prev.bottom
+    anchors.right: parent.horizontalCenter
+    text-align: center
+    margin-top: 4
+    text: Vida < 50%
+
+  HorizontalScrollBar
+    id: healthValue
+    anchors.left: parent.horizontalCenter
+    anchors.right: parent.right
+    anchors.top: healthBelow.top
+    margin-left: 3
+    margin-top: 2
+    minimum: 1
+    maximum: 100
+    step: 1
+
+  BotSwitch
+    id: manaBelow
+    anchors.left: parent.left
+    anchors.top: healthBelow.bottom
+    anchors.right: parent.horizontalCenter
+    text-align: center
+    margin-top: 4
+    text: Mana < 50%
+
+  HorizontalScrollBar
+    id: manaValue
+    anchors.left: parent.horizontalCenter
+    anchors.right: parent.right
+    anchors.top: manaBelow.top
+    margin-left: 3
+    margin-top: 2
+    minimum: 1
+    maximum: 100
+    step: 1
+
+  HorizontalSeparator
+    id: sepMessages
+    anchors.right: parent.right
+    anchors.left: parent.left
+    anchors.top: prev.bottom
+    margin-top: 4
+
+  BotSwitch
+    id: privateMessage
+    anchors.left: parent.left
+    anchors.top: prev.bottom
+    anchors.right: parent.right
+    text-align: center
+    margin-top: 4
+    text: Mensagem privada
+    !tooltip: tr('Alertar se voc� receber alguma mensagem no privado.')
+
+  BotSwitch
+    id: warnMessage
+    anchors.left: parent.left
+    anchors.top: prev.bottom
+    anchors.right: parent.horizontalCenter
+    text-align: center
+    margin-top: 5
+    text: Loot
+    !tooltip: tr('Alertar se o nome do loot que voc� colocou dropar do monstro.')
+
+  BotTextEdit
+    id: messageText
+    anchors.left: prev.right
+    margin-left: 4
+    anchors.top: prev.top
+    anchors.right: parent.right
+    margin-top: 1
+    height: 17
+    font: terminus-10px
+
+  HorizontalSeparator
+    id: separator
+    anchors.right: parent.right
+    anchors.left: parent.left
+    anchors.bottom: closeButton.top
+    margin-bottom: 8
+
+  Button
+    id: closeButton
+    !text: tr('Close')
+    font: cipsoftFont
+    anchors.right: parent.right
+    anchors.bottom: parent.bottom
+    size: 45 21
+    margin-top: 15
+    margin-right: 5

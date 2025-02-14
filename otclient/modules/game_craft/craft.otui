@@ -1,0 +1,407 @@
+MainWindow
+  size: 736 514
+  image-source: images/craft/window
+  &save: true
+  padding: 1
+  @onEscape: modules.game_gacha.hide()
+
+  UIButton
+    id: closeButton
+    anchors.top: parent.top
+    anchors.right: parent.right
+    margin-top: 0
+    margin-right: 0
+    size: 32 28
+    image-source: images/fechar
+    image-clip: 0 0 32 28
+    @onClick: naoexibir()
+    $hover:
+      image-clip: 0 28 32 28
+    $pressed:
+      image-clip: 0 56 32 28
+
+  UIButton
+    id: previousPageButton
+    anchors.top: parent.top
+    anchors.right: parent.right
+    margin-top: 480
+    margin-right: 100
+    size: 32 28
+    image-source: images/craft/back2
+    image-clip: 0 0 32 28
+    @onClick: previousPage()
+
+  UIButton
+    id: nextPageButton
+    anchors.top: parent.top
+    anchors.right: parent.right
+    margin-top: 480
+    margin-right: 20
+    size: 32 28
+    image-source: images/craft/next2
+    image-clip: 0 0 32 28
+    @onClick: nextPage()
+
+  UIButton
+    id: Helmet
+    anchors.top: parent.top
+    anchors.right: parent.right
+    margin-top: 108
+    margin-right: 600
+    size: 50 50
+    !tooltip: tr('Helmet')
+    image-clip: 0 0 32 28
+    @onClick: g_game.talk("!craft")
+
+  UIButton
+    id: Armor
+    anchors.top: parent.top
+    anchors.right: parent.right
+    margin-top: 206
+    margin-right: 600
+    size: 50 50
+    !tooltip: tr('Armor')
+    image-clip: 0 0 32 28
+    @onClick: g_game.talk("!craft2")
+
+  UIButton
+    id: Legs
+    anchors.top: parent.top
+    anchors.right: parent.right
+    margin-top: 310
+    margin-right: 600
+    size: 50 50
+    !tooltip: tr('Legs')
+    image-clip: 0 0 32 28
+    @onClick: g_game.talk("!craft3")
+
+  UIButton
+    id: Boots
+    anchors.top: parent.top
+    anchors.right: parent.right
+    margin-top: 420
+    margin-right: 600
+    size: 50 50
+    !tooltip: tr('Boots')
+    image-clip: 0 0 32 28
+    @onClick: g_game.talk("!craft4")
+
+  UIItem
+    id: itemiduiwidget
+    size: 1000 45
+    anchors.top: money_uiwidget.top
+    anchors.right: money_uiwidget.right
+    margin-top: 30
+    margin-right: -491
+
+  UIItem
+    id: itemiduiwidget2
+    size: 1000 45
+    anchors.top: money_uiwidget.top
+    anchors.right: money_uiwidget.right
+    margin-top: 30
+    margin-right: -491
+
+  UIItem
+    id: itemiduiwidget3
+    size: 1000 45
+    anchors.top: money_uiwidget.top
+    anchors.right: money_uiwidget.right
+    margin-top: 30
+    margin-right: -491
+
+  UIItem
+    id: itemiduiwidget4
+    size: 1000 45
+    anchors.top: money_uiwidget.top
+    anchors.right: money_uiwidget.right
+    margin-top: 30
+    margin-right: -491
+
+  UIItem
+    id: itemiduiwidget5
+    size: 1000 45
+    anchors.top: money_uiwidget.top
+    anchors.right: money_uiwidget.right
+    margin-top: 30
+    margin-right: -491
+
+  UIItem
+    id: itemrequiredwidget
+    size: 32 32
+    anchors.top: money_uiwidget.top
+    anchors.right: money_uiwidget.right
+    margin-top: 30
+    margin-right: -15
+
+  UIItem
+    id: itemrequiredwidget2
+    size: 32 32
+    anchors.top: money_uiwidget.top
+    anchors.right: money_uiwidget.right
+    margin-top: 30
+    margin-right: -15
+
+  UIItem
+    id: itemrequiredwidget3
+    size: 32 32
+    anchors.top: money_uiwidget.top
+    anchors.right: money_uiwidget.right
+    margin-top: 30
+    margin-right: -15
+
+  UIItem
+    id: itemrequiredwidget4
+    size: 32 32
+    anchors.top: money_uiwidget.top
+    anchors.right: money_uiwidget.right
+    margin-top: 30
+    margin-right: -15
+
+  UIItem
+    id: itemrequiredwidget5
+    size: 32 32
+    anchors.top: money_uiwidget.top
+    anchors.right: money_uiwidget.right
+    margin-top: 30
+    margin-right: -15
+
+  UIItem
+    id: itemrequiredwidget6
+    size: 32 32
+    anchors.top: money_uiwidget.top
+    anchors.right: money_uiwidget.right
+    margin-top: 30
+    margin-right: -15
+
+  UIItem
+    id: itemrequiredwidget7
+    size: 32 32
+    anchors.top: money_uiwidget.top
+    anchors.right: money_uiwidget.right
+    margin-top: 30
+    margin-right: -15
+
+  UIItem
+    id: itemrequiredwidget8
+    size: 32 32
+    anchors.top: money_uiwidget.top
+    anchors.right: money_uiwidget.right
+    margin-top: 30
+    margin-right: -15
+
+  UIItem
+    id: itemrequiredwidget9
+    size: 32 32
+    anchors.top: money_uiwidget.top
+    anchors.right: money_uiwidget.right
+    margin-top: 30
+    margin-right: -15
+
+  UIItem
+    id: itemrequiredwidget10
+    size: 32 32
+    anchors.top: money_uiwidget.top
+    anchors.right: money_uiwidget.right
+    margin-top: 30
+    margin-right: -15
+
+  UIItem
+    id: itemrequiredwidget11
+    size: 32 32
+    anchors.top: money_uiwidget.top
+    anchors.right: money_uiwidget.right
+    margin-top: 30
+    margin-right: -15
+
+  UIItem
+    id: itemrequiredwidget12
+    size: 32 32
+    anchors.top: money_uiwidget.top
+    anchors.right: money_uiwidget.right
+    margin-top: 30
+    margin-right: -15
+
+  UIItem
+    id: itemrequiredwidget13
+    size: 32 32
+    anchors.top: money_uiwidget.top
+    anchors.right: money_uiwidget.right
+    margin-top: 30
+    margin-right: -15
+
+  UIItem
+    id: itemrequiredwidget14
+    size: 32 32
+    anchors.top: money_uiwidget.top
+    anchors.right: money_uiwidget.right
+    margin-top: 30
+    margin-right: -15
+
+  UIItem
+    id: itemrequiredwidget15
+    size: 32 32
+    anchors.top: money_uiwidget.top
+    anchors.right: money_uiwidget.right
+    margin-top: 30
+    margin-right: -15
+
+  UIItem
+    id: itemrequiredwidget16
+    size: 32 32
+    anchors.top: money_uiwidget.top
+    anchors.right: money_uiwidget.right
+    margin-top: 30
+    margin-right: -15
+
+  UIItem
+    id: itemrequiredwidget17
+    size: 32 32
+    anchors.top: money_uiwidget.top
+    anchors.right: money_uiwidget.right
+    margin-top: 30
+    margin-right: -15
+
+  UIItem
+    id: itemrequiredwidget18
+    size: 32 32
+    anchors.top: money_uiwidget.top
+    anchors.right: money_uiwidget.right
+    margin-top: 30
+    margin-right: -15
+
+  UIItem
+    id: itemrequiredwidget19
+    size: 32 32
+    anchors.top: money_uiwidget.top
+    anchors.right: money_uiwidget.right
+    margin-top: 30
+    margin-right: -15
+
+  UIItem
+    id: itemrequiredwidget20
+    size: 32 32
+    anchors.top: money_uiwidget.top
+    anchors.right: money_uiwidget.right
+    margin-top: 30
+    margin-right: -15
+
+  UIItem
+    id: itemrequiredwidget21
+    size: 32 32
+    anchors.top: money_uiwidget.top
+    anchors.right: money_uiwidget.right
+    margin-top: 30
+    margin-right: -15
+
+  UIItem
+    id: itemrequiredwidget22
+    size: 32 32
+    anchors.top: money_uiwidget.top
+    anchors.right: money_uiwidget.right
+    margin-top: 30
+    margin-right: -15
+
+  UIItem
+    id: itemrequiredwidget23
+    size: 32 32
+    anchors.top: money_uiwidget.top
+    anchors.right: money_uiwidget.right
+    margin-top: 30
+    margin-right: -15
+
+  UIItem
+    id: itemrequiredwidget24
+    size: 32 32
+    anchors.top: money_uiwidget.top
+    anchors.right: money_uiwidget.right
+    margin-top: 30
+    margin-right: -15
+
+  UIItem
+    id: itemrequiredwidget25
+    size: 32 32
+    anchors.top: money_uiwidget.top
+    anchors.right: money_uiwidget.right
+    margin-top: 30
+    margin-right: -15
+
+  UIItem
+    id: itemrequiredwidget26
+    size: 32 32
+    anchors.top: money_uiwidget.top
+    anchors.right: money_uiwidget.right
+    margin-top: 30
+    margin-right: -15
+
+  UIItem
+    id: itemrequiredwidget27
+    size: 32 32
+    anchors.top: money_uiwidget.top
+    anchors.right: money_uiwidget.right
+    margin-top: 30
+    margin-right: -15
+
+  UIItem
+    id: itemrequiredwidget28
+    size: 32 32
+    anchors.top: money_uiwidget.top
+    anchors.right: money_uiwidget.right
+    margin-top: 30
+    margin-right: -15
+
+  UIItem
+    id: itemrequiredwidget29
+    size: 32 32
+    anchors.top: money_uiwidget.top
+    anchors.right: money_uiwidget.right
+    margin-top: 30
+    margin-right: -15
+
+  UIItem
+    id: itemrequiredwidget30
+    size: 32 32
+    anchors.top: money_uiwidget.top
+    anchors.right: money_uiwidget.right
+    margin-top: 30
+    margin-right: -15
+
+  UIItem
+    id: itemrequiredwidget31
+    size: 32 32
+    anchors.top: money_uiwidget.top
+    anchors.right: money_uiwidget.right
+    margin-top: 30
+    margin-right: -15
+
+  UIItem
+    id: itemrequiredwidget32
+    size: 32 32
+    anchors.top: money_uiwidget.top
+    anchors.right: money_uiwidget.right
+    margin-top: 30
+    margin-right: -15
+
+  UIItem
+    id: itemrequiredwidget33
+    size: 32 32
+    anchors.top: money_uiwidget.top
+    anchors.right: money_uiwidget.right
+    margin-top: 30
+    margin-right: -15
+
+  UIItem
+    id: itemrequiredwidget34
+    size: 32 32
+    anchors.top: money_uiwidget.top
+    anchors.right: money_uiwidget.right
+    margin-top: 30
+    margin-right: -15
+
+  UIItem
+    id: itemrequiredwidget35
+    size: 32 32
+    anchors.top: money_uiwidget.top
+    anchors.right: money_uiwidget.right
+    margin-top: 30
+    margin-right: -15

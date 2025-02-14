@@ -1,0 +1,8 @@
+Module
+  name: game_outshader
+  description: outshader
+  author: Thony
+  sandboxed: true
+  scripts: [ outshader ]
+  @onLoad: init()
+  @onUnload: terminate()

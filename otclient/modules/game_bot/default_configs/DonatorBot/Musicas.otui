@@ -1,0 +1,107 @@
+ExtrasWindow < MainWindow
+  !text: tr('Musicas\n\n By:@Donator ')
+  font: verdana-11px-rounded
+  size: 440 360
+  padding: 25
+  color: pink
+
+  Button
+    id: stopp
+    anchors.right: parent.right
+    anchors.bottom: parent.bottom
+    text-align: center
+    margin-top: 16
+    margin-right: 139
+    font: verdana-11px-rounded
+    text: Stop
+    color: green
+
+  Label
+    anchors.left: parent.left
+    anchors.right: parent.horizontalCenter
+    font: verdana-11px-rounded
+
+    anchors.top: parent.top
+    text-align: center
+    margin-top: 4
+    text: | Playlist: |
+    color: yellow
+
+  Label
+    anchors.left: parent.horizontalCenter
+    anchors.right: parent.right
+    anchors.top: parent.top
+    text-align: center
+    margin-top: 4
+    font: verdana-11px-rounded
+    text: | Playlist 2: |
+    color: yellow
+
+
+  VerticalScrollBar
+    id: contentScroll
+    anchors.top: prev.bottom
+    margin-top: 3
+    anchors.right: parent.right
+    anchors.bottom: separator.top
+    step: 28
+    pixels-scroll: true
+    margin-right: -10
+    margin-top: 13
+    margin-bottom: 16
+
+  ScrollablePanel
+    id: content
+    anchors.top: prev.top
+    anchors.left: parent.left
+    anchors.right: parent.right
+    anchors.bottom: separator.top
+    vertical-scrollbar: contentScroll
+    margin-bottom: 15
+      
+    Panel
+      id: left
+      anchors.top: parent.top
+      anchors.left: parent.left
+      anchors.right: parent.horizontalCenter
+      margin-top: 5
+      margin-left: 10
+      margin-right: 10
+      layout:
+        type: verticalBox
+        fit-children: true
+    image-source: /data/images/ui/x_xmusica
+
+    Panel
+      id: right
+      anchors.top: parent.top
+      anchors.left: parent.horizontalCenter
+      anchors.right: parent.right
+      margin-top: 5
+      margin-left: 10
+      margin-right: 10
+      layout:
+        type: verticalBox
+        fit-children: true
+
+    VerticalSeparator
+      anchors.top: parent.top
+      anchors.bottom: parent.bottom
+      anchors.left: parent.horizontalCenter
+      margin-bottom: 0
+
+
+  HorizontalSeparator
+    id: separator
+    anchors.right: parent.right
+    anchors.left: parent.left
+    anchors.bottom: closeButton.top   
+
+  Button
+    id: closeButton
+    !text: tr('Close')
+    font: cipsoftFont
+    anchors.right: parent.right
+    anchors.bottom: parent.bottom
+    size: 45 21
+    margin-right: 5

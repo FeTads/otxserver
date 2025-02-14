@@ -1,0 +1,44 @@
+
+croPanel < Panel
+  margin: 5
+  layout:
+    type: verticalBox
+
+cronometroWindow < MainWindow
+  !text: tr('- Cronometro -')
+  color: pink
+  size: 200 300
+  @onEscape: self:hide()
+
+  TabBar
+    id: croTabBar
+    anchors.top: parent.top
+    anchors.left: parent.left
+    anchors.right: parent.right
+    margin-top: 0
+
+
+  Panel
+    id: cronometroImagem
+    anchors.top: croTabBar.bottom
+    anchors.left: parent.left
+    anchors.right: parent.right
+    anchors.bottom: parent.bottom
+    image-source: /data/images/ui/x_xcro2
+    image-border: 9
+
+
+
+
+
+  Button
+    id: closeButton
+    !text: tr('Close')
+    font: cipsoftFont
+    anchors.right: parent.right
+    anchors.bottom: parent.bottom
+    size: 45 21
+    margin-top: 15
+    margin-right: 5    
+
+

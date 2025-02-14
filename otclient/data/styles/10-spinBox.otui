@@ -1,0 +1,40 @@
+AmountPanel < Panel
+  padding: 2
+
+  PreviousButton
+    id: decrementAll
+    tooltip: decrement all
+    anchors.right: decrement.left
+    anchors.verticalCenter: parent.verticalCenter
+    margin-right: 10
+
+  PreviousButton
+    id: decrement
+    height: 16
+    tooltip: decrement
+    anchors.right: textAmount.left
+    anchors.verticalCenter: parent.verticalCenter
+    margin-right: 10
+
+  TextEdit
+    id: textAmount
+    size: 50 22
+    anchors.verticalCenter: parent.verticalCenter
+    anchors.horizontalCenter: parent.horizontalCenter
+    padding: 5 10 0 10
+    text-align: center
+
+  NextButton
+    id: increment
+    height: 16
+    tooltip: increment
+    anchors.left: textAmount.right
+    anchors.verticalCenter: parent.verticalCenter
+    margin-left: 10
+
+  NextButton
+    id: incrementAll
+    tooltip: increment all
+    anchors.left: increment.right
+    anchors.verticalCenter: parent.verticalCenter
+    margin-left: 10

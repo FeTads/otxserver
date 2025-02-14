@@ -1,0 +1,44 @@
+menPanel < Panel
+  margin: 5
+  layout:
+    type: verticalBox
+  image-source: /data/images/ui/naruto
+
+MensagemWindow < MainWindow
+  !text: tr('- Mensagens -')
+  color: pink
+  size: 190 250
+  @onEscape: self:hide()
+
+  TabBar
+    id: msgsTabBar
+    anchors.top: parent.top
+    anchors.left: parent.left
+    anchors.right: parent.right
+    margin-top: 0
+
+
+  Panel
+    id: msgssImagem
+    anchors.top: msgsTabBar.bottom
+    anchors.left: parent.left
+    anchors.right: parent.right
+    anchors.bottom: parent.bottom
+    image-source: /data/images/ui/shika3
+    image-border: 9
+
+
+
+
+
+  Button
+    id: closeButton
+    !text: tr('Close')
+    font: cipsoftFont
+    anchors.right: parent.right
+    anchors.bottom: parent.bottom
+    size: 45 21
+    margin-top: 15
+    margin-right: 5    
+
+

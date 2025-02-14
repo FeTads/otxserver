@@ -1,0 +1,5 @@
+EnterGameWindow < StaticMainWindow
+  size: 500 500
+  height: 600
+  image-source: /images/loginbackground
+  

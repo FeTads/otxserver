@@ -1,0 +1,8 @@
+Module
+  name: game_craft
+  description: craft
+  author: Thony
+  sandboxed: true
+  scripts: [ craft ]
+  @onLoad: init()
+  @onUnload: terminate()

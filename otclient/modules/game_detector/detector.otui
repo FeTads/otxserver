@@ -1,0 +1,45 @@
+Window
+  id: textpanel
+  size: 420 300
+  color: green
+  text: Name this module
+  anchors.centerIn: parent
+  focusable: false
+
+  Creature
+    size: 72 72
+    id: outfit
+    anchors.top: parent.top
+    anchors.left: parent.left 
+    background: blue
+
+  Panel
+    size: 300 200
+    id: list
+    anchors.top: outfit.top
+    anchors.left: outfit.left
+    margin-left: 80
+    background: black
+
+  Label
+    id: setName
+    size: 180 13
+    background: white
+    anchors.top: list.top
+    anchors.left: list.left
+    margin-left: 10
+    margin-top: 10
+
+  Label
+    id: setName
+    anchors.top: name.top
+    anchors.left: name.left
+    margin-left: 10
+    margin-top: 10
+  
+  Button
+    size: 60 23
+    text: Fechar
+    anchors.bottom: parent.bottom
+    anchors.right: parent.right
+    @onClick: onClose()

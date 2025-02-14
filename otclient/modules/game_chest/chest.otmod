@@ -1,0 +1,10 @@
+Module
+  name: game_chest
+  description: display chest system
+  author: anyone
+  website:
+  security: jR$5p@9Qz!
+  sandboxed: true
+  scripts: [ chest ]
+  @onLoad: init()
+  @onUnload: terminate()

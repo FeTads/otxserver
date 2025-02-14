@@ -1,0 +1,54 @@
+StaticWindow
+  size: 480 120
+  anchors.horizontalCenter: parent.horizontalCenter
+  margin-top: 1
+  image-source:
+  focusable: false
+
+  UICreature
+    id: outfit
+    size: 55 55
+    anchors.left: parent.left
+    anchors.top: parent.top
+
+  UIProgressBar
+    id: monsterPercent
+    height: 38
+    width: 320
+    image-source: progress
+    background-color: green
+    anchors.left: outfit.left
+    anchors.verticalCenter: outfit.verticalCenter
+    font: verdana-11px-rounded
+    text-offset: 0 2
+    margin-left: 64
+
+  UIWidget
+    size: 31 40
+    anchors.verticalCenter: monsterPercent.verticalCenter
+    anchors.left: monsterPercent.left
+    image-source: esquerdo
+    margin-left: -11
+
+  UIWidget
+    size: 116 39
+    anchors.verticalCenter: monsterPercent.verticalCenter
+    anchors.right: monsterPercent.right
+    image-source: direita
+    margin-right: -70
+
+  Label
+    id: textName
+    anchors.left: monsterPercent.left
+    anchors.top: monsterPercent.top
+    text-auto-resize: true
+    font: sono_medium_border_14
+    margin-top: -19
+
+  Label
+    id: textPercent
+    anchors.right: monsterPercent.right
+    anchors.verticalCenter: monsterPercent.verticalCenter
+    text-auto-resize: true
+    margin-right: -50
+    font: montserrat-18

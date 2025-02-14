@@ -1,0 +1,68 @@
+CreatureOutfit < UIWidget
+  size: 40 40
+  anchors.horizontalCenter: parent.horizontalCenter
+  anchors.verticalCenter: parent.verticalCenter
+  margin-left: -135
+  margin-top: 32
+  UICreature
+    id:outfitBox
+    size: 200 200
+    anchors.bottom: parent.bottom
+    anchors.right: parent.right
+
+Window
+  id: window
+  size: 650 420
+  color: white
+  anchors.centerIn: parent
+  image-source: background 
+
+  ScrollableFlatPanel
+    id: panelbars
+    size: 400 325
+    anchors.horizontalCenter: parent.horizontalCenter
+    anchors.top: parent.top
+    margin-top: 10
+    margin-left: 180
+    vertical-scrollbar: panelbar_scroll
+    image-source: nada
+    layout:
+      type: grid
+      cell-size: 140 155 
+      cell-spacing: 10 
+      flow: true
+
+  HorizontalScrollBar
+    id: panelbar_scroll
+    anchors.left: parent.left
+    anchors.right: closeBtn.left
+    anchors.bottom: parent.bottom
+    margin-left: 10
+    margin-right: 10
+    margin-bottom: 5
+    step: 14
+    pixels-scroll: true
+
+  Button
+    id: closeBtn
+    text: Fechar
+    size: 100 23
+    anchors.bottom: parent.bottom
+    anchors.right: parent.right
+    margin-bottom: 0
+    margin-right: 10
+    image-source: fechar
+    border: 1 gray
+    @onClick: naoexibir()
+
+  Button
+    id: Desativar
+    text: Desativar
+    size: 100 23
+    anchors.bottom: parent.bottom
+    anchors.right: parent.right
+    margin-bottom: 70
+    margin-right: 427
+    image-source: fechar
+    border: 1 gray
+    @onClick: DesativarBar()

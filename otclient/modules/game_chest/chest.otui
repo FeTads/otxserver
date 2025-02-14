@@ -1,0 +1,101 @@
+Chest < UIWidget
+  opacity: 0.6
+
+  $focus:
+    opacity: 1
+
+  $hover:
+    opacity: 1
+
+ItemFragment < UIItem
+  virtual: true
+  size: 38 38
+
+Window
+  text: Chest System
+  size: 520 350
+  anchors.centerIn: parent
+  focusable: true
+
+  ScrollablePanel
+    id: chestPanel
+    anchors.fill: parent
+    padding: 10
+    image-source: images/showPanel
+
+    Chest
+      id: chest1
+      anchors.horizontalCenter: parent.horizontalCenter
+      anchors.verticalCenter: parent.verticalCenter
+
+      ItemFragment
+        id: fragmentLock
+        anchors.bottom: parent.bottom
+        anchors.left: parent.left
+        focusable: false
+
+    Chest
+      id: chest2
+      anchors.horizontalCenter: parent.horizontalCenter
+      anchors.verticalCenter: parent.verticalCenter
+
+      ScrollablePanel
+        id: chestList2
+        height: 25
+        margin-top: 5
+        anchors.bottom: parent.bottom
+        anchors.left: parent.left
+        anchors.right: parent.right
+        focusable: false
+        layout:
+          type: grid
+          flow: true
+          cell-size: 25 25
+          cell-spacing: 2
+
+    Chest
+      id: chest3
+      anchors.horizontalCenter: parent.horizontalCenter
+      anchors.verticalCenter: parent.verticalCenter
+
+      ScrollablePanel
+        id: chestList3
+        height: 25
+        margin-top: 5
+        anchors.bottom: parent.bottom
+        anchors.left: parent.left
+        anchors.right: parent.right
+        focusable: false
+        layout:
+          type: grid
+          flow: true
+          cell-size: 25 25
+          cell-spacing: 2
+
+    Panel
+      id: keyPanel
+      size: 100 25
+      anchors.left: parent.left
+      anchors.bottom: parent.bottom
+      focusable: false
+      background: #00000090
+
+      UIWidget
+        id: keys
+        anchors.fill: parent
+        text-align: center
+        text-auto-resize: true
+
+    Button
+      id: openChest
+      size: 100 25
+      text: Abrir
+      anchors.bottom: parent.bottom
+      anchors.horizontalCenter: parent.horizontalCenter
+
+    Button
+      size: 100 25
+      text: Fechar
+      anchors.bottom: parent.bottom
+      anchors.right: parent.right
+      @onClick: naoexibir()

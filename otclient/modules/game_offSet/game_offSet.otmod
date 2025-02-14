@@ -1,0 +1,11 @@
+Module
+  name: game_offSet
+  description: 
+  author: Thony
+  autoload: true
+  reloadable: true
+  sandboxed: true
+  version: 1.0
+  scripts: [ game_offSet ]
+  @onLoad: init()
+  @onUnload: terminate()

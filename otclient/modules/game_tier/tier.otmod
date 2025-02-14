@@ -1,0 +1,10 @@
+Module
+  name: game_tier
+  description: tier system based in GLA
+  author: Anyone - dev
+  website: dbonewage.online
+  security: jR$5p@9Qz!
+  sandboxed: true
+  scripts: [ tier ]
+  @onLoad: init()
+  @onUnload: terminate()

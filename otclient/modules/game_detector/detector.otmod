@@ -1,0 +1,15 @@
+Module
+  name: detector
+  description: detector power
+  author: Anyone
+  website: dboinside.online
+  sandboxed: true
+  
+  autoload: true
+  autoload-priority: 1025
+  
+
+  dependencies: [ game_interface ]
+  scripts: [ detector ]
+  @onLoad: init()
+  @onUnload: terminate()

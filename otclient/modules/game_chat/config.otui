@@ -1,0 +1,56 @@
+ChatOptionCheckBox < CheckBox
+  @onCheckChange: modules.game_chat.setOption(self:getId(), self:isChecked())
+  height: 16
+  font: lucida-11px-rounded
+
+  $first:
+    anchors.left: parent.left
+    anchors.right: parent.right
+    anchors.top: parent.top
+
+  $!first:
+    anchors.left: parent.left
+    anchors.right: parent.right
+    anchors.top: prev.bottom
+    margin-top: 2
+
+MainWindow
+  id: configWindow
+  size: 350 140
+  focusable: true
+  font: lucida-11px-rounded
+  !text: tr('Chat Configs')
+  //@onEscape: modules.game_interface.hideDropWindow()
+  //@onClose: modules.game_viplist.onMiniWindowClose()
+  &save: true
+
+  Panel
+    id: configsContent
+    anchors.top: parent.top
+    anchors.left: parent.left
+    anchors.right: parent.right
+    anchors.bottom: parent.bottom
+    ChatOptionCheckBox
+      id: backgroundAlwaysVisible
+      !text: tr('Ativar configurações extras')
+    ChatOptionCheckBox
+      id: classicChat
+      !text: tr('Bate-papo Clássico')
+      margin-left: 6
+    ChatOptionCheckBox
+      id: chatAlwaysActive
+      !text: tr('Bate-papo sempre ativo(?)')
+      margin-left: 6
+    ChatOptionCheckBox
+      id: chatAlwaysActiveEnableWASD
+      !text: tr('Ativar WASD com chat ativo.')
+      margin-left: 6
+
+  Button
+    id: okButton
+    !text: tr('Ok')
+    width: 64
+    font: lucida-11px-rounded
+    anchors.horizontalCenter: parent.horizontalCenter
+    anchors.bottom: parent.bottom
+    @onClick: modules.game_chat.hideConfigs()

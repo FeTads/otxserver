@@ -1,0 +1,9 @@
+Module
+  name: game_donate
+  description: Donate Goal - Meta de Doacoes
+  author: Aion
+  autoload: true
+  sandboxed: true
+  scripts: [ donate ]
+  @onLoad: init()
+  @onUnload: terminate()

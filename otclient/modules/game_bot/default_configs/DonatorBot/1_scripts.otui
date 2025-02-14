@@ -1,0 +1,43 @@
+
+sPanel < Panel
+  margin: 5
+  layout:
+    type: verticalBox
+
+ScriptsWindow < MainWindow
+  !text: tr('- Scripts -')
+  color: pink
+  size: 235 360
+  @onEscape: self:hide()
+
+  TabBar
+    id: tmpTabBar
+    anchors.top: parent.top
+    anchors.left: parent.left
+    anchors.right: parent.right
+
+
+  Panel
+    id: tmpTabContent
+    anchors.top: tmpTabBar.bottom
+    anchors.left: parent.left
+    anchors.right: parent.right
+    anchors.bottom: parent.bottom
+    image-source: /data/images/ui/caveirascript
+    image-border: 5
+
+
+
+
+
+  Button
+    id: closeButton
+    !text: tr('Close')
+    font: cipsoftFont
+    anchors.right: parent.right
+    anchors.bottom: parent.bottom
+    size: 45 21
+    margin-top: 15
+    margin-right: 5    
+
+

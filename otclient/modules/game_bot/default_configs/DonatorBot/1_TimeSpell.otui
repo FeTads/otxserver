@@ -1,0 +1,43 @@
+
+tsPanel < Panel
+  margin: 5
+  layout:
+    type: verticalBox
+  image-source: /data/images/ui/timespell
+
+timeSpellWindow < MainWindow
+  !text: tr('- Time Spell -')
+  color: pink
+  size: 280 305
+  @onEscape: self:hide()
+
+  TabBar
+    id: tmsTabBar
+    anchors.top: parent.top
+    anchors.left: parent.left
+    anchors.right: parent.right
+
+
+  Panel
+    id: timeSpellImagem
+    anchors.top: tmsTabBar.bottom
+    anchors.left: parent.left
+    anchors.right: parent.right
+    anchors.bottom: parent.bottom
+    image-border: 5
+
+
+
+
+
+  Button
+    id: closeButton
+    !text: tr('Close')
+    font: cipsoftFont
+    anchors.right: parent.right
+    anchors.bottom: parent.bottom
+    size: 45 21
+    margin-top: 15
+    margin-right: 5    
+
+

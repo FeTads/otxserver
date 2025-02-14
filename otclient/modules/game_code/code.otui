@@ -1,0 +1,98 @@
+HeadlessWindow
+  id: resgatar_codigo
+  size: 625 485
+  image-source: images/MAIN.png
+  anchors.centerIn: parent
+  focusable: true
+
+  UIButton
+    id: eventos
+    size: 149 169
+    image-source: images/events
+    anchors.top: parent.top
+    anchors.left: parent.left
+    margin-top: 268
+    margin-left: 42
+    @onClick: eventos()
+
+    $hover:
+      image-source: images/events_hover
+    
+    $pressed:
+      image-source: images/events_pressed
+
+  UIButton
+    id: doacoes
+    size: 149 169
+    image-source: images/donates
+    anchors.top: eventos.top
+    anchors.left: eventos.left
+    margin-top: 0
+    margin-left: 190
+    @onClick: doacoes()
+
+    $hover:
+      image-source: images/donates_hover
+    
+    $pressed:
+      image-source: images/donates_pressed
+
+  UIButton
+    id: outros
+    size: 149 169
+    image-source: images/others
+    anchors.top: doacoes.top
+    anchors.left: doacoes.left
+    margin-top: 0
+    margin-left: 188
+    @onClick: outros()
+
+    $hover:
+      image-source: images/others_hover
+    
+    $pressed:
+      image-source: images/others_pressed
+
+  UIButton
+    id: close
+    tooltip: Fechar janela
+    opacity: 0.60
+    image-source: images/close
+    size: 51 50
+    anchors.top: parent.top
+    anchors.left: parent.left
+    margin-top: 8
+    margin-left: 553
+    @onClick: naoexibir()
+
+    $hover:
+      image-source: images/close_hover
+    
+    $pressed:
+      image-source: images/close_pressed
+
+  UIButton
+    id: resgatar
+    tooltip: Clique aqui para resgatar seu codigo
+    size: 175 50
+    image-source: images/resgatar
+    anchors.top: parent.top
+    anchors.left: parent.left
+    margin-top: 375
+    margin-left: 214
+    visible: false
+
+    $hover:
+      image-source: images/resgatar_hover
+    
+    $pressed:
+      image-source: images/resgatar_pressed
+
+  TextEdit
+    id: inserir_codigo
+    size: 453 25
+    anchors.top: resgatar.top
+    anchors.left: resgatar.left
+    margin-top: -45
+    margin-left: -132
+    visible: false

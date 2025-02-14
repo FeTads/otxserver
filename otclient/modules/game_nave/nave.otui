@@ -1,0 +1,217 @@
+Planet < UIWidget
+  size: 55 55
+  opacity: 0.5
+
+  $hover:
+    opacity: 1
+
+  $focus:
+    opacity: 1
+
+MarkPosition < UIWidget
+  size: 30 30
+  image-source: images/position
+  opacity: 0.8
+
+  $hover:
+    opacity: 1
+
+  $focus:
+    image-source: images/focusPosition
+    size: 45 45
+    opacity: 1
+
+Window
+  size: 646 473
+  image-source: images/window
+  anchors.centerIn: parent
+  padding: 10
+
+  Panel
+    width: 379
+    id: PanelPlanetList
+    image-source: images/panelPlanets
+    anchors.top: parent.top
+    anchors.bottom: buttonTravel.top
+    anchors.left: parent.left
+    margin: 90 0 10 0
+    padding: 10
+
+    ScrollablePanel
+      id: planetList
+      anchors.fill: parent
+      layout:
+        type: anchor
+        spacing: 5
+
+      Planet
+        id: Earth
+        size: 65 65
+        image-source: planets/earth
+        anchors.top: parent.top
+        anchors.horizontalCenter: parent.horizontalCenter
+
+      Planet
+        id: City 17
+        image-source: planets/city 17
+        anchors.left: prev.right
+        anchors.top: parent.top
+        margin: 30 0 0 25
+
+      Planet
+        id: Gelbo
+        image-source: planets/gelbo
+        anchors.verticalCenter: parent.verticalCenter
+        anchors.left: parent.left
+        margin: 0 0 30 0
+
+      Planet
+        id: Gardia
+        image-source: planets/gardia
+        anchors.right: parent.right
+        anchors.bottom: parent.bottom
+        margin: 0 10 80 0
+
+      Planet
+        id: Kanassa
+        image-source: planets/kanassa
+        anchors.horizontalCenter: parent.horizontalCenter
+        anchors.bottom: parent.bottom
+        margin: 0 25 10 0
+
+      Planet
+        id: Vegeta
+        image-source: planets/vegeta
+        anchors.horizontalCenter: parent.horizontalCenter
+        anchors.bottom: parent.bottom
+        margin: 0 52 105 0
+
+      Planet
+        id: Namek
+        size: 60 60
+        image-source: planets/namek
+        anchors.left: parent.left
+        anchors.bottom: parent.bottom
+        margin: 0 0 40 25
+
+      Planet
+        id: Zelta
+        image-source: planets/zelta
+        anchors.verticalCenter: parent.verticalCenter
+        anchors.horizontalCenter: parent.horizontalCenter
+        margin: 0 0 40 0
+
+      Planet
+        id: M2
+        image-source: planets/m2
+        anchors.right: parent.right
+        anchors.bottom: parent.bottom
+        margin: 0 45 5 0
+
+      Planet
+        id: Tsufur
+        image-source: planets/tsufur
+        anchors.left: parent.left
+        anchors.top: parent.top
+        margin: 15 0 0 43
+
+      Planet
+        id: Ruudeze
+        image-source: planets/ruudeze
+        anchors.right: parent.right
+        anchors.verticalCenter: parent.verticalCenter
+        margin: 0 0 40 0
+
+      Planet
+        id: Ruudo
+        image-source: planets/ruudo
+        anchors.right: parent.right
+        anchors.bottom: parent.bottom
+        margin: 0 90 120 0
+
+  Label
+    text: Corporacao Capsula - Planetas
+    anchors.top: parent.top
+    anchors.horizontalCenter: PanelPlanetList.horizontalCenter
+    margin-top: 65
+
+  Panel
+    id: PanelPlanetInfo
+    image-source: images/planetInfo
+    anchors.top: PanelPlanetList.top
+    anchors.bottom: PanelPlanetList.bottom
+    anchors.left: PanelPlanetList.right
+    anchors.right: parent.right
+    margin: 0 0 0 10
+    padding: 10
+
+    Label
+      id: labelName
+      anchors.horizontalCenter: parent.horizontalCenter
+      anchors.top: parent.top
+      font: sans-bold-16px
+      color: #3B98D1
+      text-auto-resize: true
+
+    Label
+      id: labelDistance
+      anchors.horizontalCenter: parent.horizontalCenter
+      anchors.top: prev.bottom
+      text-auto-resize: true
+      margin-top: 10
+
+    Label
+      id: labelPrice
+      anchors.horizontalCenter: parent.horizontalCenter
+      anchors.top: prev.bottom
+      text-auto-resize: true
+
+    HorizontalSeparator
+      anchors.top: prev.bottom
+      anchors.left: parent.left
+      anchors.right: parent.right
+      anchors.horizontalCenter: parent.horizontalCenter
+      margin: 20 15 0 15
+      opacity: 0.2
+
+    Label
+      text: Minimap
+      anchors.horizontalCenter: parent.horizontalCenter
+      anchors.top: prev.bottom
+      margin-top: 7
+      font: start_big
+      text-auto-resize: true
+
+    ScrollablePanel
+      id: panelMinimap
+      anchors.top: prev.bottom
+      anchors.bottom: parent.bottom
+      anchors.left: parent.left
+      anchors.right: parent.right
+      margin-top: 5
+
+  Label
+    text: Informacoes do planeta
+    anchors.top: parent.top
+    anchors.horizontalCenter: PanelPlanetInfo.horizontalCenter
+    margin-top: 65
+    text-auto-resize: true
+
+  Button
+    id: buttonTravel
+    text: Instant Travel
+    size: 150 23
+    anchors.bottom: parent.bottom
+    anchors.horizontalCenter: parent.horizontalCenter
+
+  UIButton
+    id: close
+    size: 35 35
+    image-source: images/close
+    anchors.top: parent.top
+    anchors.right: parent.right
+    opacity: 0.6
+    @onClick: naoexibir()
+
+    $hover:
+      opacity: 1

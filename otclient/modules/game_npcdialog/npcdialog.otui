@@ -1,0 +1,69 @@
+LabelText < Label
+  padding-bottom: 5
+  font: sans-bold-16px
+  color: #e8c05e
+  text-wrap: true
+  text-auto-resize: true
+
+OptionButton < Button
+  margin: 1 0 0 2
+  width: 80
+
+UIWindow
+  size: 620 231
+  visible: false
+  image-source: window
+  image-border: 12
+  anchors.centerIn: parent
+  @onEscape: modules.game_npcdialog.closeDialog()
+
+  Label
+    id: labelTitle
+    font: sans-bold-16px
+    anchors.top: parent.top
+    anchors.left: parent.left
+    !text: tr('Title')
+    margin: 18 0 5 25
+    color: #e8c05e
+    text-auto-resize: true
+
+  UICreature
+    id: outfitBox
+    size: 58 58
+    anchors.top: prev.bottom
+    anchors.left: parent.left
+    margin: 20 0 5 34
+
+  VerticalScrollBar
+    id: scrollPanel
+    height: 65
+    anchors.top: panelMessage.top
+    anchors.left: panelMessage.right
+    anchors.bottom: panelMessage.bottom
+    margin-left: 5
+    visible: false
+    pixels-scroll: true
+    step: 14
+
+  ScrollablePanel
+    id: panelMessage
+    size: 0 120
+    anchors.top: labelTitle.bottom
+    anchors.left: outfitBox.right
+    anchors.right: parent.right
+    margin: 8 30 10 25
+    vertical-scrollbar: scrollPanel
+    layout: verticalBox
+    &limitText: 80
+
+  ScrollablePanel
+    id: buttonHolder
+    size: 0 24
+    anchors.bottom: parent.bottom
+    anchors.left: parent.left
+    anchors.right: parent.right
+    margin: 15 10 8 10
+    layout:
+      type: grid
+      cell-size: 99 22
+      flow: true

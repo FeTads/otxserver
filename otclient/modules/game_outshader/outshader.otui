@@ -1,0 +1,44 @@
+Window
+  size: 250 420
+  text: Select Shader Look You Outfit
+  color: white
+  anchors.centerIn: parent
+
+  ScrollableFlatPanel
+    id: panelbars
+    size: 180 300
+    anchors.left: parent.left
+    anchors.top: parent.top
+    margin-left: 10
+    margin-top: 20
+    image-source:
+    vertical-scrollbar: panelbar_scroll
+    layout:
+      type: grid
+      cell-size: 180 50
+      cell-spacing: 0
+      flow: true
+
+  VerticalScrollBar
+    id: panelbar_scroll
+    anchors.top: parent.top
+    anchors.bottom: parent.bottom
+    anchors.right: parent.right
+    margin-bottom: 70
+    step: 14
+    pixels-scroll: true
+
+  Button
+    text: Fechar
+    size: 100 23
+    anchors.bottom: parent.bottom
+    anchors.right: parent.right
+    @onClick: naoexibir()
+
+  Button
+    text: Desativar
+    size: 100 23
+    margin-right: 116
+    anchors.bottom: parent.bottom
+    anchors.right: parent.right
+    @onClick: DesativarBar()

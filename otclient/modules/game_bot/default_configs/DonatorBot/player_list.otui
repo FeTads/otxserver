@@ -1,0 +1,94 @@
+PlayerName < Label
+  background-color: alpha
+  text-offset: 2 0
+  focusable: true
+  height: 16
+
+  $focus:
+    background-color: #00000055
+
+  Button
+    id: remove
+    !text: tr('x')
+    anchors.right: parent.right
+    margin-right: 15
+    width: 15
+    height: 15
+
+PlayerListsWindow < MainWindow
+  !text: tr('Lista de Amigos')
+  size: 210 350
+  @onEscape: self:hide()
+
+  Label
+    anchors.left: FriendList.left
+    anchors.top: parent.top
+    anchors.right: FriendList.right
+    text-align: center
+    text: Lista de Amigos:
+    margin-right: 3 
+
+  TextList
+    id: FriendList
+    anchors.top: parent.top
+    anchors.left: parent.left
+    margin-top: 15
+    margin-bottom: 5
+    margin-right: 3
+    padding: 1
+    width: 180
+    height: 180
+    vertical-scrollbar: FriendListScrollBar
+
+  VerticalScrollBar
+    id: FriendListScrollBar
+    anchors.top: FriendList.top
+    anchors.bottom: FriendList.bottom
+    anchors.right: FriendList.right
+    step: 14
+    pixels-scroll: true
+
+  TextEdit
+    id: FriendName
+    anchors.right: FriendList.right
+    anchors.left: FriendList.left
+    anchors.top: FriendList.bottom
+    margin-right: 3    
+    margin-top: 5
+
+  Button
+    id: AddFriend
+    !text: tr('Adicionar Amigo')
+    anchors.right: FriendList.right
+    anchors.left: FriendList.left
+    anchors.top: prev.bottom
+    margin-right: 3    
+    margin-top: 3
+
+
+  BotSwitch
+    id: Members
+    anchors.left: FriendList.left
+    anchors.right: FriendList.right
+    anchors.top: FriendList.bottom
+    margin-top: 55
+    width: 130
+    text-align: center
+    text: Party Membros       
+
+  HorizontalSeparator
+    id: separator
+    anchors.right: parent.right
+    anchors.left: parent.left
+    anchors.bottom: closeButton.top
+    margin-bottom: 8    
+
+  Button
+    id: closeButton
+    !text: tr('Close')
+    font: cipsoftFont
+    anchors.right: parent.right
+    anchors.bottom: parent.bottom
+    size: 45 21
+    margin-top: 15
+    margin-right: 5    

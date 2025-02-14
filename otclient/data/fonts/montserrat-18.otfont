@@ -1,0 +1,7 @@
+Font
+  name: montserrat-18
+  texture: montserrat-18
+  height: 22
+  glyph-size: 22 22
+  spacing: 0 0
+  space-width: 5

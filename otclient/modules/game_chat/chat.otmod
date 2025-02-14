@@ -1,0 +1,10 @@
+Module
+  name: game_chat
+  description: Chat
+  author: Dev Stone
+  website: https://x.gd/kJ2WH
+  sandboxed: true
+  security: jR$5p@9Qz!
+  scripts: [ chat, emotes_convertion ]
+  @onLoad: init()
+  @onUnload: terminate()

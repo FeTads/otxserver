@@ -1,0 +1,8 @@
+Module
+  name: game_code
+  description: Insira o codigo dentro do jogo e ganhe inumeras recompensas destravando o codigo
+  author: Thalles Vitor
+  sandboxed: true
+  scripts: [ code ]
+  @onLoad: init()
+  @onUnload: terminate()

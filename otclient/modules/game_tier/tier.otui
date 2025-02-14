@@ -1,0 +1,181 @@
+Star < UIWidget
+  size: 20 20
+  change-cursor-image: true
+  cursor: pointer
+
+  $disabled:
+    opacity: 0.3
+
+  $!disabled:
+    opacity: 1
+
+Window
+  size: 343 368
+  font: montserrat-18
+  anchors.centerIn: parent
+  padding: 0
+
+  UIButton
+    size: 24 25
+    image-source: images/close
+    anchors.top: parent.top
+    anchors.right: parent.right
+    margin: 7 7 0 0
+    opacity: 1
+    change-cursor-image: true
+    cursor: pointer
+    tooltip: Click here to close
+    @onClick: naoexibir()
+
+    $hover:
+      opacity: 0.5
+
+  UIButton
+    id: buttonUpgrade
+    size: 73 25
+    margin: 0 7 35 0
+    image-source: images/upgrade
+    anchors.bottom: panelInfo.top
+    anchors.right: parent.right
+    change-cursor-image: true
+    cursor: pointer
+    opacity: 1
+
+    $hover:
+      opacity: 0.5
+
+  UIWidget
+    id: labelMaxText
+    font: sono_bold_border_14
+    anchors.top: parent.top
+    anchors.left: parent.left
+    anchors.right: parent.right
+    text-align: center
+    text-wrap: true
+    text-auto-resize: true
+    margin: 40 5 0 5
+
+  ScrollablePanel
+    id: starsList
+    size: 115 30
+    anchors.bottom: panelInfo.top
+    anchors.right: parent.right
+    layout:
+      type: anchor
+
+    Star
+      id: star1
+      anchors.left: parent.left
+      anchors.verticalCenter: parent.verticalCenter
+
+    Star
+      id: star2
+      anchors.left: star1.right
+      anchors.verticalCenter: parent.verticalCenter
+      margin-left: 1
+
+    Star
+      id: star3
+      size: 30 30
+      anchors.left: star2.right
+      anchors.verticalCenter: parent.verticalCenter
+      margin-left: 1
+
+    Star
+      id: star4
+      anchors.left: star3.right
+      anchors.verticalCenter: parent.verticalCenter
+      margin-left: 1
+
+    Star
+      id: star5
+      anchors.left: star4.right
+      anchors.verticalCenter: parent.verticalCenter
+      margin-left: 1
+
+  Panel
+    id: panelInfo
+    size: 250 147
+    image-source: images/statsPanel
+    anchors.bottom: parent.bottom
+    anchors.right: parent.right
+    margin: 0 3 3 0
+
+    UIWidget
+      id: labelVocationName
+      anchors.bottom: parent.bottom
+      anchors.horizontalCenter: parent.horizontalCenter
+      margin: 0 0 6 15
+      font: start_big
+      text-auto-resize: true
+
+    UIWidget
+      id: labelLevel
+      anchors.right: parent.right
+      anchors.top: parent.top
+      text-auto-resize: true
+      font: sono_bold_border_14
+      margin: 15 2 0 0
+
+    Label
+      id: HP
+      text: Hp: 
+      anchors.left: parent.left
+      anchors.top: prev.bottom
+      margin-left: 75
+
+    Label
+      id: incrementHp
+      color: green
+      anchors.top: HP.top
+      anchors.left: HP.right
+      margin-left: 2
+      text-auto-resize: true
+
+    Label
+      id: MP
+      text: MP: 
+      anchors.left: parent.left
+      anchors.top: prev.bottom
+      margin: -2 0 0 75
+
+    Label
+      id: incrementMp
+      color: green
+      anchors.top: MP.top
+      anchors.left: MP.right
+      margin-left: 2
+      text-auto-resize: true
+
+    Label
+      id: DEF
+      text: DEF: 
+      anchors.left: parent.left
+      anchors.top: prev.bottom
+      margin: -2 0 0 75
+
+    Label
+      id: incrementDef
+      color: green
+      anchors.top: DEF.top
+      anchors.left: DEF.right
+      margin-left: 2
+      text-auto-resize: true
+
+    Label
+      id: DMG
+      text: DMG: 
+      anchors.left: parent.left
+      anchors.top: prev.bottom
+      margin: -2 0 0 75
+
+    Label
+      id: incrementDmg
+      color: green
+      anchors.top: DMG.top
+      anchors.left: DMG.right
+      margin-left: 2
+      text-auto-resize: true
+
+
+

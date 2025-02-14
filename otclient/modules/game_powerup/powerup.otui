@@ -1,0 +1,98 @@
+PowerUpButton < UIButton
+  margin-right: 3
+  size: 18 18
+  image-source: /images/ui/miniwindow_buttons
+  image-clip: 14 14 14 14
+
+  $hover:
+    image-clip: 14 28 14 14
+
+  $pressed:
+    image-clip: 14 42 14 14
+
+  $disabled:
+    opacity: 0.5
+
+UnlockedButtonStats < UIButton
+  margin-right: 3
+  size: 18 18
+  image-source: images/lockSmall
+
+  $on:
+    image-source: images/unlockSmall
+
+PowerUpSeparator < HorizontalSeparator
+  anchors.bottom: parent.bottom
+  anchors.left: parent.left
+  anchors.right: parent.right
+
+StatsPanelPoints < FlatPanel
+  height: 35
+  UIWidget
+    id: statsName
+    anchors.verticalCenter: parent.verticalCenter
+    anchors.left: parent.left
+    text-auto-resize: true
+    margin-left: 5
+    font: sono_bold_border_14
+
+  UIWidget
+    id: statsValue
+    anchors.verticalCenter: parent.verticalCenter
+    anchors.left: parent.horizontalCenter
+    color: green
+    margin-left: 25
+    text-auto-resize: true
+    font: sono_bold_border_14
+
+  PowerUpButton
+    id: increment
+    anchors.verticalCenter: parent.verticalCenter
+    anchors.right: parent.right
+    margin-right: 30
+
+  UnlockedButtonStats
+    id: blocked
+    anchors.verticalCenter: parent.verticalCenter
+    anchors.right: parent.right
+
+MainWindow
+  width: 360
+  text: Power Up
+  @onEscape: naoexibir()
+
+  ScrollablePanel
+    id: statsList
+    height: 495
+    anchors.top: parent.top
+    anchors.left: parent.left
+    anchors.right: parent.right
+    margin-top: 0
+    layout: 
+      type: verticalBox
+      spacing: 3
+
+  UIWidget
+    id: points
+    text: See Your Bonus
+    text-align: center
+    text-auto-resize: true
+    anchors.bottom: parent.bottom
+    anchors.horizontalCenter: parent.horizontalCenter
+    margin-bottom: 30
+    font: sono_bold_border_14
+
+  Button
+    size: 80 23
+    text: Fechar
+    anchors.bottom: parent.bottom
+    anchors.right: parent.right
+    @onClick: naoexibir()
+
+  Button
+    id: buttonReset
+    size: 80 23
+    text: Reset
+    anchors.bottom: parent.bottom
+    anchors.left: parent.left
+    @onClick: doPlayerResetPowerUpPoints()

@@ -1,0 +1,9 @@
+Module
+  name: game_gacha
+  description: a
+  author: Walox
+  website: www.pokezring.com.br
+  sandboxed: true
+  scripts: [ gacha ]
+  @onLoad: init()
+  @onUnload: terminate()

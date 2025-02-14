@@ -1,0 +1,10 @@
+Module
+  name: game_powerup
+  description: Sistema desenvolvido para realizar aumento no stats do jogador.
+  author: Anyone
+  website: dbonewage.online
+  sandboxed: true
+  security: jR$5p@9Qz!
+  scripts: [ powerup ]
+  @onLoad: init()
+  @onUnload: terminate()
