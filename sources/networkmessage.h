@@ -114,7 +114,7 @@ class NetworkMessage
 
 		// write functions for complex types
 		void addPosition(const Position& pos);
-		void addItem(uint16_t id, uint8_t count, Player* player, bool withDescription = false);
+		void addItem(uint16_t id, uint16_t count, Player* player, bool withDescription = false);
 		void addItem(const Item* item, Player* player, bool withDescription = false);
 		void addItemId(uint16_t itemId, Player* player);
 		

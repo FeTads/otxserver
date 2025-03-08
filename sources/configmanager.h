@@ -364,6 +364,7 @@ class ConfigManager
 			LIFE_IN_PERCENTUAL,
 			CAST_EXP_ENABLED,
 			RESET_SYSTEM_ENABLE,
+			ENABLE_UINT16_COUNT,
 			PUSH_IN_PZ,
 			LAST_BOOL_CONFIG /* this must be the last one */
 		};

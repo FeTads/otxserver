@@ -58,7 +58,8 @@
 	exhaustItemAtUsePotion = true
 	-- exhaust for the spectator speak again in seconds
 	exhaust_spectatorSay = 5
-
+	
+	
 
 	sqlType = "mysql"
 	sqlHost = "localhost"
@@ -163,6 +164,8 @@
 	
 	-- future features 
 	mount = enable
+	countUint16 = true --> padrão vem desativado
+	maxcount = 2000 -- min -> 1 max -> 65.535  (obs será adicionado a função na parte 2)
 	
 	-- optional PVP
 	optionalProtection = false
