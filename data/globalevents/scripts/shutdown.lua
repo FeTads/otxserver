@@ -18,6 +18,7 @@ function prepareShutdown(minutes)
 		doBroadcastMessage("[Salvando]: O Server Save acontecerá em " .. minutes .. " minutos, por favor desloguem!")
 	else
 		doBroadcastMessage("O Server Save acontecerá em " .. minutes .. " minutos.")
+		doSetGameState(GAMESTATE_CLOSING)
 	end
 
 	shutdownEvent = addEvent(prepareShutdown, 60000, minutes - 1)
