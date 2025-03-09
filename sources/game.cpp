@@ -1122,7 +1122,7 @@ bool Game::removeCreature(Creature* creature, const bool& isLogout /*= true*/)
 }
 
 bool Game::playerMoveThing(const uint32_t& playerId, const Position& fromPos,
-	const uint16_t& spriteId, const int16_t& fromStackpos, const Position& toPos, const uint8_t& count)
+	const uint16_t& spriteId, const int16_t& fromStackpos, const Position& toPos, const uint16_t& count)
 {
 	Player* player = getPlayerByID(playerId);
 	if(!player || player->isRemoved())
@@ -1418,7 +1418,7 @@ ReturnValue Game::internalMoveCreature(Creature* actor, Creature* creature, Cyli
 }
 
 bool Game::playerMoveItem(const uint32_t& playerId, const Position& fromPos,
-	const uint16_t& spriteId, const int16_t& fromStackpos, const Position& toPos, const uint8_t& count)
+	const uint16_t& spriteId, const int16_t& fromStackpos, const Position& toPos, const uint16_t& count)
 {
 	Player* player = getPlayerByID(playerId);
 	if(!player || player->isRemoved() || player->hasFlag(PlayerFlag_CannotMoveItems))
@@ -1742,7 +1742,7 @@ ReturnValue Game::internalMoveItem(Creature* actor, Cylinder* fromCylinder, Cyli
 		uint8_t n = 0;
 		if(toItem && toItem->getID() == item->getID())
 		{
-			n = std::min((uint32_t)100 - toItem->getItemCount(), m);
+			n = std::min((uint32_t)g_config.getNumber(ConfigManager::UINT16_COUNT) - toItem->getItemCount(), m);
 			toCylinder->__updateThing(toItem, toItem->getID(), toItem->getItemCount() + n);
 			updateItem = toItem;
 		}
@@ -1894,7 +1894,7 @@ ReturnValue Game::internalMoveTradeItem(Creature* actor, Cylinder* fromCylinder,
 		uint8_t n = 0;
 		if(toItem && toItem->getID() == item->getID())
 		{
-			n = std::min((uint32_t)100 - toItem->getItemCount(), m);
+			n = std::min((uint32_t)g_config.getNumber(ConfigManager::UINT16_COUNT) - toItem->getItemCount(), m);
 			toCylinder->__updateThing(toItem, toItem->getID(), toItem->getItemCount() + n);
 			updateItem = toItem;
 		}
@@ -1987,7 +1987,7 @@ ReturnValue Game::internalAddItem(Creature* actor, Cylinder* toCylinder, Item* i
 		uint32_t m = std::min((uint32_t)item->getItemCount(), maxQueryCount), n = 0;
 		if(toItem->getID() == item->getID())
 		{
-			n = std::min((uint32_t)100 - toItem->getItemCount(), m);
+			n = std::min((uint32_t)g_config.getNumber(ConfigManager::UINT16_COUNT) - toItem->getItemCount(), m);
 			toCylinder->__updateThing(toItem, toItem->getID(), toItem->getItemCount() + n);
 		}
 

@@ -155,6 +155,8 @@ bool ConfigManager::load()
 	m_confNumber[EXHAUST_SPECTATOR_SAY] = getGlobalNumber("exhaust_spectatorSay", 3);
 	
 	m_confBool[ENABLE_UINT16_COUNT] = getGlobalBool("countUint16", false);
+
+	m_confNumber[UINT16_COUNT] = getGlobalNumber("maxcount", 100);
 	
 	m_confString[MAP_AUTHOR] = getGlobalString("mapAuthor", "Unknown");
 	m_confNumber[LOGIN_TRIES] = getGlobalNumber("loginTries", 3);

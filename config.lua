@@ -165,7 +165,7 @@
 	-- future features 
 	mount = enable
 	countUint16 = true --> padrão vem desativado
-	maxcount = 2000 -- min -> 1 max -> 65.535  (obs será adicionado a função na parte 2)
+	maxcount = 2000 -- min -> 1 max -> 65.535  (obs padrão = 100)
 	
 	-- optional PVP
 	optionalProtection = false

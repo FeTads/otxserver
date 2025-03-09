@@ -3383,9 +3383,9 @@ ReturnValue Player::__queryMaxCount(int32_t index, const Thing* thing, uint32_t 
 						}
 					}
 				}
-				else if(inventoryItem->isStackable() && item->getID() == inventoryItem->getID() && inventoryItem->getItemCount() < 100)
+				else if(inventoryItem->isStackable() && item->getID() == inventoryItem->getID() && inventoryItem->getItemCount() < g_config.getNumber(ConfigManager::UINT16_COUNT))
 				{
-					uint32_t remainder = (100 - inventoryItem->getItemCount());
+					uint32_t remainder = (g_config.getNumber(ConfigManager::UINT16_COUNT) - inventoryItem->getItemCount());
 					if(__queryAdd(i, item, remainder, flags) == RET_NOERROR)
 						n += remainder;
 				}
@@ -3393,7 +3393,7 @@ ReturnValue Player::__queryMaxCount(int32_t index, const Thing* thing, uint32_t 
 			else if(__queryAdd(i, item, item->getItemCount(), flags) == RET_NOERROR)
 			{
 				if(item->isStackable())
-					n += 100;
+					n += g_config.getNumber(ConfigManager::UINT16_COUNT);
 				else
 					n += 1;
 			}
@@ -3410,15 +3410,15 @@ ReturnValue Player::__queryMaxCount(int32_t index, const Thing* thing, uint32_t 
 
 		if(destItem)
 		{
-			if(destItem->isStackable() && item->getID() == destItem->getID() && destItem->getItemCount() < 100)
-				maxQueryCount = 100 - destItem->getItemCount();
+			if(destItem->isStackable() && item->getID() == destItem->getID() && destItem->getItemCount() < g_config.getNumber(ConfigManager::UINT16_COUNT))
+				maxQueryCount = g_config.getNumber(ConfigManager::UINT16_COUNT) - destItem->getItemCount();
 			else
 				maxQueryCount = 0;
 		}
 		else if(__queryAdd(index, item, count, flags) == RET_NOERROR)
 		{
 			if(item->isStackable())
-				maxQueryCount = 100;
+				maxQueryCount = g_config.getNumber(ConfigManager::UINT16_COUNT);
 			else
 				maxQueryCount = 1;
 
@@ -3482,7 +3482,7 @@ Cylinder* Player::__queryDestination(int32_t& index, const Thing* thing, Item** 
 					continue;
 
 				if(autoStack && item->isStackable() && __queryAdd(i, item, item->getItemCount(), 0)
-					== RET_NOERROR && invItem->getID() == item->getID() && invItem->getItemCount() < 100)
+					== RET_NOERROR && invItem->getID() == item->getID() && invItem->getItemCount() < g_config.getNumber(ConfigManager::UINT16_COUNT))
 				{
 					*destItem = invItem;
 					index = i;
@@ -3532,7 +3532,7 @@ Cylinder* Player::__queryDestination(int32_t& index, const Thing* thing, Item** 
 						continue;
 
 					if(autoStack && item->isStackable() && tmpContainer->__queryAdd(n, item, item->getItemCount(),
-						0) == RET_NOERROR && tmpItem->getID() == item->getID() && tmpItem->getItemCount() < 100)
+						0) == RET_NOERROR && tmpItem->getID() == item->getID() && tmpItem->getItemCount() < g_config.getNumber(ConfigManager::UINT16_COUNT))
 					{
 						index = n;
 						*destItem = tmpItem;

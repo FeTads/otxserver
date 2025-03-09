@@ -491,11 +491,11 @@ class Game
 			ViolationAction_t action, std::string comment, std::string statement,
 			const uint32_t& statementId, bool ipBanishment);
 		bool playerMoveThing(const uint32_t& playerId, const Position& fromPos,
-			const uint16_t& spriteId, const int16_t& fromStackpos, const Position& toPos, const uint8_t& count);
+			const uint16_t& spriteId, const int16_t& fromStackpos, const Position& toPos, const uint16_t& count);
 		bool playerMoveCreature(const uint32_t& playerId, const uint32_t& movingCreatureId,
 			const Position& movingCreaturePos, const Position& toPos, const bool& delay);
 		bool playerMoveItem(const uint32_t& playerId, const Position& fromPos,
-			const uint16_t& spriteId, const int16_t& fromStackpos, const Position& toPos, const uint8_t& count);
+			const uint16_t& spriteId, const int16_t& fromStackpos, const Position& toPos, const uint16_t& count);
 		bool playerMove(const uint32_t& playerId, const Direction& dir);
 		bool playerCreatePrivateChannel(const uint32_t& playerId);
 		bool playerChannelInvite(const uint32_t& playerId, const std::string& name);

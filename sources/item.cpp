@@ -357,7 +357,7 @@ Attr_ReadValue Item::readAttr(AttrTypes_t attr, PropStream& propStream)
 			if(!propStream.getByte(_count))
 				return ATTR_READ_ERROR;
 
-			setSubType((uint16_t)_count);
+			// setSubType((uint16_t)_count);
 			break;
 		}
 

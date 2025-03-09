@@ -3850,8 +3850,8 @@ int32_t LuaInterface::luaDoTransformItem(lua_State* L)
 	}
 
 	const ItemType& it = Item::items[newId];
-	if(it.stackable && count > 100)
-		count = 100;
+	if(it.stackable && count > g_config.getNumber(ConfigManager::UINT16_COUNT))
+		count = g_config.getNumber(ConfigManager::UINT16_COUNT);
 
 	Item* newItem = g_game.transformItem(item, newId, count);
 	if(newItem && newItem != item)
@@ -4252,7 +4252,7 @@ int32_t LuaInterface::luaDoPlayerAddItem(lua_State* L)
 	else if(it.hasSubType())
 	{
 		if(it.stackable)
-			itemCount = (int32_t)std::ceil((float)count / 100);
+			itemCount = (int32_t)std::ceil((float)count / g_config.getNumber(ConfigManager::UINT16_COUNT));
 
 		subType = count;
 	}
@@ -4261,7 +4261,7 @@ int32_t LuaInterface::luaDoPlayerAddItem(lua_State* L)
 	Item* newItem = NULL;
 	while(itemCount > 0)
 	{
-		int32_t stackCount = std::min(100, subType);
+		int32_t stackCount = std::min(g_config.getNumber(ConfigManager::UINT16_COUNT), subType);
 		if(!(newItem = Item::CreateItem(itemId, stackCount)))
 		{
 			errorEx(getError(LUA_ERROR_ITEM_NOT_FOUND));
@@ -5275,7 +5275,7 @@ int32_t LuaInterface::luaDoCreateItem(lua_State* L)
 	if(it.hasSubType())
 	{
 		if(it.stackable)
-			itemCount = (int32_t)std::ceil(count / 100.);
+			itemCount = (int32_t)std::ceil(count / g_config.getNumber(ConfigManager::UINT16_COUNT));
 
 		subType = count;
 	}
@@ -5286,7 +5286,7 @@ int32_t LuaInterface::luaDoCreateItem(lua_State* L)
 	Item* newItem = NULL;
 	while(itemCount > 0)
 	{
-		int32_t stackCount = std::min(100, subType);
+		int32_t stackCount = std::min(g_config.getNumber(ConfigManager::UINT16_COUNT), subType);
 		if(!(newItem = Item::CreateItem(it.id, stackCount)))
 		{
 			errorEx(getError(LUA_ERROR_ITEM_NOT_FOUND));
@@ -5333,8 +5333,8 @@ int32_t LuaInterface::luaDoCreateItemEx(lua_State* L)
 
 	ScriptEnviroment* env = getEnv();
 	const ItemType& it = Item::items[(uint32_t)popNumber(L)];
-	if(it.stackable && count > 100)
-		count = 100;
+	if(it.stackable && count > g_config.getNumber(ConfigManager::UINT16_COUNT))
+		count = g_config.getNumber(ConfigManager::UINT16_COUNT);
 
 	Item* newItem = Item::CreateItem(it.id, count);
 	if(!newItem)

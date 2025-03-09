@@ -277,7 +277,7 @@ class Item : virtual public Thing, public ItemAttributes
 		void getLight(LightInfo& lightInfo);
 
 		int32_t getMaxWriteLength() const {return items[id].maxTextLength;}
-		int32_t getWorth() const {return count * items[id].worth;}
+		int64_t getWorth() const {return count * items[id].worth;}
 		virtual int32_t getThrowRange() const {return (isPickupable() ? 15 : 2);}
 
 		bool floorChange(FloorChange_t change = CHANGE_NONE) const;
@@ -359,7 +359,7 @@ class Item : virtual public Thing, public ItemAttributes
 
 	protected:
 		uint16_t id;
-		uint8_t count;
+		uint16_t count;
 		int32_t itemUid;
 		int32_t duration;
 
