@@ -3140,7 +3140,20 @@ void ProtocolGame::AddCreature(OutputMessage_ptr msg, const Creature* creature, 
 		msg->addByte((uint8_t)std::ceil(creature->getHealth() * 100. / std::max(creature->getMaxHealth(), 1)));
 	else
 		msg->addByte(0x00);
-
+	
+    // Adicionando lógica para enviar informações de mana se o jogador está usando otclient
+    if (player->isUsingOtclient()) {
+        msg->addByte(0x01); // Adiciona um byte para indicar a presença de mana
+        int32_t mana = creature->getMana();
+        int32_t maxMana = creature->getMaxMana();
+        if (maxMana > 0) {
+            uint8_t manaPercent = (uint8_t)std::ceil(mana * 100. / maxMana);
+            msg->addByte(manaPercent);
+        } else {
+            msg->addByte(0x00); // Se a mana máxima for 0, envia 0
+        }
+    }
+	
 	msg->addByte((uint8_t)creature->getDirection());
 	AddCreatureOutfit(msg, creature, creature->getCurrentOutfit());
 
@@ -3322,14 +3335,32 @@ void ProtocolGame::AddCreatureSpeak(OutputMessage_ptr msg, const Creature* creat
 	msg->addString(text);
 }
 
-void ProtocolGame::AddCreatureHealth(OutputMessage_ptr msg,const Creature* creature)
+void ProtocolGame::AddCreatureHealth(OutputMessage_ptr msg, const Creature* creature)
 {
-	msg->addByte(0x8C);
-	msg->add<uint32_t>(creature->getID());
-	if(!creature->getHideHealth())
-		msg->addByte((uint8_t)std::ceil(creature->getHealth() * 100. / std::max(creature->getMaxHealth(), (int32_t)1)));
-	else
-		msg->addByte(0x00);
+    msg->addByte(0x8C);
+    msg->add<uint32_t>(creature->getID());
+
+    // Verifica se a saúde da criatura deve ser ocultada
+    if (!creature->getHideHealth()) {
+        // Envia a saúde como porcentagem
+        msg->addByte((uint8_t)std::ceil(creature->getHealth() * 100. / std::max(creature->getMaxHealth(), (int32_t)1)));
+    } else {
+        // Envia 0 como saúde se a saúde deve ser ocultada
+        msg->addByte(0x00);
+    }
+
+    // Só adiciona informação de mana se o jogador está usando otclient
+    if (player->isUsingOtclient()) {
+        msg->addByte(0x01);  // Adiciona um byte para indicar a presença de informação de mana
+        int32_t mana = creature->getMana();
+        int32_t maxMana = creature->getMaxMana();
+        if (maxMana > 0) {  // Evita divisão por zero
+            uint8_t manaPercent = (uint8_t)std::ceil(mana * 100. / maxMana);
+            msg->addByte(manaPercent);
+        } else {
+            msg->addByte(0x00);  // Envie 0% se a mana máxima for 0
+        }
+    }
 }
 
 void ProtocolGame::AddCreatureOutfit(OutputMessage_ptr msg, const Creature* creature, const Outfit_t& outfit, bool outfitWindow/* = false*/)
@@ -3820,6 +3851,7 @@ void ProtocolGame::sendFeatures()
 	features[GameMagicEffectU16] = true;
 	features[GameDistanceEffectU16] = true;
 	features[GameItemTooltip] = true;
+	features[GameCreaturesMana] = true;
 
 	if (features.empty())
 		return;
