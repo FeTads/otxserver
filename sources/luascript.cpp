@@ -4261,7 +4261,7 @@ int32_t LuaInterface::luaDoPlayerAddItem(lua_State* L)
 	Item* newItem = NULL;
 	while(itemCount > 0)
 	{
-		int32_t stackCount = std::min(g_config.getNumber(ConfigManager::UINT16_COUNT), subType);
+		int32_t stackCount = std::min<int32_t>(g_config.getNumber(ConfigManager::UINT16_COUNT), subType); 
 		if(!(newItem = Item::CreateItem(itemId, stackCount)))
 		{
 			errorEx(getError(LUA_ERROR_ITEM_NOT_FOUND));
@@ -5286,7 +5286,7 @@ int32_t LuaInterface::luaDoCreateItem(lua_State* L)
 	Item* newItem = NULL;
 	while(itemCount > 0)
 	{
-		int32_t stackCount = std::min(g_config.getNumber(ConfigManager::UINT16_COUNT), subType);
+		int32_t stackCount = std::min<int32_t>(g_config.getNumber(ConfigManager::UINT16_COUNT), subType); 
 		if(!(newItem = Item::CreateItem(it.id, stackCount)))
 		{
 			errorEx(getError(LUA_ERROR_ITEM_NOT_FOUND));
