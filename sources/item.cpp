@@ -353,8 +353,8 @@ Attr_ReadValue Item::readAttr(AttrTypes_t attr, PropStream& propStream)
 	{
 		case ATTR_COUNT:
 		{
-			uint8_t _count;
-			if(!propStream.getByte(_count))
+			uint16_t _count;
+			if(!propStream.getShort(_count))
 				return ATTR_READ_ERROR;
 
 			// setSubType((uint16_t)_count);
@@ -715,7 +715,7 @@ bool Item::serializeAttr(PropWriteStream& propWriteStream) const
 	if (isStackable() || isFluidContainer() || isSplash())
 	{
 		propWriteStream.addByte(ATTR_COUNT);
-		propWriteStream.addByte((uint8_t)getSubType());
+		propWriteStream.addShort(getSubType());
 	}
 
 	if (duration != 0)
