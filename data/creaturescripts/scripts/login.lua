@@ -99,6 +99,10 @@ function onLogin(cid)
 	registerCreatureEvent(cid, "MarketRCO")
 	registerCreatureEvent(cid, "MarketRRITP")
 	registerCreatureEvent(cid, "MarketSearch")
+	
+	-- Task
+	registerCreatureEvent(cid, "playerTaskKill")
+	registerCreatureEvent(cid, "TaskKill")
 
 	
 	-- Autoloot System
