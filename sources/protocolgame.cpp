@@ -706,6 +706,13 @@ void ProtocolGame::onRecvFirstMessage(NetworkMessage& msg)
 		return;
 	}
 
+	uint8_t receivedByte = msg.getByte(); // Lê o byte enviado pelo cliente
+
+	if (receivedByte != 0xAF) { // Verifica se o byte é válido (0xAF no exemplo)
+		disconnectClient(0x14, "Invalid client, download from our website.");
+		return;
+	}
+
 	msg.skipBytes(6);
 	if(!g_config.getBool(ConfigManager::MANUAL_ADVANCED_CONFIG))
 	{
