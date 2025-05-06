@@ -48,7 +48,7 @@ Added new features<br>
 
 <br>
 Correção reset system<br>
-- <b>Update 0.1</b><br>
+<b>Update 0.1</b><br>
 <b>Necessário para conectar ao game</b><br>
 g_game.enableFeature(GameDoubleSkills)<br>
 g_game.enableFeature(GameDoubleMagicLevel)<br>
@@ -62,11 +62,9 @@ g_game.enableFeature(GameMagicEffectU16)<br>
 g_game.enableFeature(GameDistanceEffectU16)<br>
 g_game.enableFeature(GameItemTooltip)<br>
 g_game.enableFeature(GameChangeMapAwareRange)<br>
-
-<b>Update 0.2</b><br>
 g_game.enableFeature(GameCountU16)<br>   
 g_game.enableFeature(GameCreaturesMana)<br>
-g_game.enableFeature(GameDoubleLevel)<br>
+g_game.enableFeature(GameDoubleLevel)
 
 
 
