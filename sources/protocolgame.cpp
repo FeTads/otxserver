@@ -3200,7 +3200,7 @@ void ProtocolGame::AddPlayerStatsNew(OutputMessage_ptr msg)
         msg->add<uint32_t>(experience);
 	}
 		
-    msg->add<uint16_t>(player->getPlayerInfo(PLAYERINFO_LEVEL));
+    msg->add<uint32_t>(player->getPlayerInfo(PLAYERINFO_LEVEL));
     msg->addByte(player->getPlayerInfo(PLAYERINFO_LEVELPERCENT));
     if (player->getPlayerInfo(PLAYERINFO_MAXMANA) > 0)
     {
