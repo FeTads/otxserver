@@ -63,8 +63,8 @@ g_game.enableFeature(GameDistanceEffectU16)<br>
 g_game.enableFeature(GameItemTooltip)<br>
 g_game.enableFeature(GameChangeMapAwareRange)<br>
 
-- <b>Update 0.2</b><br>
-g_game.enableFeature(GameCountU16)<br>
+<b>Update 0.2</b><br>
+g_game.enableFeature(GameCountU16)<br>   
 g_game.enableFeature(GameCreaturesMana)<br>
 g_game.enableFeature(GameDoubleLevel)<br>
 
