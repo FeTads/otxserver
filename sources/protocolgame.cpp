@@ -3242,7 +3242,7 @@ void ProtocolGame::AddPlayerStats(OutputMessage_ptr msg)
 	else
 		msg->add<uint32_t>(experience);
 
-	msg->add<uint16_t>(player->getPlayerInfo(PLAYERINFO_LEVEL));
+	msg->add<uint32_t>(player->getPlayerInfo(PLAYERINFO_LEVEL));
 	msg->addByte(player->getPlayerInfo(PLAYERINFO_LEVELPERCENT));
 	msg->add<uint32_t>(player->getPlayerInfo(PLAYERINFO_MANA));
 	msg->add<uint32_t>(player->getPlayerInfo(PLAYERINFO_MAXMANA));
@@ -3291,9 +3291,9 @@ void ProtocolGame::AddCreatureSpeak(OutputMessage_ptr msg, const Creature* creat
 
 		const Player* speaker = creature->getPlayer();
 		if(speaker && !speaker->isAccountManager() && !speaker->hasCustomFlag(PlayerCustomFlag_HideLevel))
-			msg->add<uint16_t>(speaker->getPlayerInfo(PLAYERINFO_LEVEL));
+			msg->add<uint32_t>(speaker->getPlayerInfo(PLAYERINFO_LEVEL));
 		else
-			msg->add<uint16_t>(0x00);
+			msg->add<uint32_t>(0x00);
 	}
 	else
 	{
@@ -3631,7 +3631,7 @@ void ProtocolGame::sendChannelMessage(std::string author, std::string text, Mess
 	msg->addByte(0xAA);
 	msg->add<uint32_t>(0x00);
 	msg->addString(author);
-	msg->add<uint16_t>(0x00);
+	msg->add<uint32_t>(0x00);
 	msg->addByte(type);
 	msg->add<uint16_t>(channel);
 	msg->addString(text);
