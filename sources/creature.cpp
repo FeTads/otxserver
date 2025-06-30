@@ -924,6 +924,8 @@ void Creature::changeMana(int32_t manaChange)
 		mana += std::min(manaChange, getMaxMana() - mana);
 	else
 		mana = std::max((int32_t)0, mana + manaChange);
+
+	g_game.addCreatureHealth(this);
 }
 
 // Reset System
