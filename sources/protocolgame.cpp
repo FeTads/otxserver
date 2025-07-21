@@ -706,12 +706,12 @@ void ProtocolGame::onRecvFirstMessage(NetworkMessage& msg)
 		return;
 	}
 
-	uint8_t receivedByte = msg.getByte(); // Lê o byte enviado pelo cliente
+	// uint8_t receivedByte = msg.getByte(); // Lê o byte enviado pelo cliente
 
-	if (receivedByte != 0xAF) { // Verifica se o byte é válido (0xAF no exemplo)
-		disconnectClient(0x14, "Invalid client, download from our website.");
-		return;
-	}
+	// if (receivedByte != 0xAF) { // Verifica se o byte é válido (0xAF no exemplo)
+		// disconnectClient(0x14, "Invalid client, download from our website.");
+		// return;
+	// }
 
 	msg.skipBytes(6);
 	if(!g_config.getBool(ConfigManager::MANUAL_ADVANCED_CONFIG))
@@ -3220,36 +3220,34 @@ void ProtocolGame::AddPlayerStatsNew(OutputMessage_ptr msg)
 
 void ProtocolGame::AddPlayerStats(OutputMessage_ptr msg)
 {
+    std::string sto = "-1";
+    player->getStorage("5556667", sto);
+    if (g_config.getBool(ConfigManager::LIFE_IN_PERCENTUAL) || std::stoi(sto) == 1) {
+        AddPlayerStatsNew(msg);
+        return;
+    }
 
-	std::string sto = "-1";
-	player->getStorage("5556667", sto);
-	if(g_config.getBool(ConfigManager::LIFE_IN_PERCENTUAL) || std::stoi(sto) == 1){
-		AddPlayerStatsNew(msg);
-		return;
-	}	
-	msg->addByte(0xA0);
-	msg->add<uint32_t>(player->getHealth());
-	msg->add<uint32_t>(player->getPlayerInfo(PLAYERINFO_MAXHEALTH));
-	uint32_t capacity = uint32_t(player->getFreeCapacity() * 100);
-	if (capacity >= INT32_MAX)
-		msg->add<uint32_t>(INT32_MAX);
-	else 
-		msg->add<uint32_t>(capacity);
-	
-	uint64_t experience = player->getExperience();
-	if(experience > 0x7FFFFFFF)
-		msg->add<uint32_t>(0x7FFFFFFF);
-	else
-		msg->add<uint32_t>(experience);
+    msg->addByte(0xA0);
+    msg->add<uint32_t>(player->getHealth());
+    msg->add<uint32_t>(player->getPlayerInfo(PLAYERINFO_MAXHEALTH));
 
-	msg->add<uint32_t>(player->getPlayerInfo(PLAYERINFO_LEVEL));
-	msg->addByte(player->getPlayerInfo(PLAYERINFO_LEVELPERCENT));
-	msg->add<uint32_t>(player->getPlayerInfo(PLAYERINFO_MANA));
-	msg->add<uint32_t>(player->getPlayerInfo(PLAYERINFO_MAXMANA));
-	msg->add<uint16_t>(player->getPlayerInfo(PLAYERINFO_MAGICLEVEL));
-	msg->addByte(player->getPlayerInfo(PLAYERINFO_MAGICLEVELPERCENT));
-	msg->addByte(player->getPlayerInfo(PLAYERINFO_SOUL));
-	msg->add<uint16_t>(player->getStaminaMinutes());
+    uint32_t capacity = uint32_t(player->getFreeCapacity() * 100);
+    if (capacity >= INT32_MAX)
+        msg->add<uint32_t>(INT32_MAX);
+    else
+        msg->add<uint32_t>(capacity);
+
+    uint64_t experience = player->getExperience();
+    msg->add<uint64_t>(experience);
+
+    msg->add<uint32_t>(player->getPlayerInfo(PLAYERINFO_LEVEL));
+    msg->addByte(player->getPlayerInfo(PLAYERINFO_LEVELPERCENT));
+    msg->add<uint32_t>(player->getPlayerInfo(PLAYERINFO_MANA));
+    msg->add<uint32_t>(player->getPlayerInfo(PLAYERINFO_MAXMANA));
+    msg->add<uint16_t>(player->getPlayerInfo(PLAYERINFO_MAGICLEVEL));
+    msg->addByte(player->getPlayerInfo(PLAYERINFO_MAGICLEVELPERCENT));
+    msg->add<uint16_t>(player->getPlayerInfo(PLAYERINFO_SOUL));
+    msg->add<uint16_t>(player->getStaminaMinutes());
 }
 
 void ProtocolGame::AddPlayerSkills(OutputMessage_ptr msg)

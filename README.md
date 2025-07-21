@@ -64,7 +64,9 @@ g_game.enableFeature(GameItemTooltip)<br>
 g_game.enableFeature(GameChangeMapAwareRange)<br>
 g_game.enableFeature(GameCountU16)<br>   
 g_game.enableFeature(GameCreaturesMana)<br>
-g_game.enableFeature(GameDoubleLevel)
+g_game.enableFeature(GameDoubleLevel)<br>
+g_game.enableFeature(GameDoubleExperience)<br>
+g_game.enableFeature(GameDoubleSoul)
 
 
 

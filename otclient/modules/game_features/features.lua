@@ -70,6 +70,8 @@ function updateFeatures(version)
 	g_game.enableFeature(GameCountU16)
 	g_game.enableFeature(GameCreaturesMana)
 	g_game.enableFeature(GameDoubleLevel)
+        g_game.enableFeature(GameDoubleExperience)
+        g_game.enableFeature(GameDoubleSoul)
     end
 
     if(version >= 862) then
